@@ -40,6 +40,8 @@ class Liquid {
 
 class Mover {
   static const double size = 8.0;
+  static const double massMin = 0.5;
+  static const double massMax = 4.0;
 
   final double mass;
   final f.Vector2 position;
@@ -55,7 +57,7 @@ class Mover {
 
   Mover.newRandom({required double right})
       : this(
-          m: u.randDoubleRange(0.5, 4.0),
+          m: u.randDoubleRange(massMin, massMax),
           position: f.Vector2(
             u.randDoubleRange(0.0, right),
             0.0,
@@ -131,6 +133,8 @@ class FluidModel extends f.Model {
 
 class FluidIur<M extends FluidModel> extends f.IurBase<M>
     implements f.Iur<M> {
+  static const double gFactor = 0.1;
+
   @override
   M update({
     required M model,
@@ -161,7 +165,7 @@ class FluidIur<M extends FluidModel> extends f.IurBase<M>
         m.applyForce(dragForce);
       }
 
-      final gravity = f.Vector2(0.0, 0.1 * m.mass);
+      final gravity = f.Vector2(0.0, gFactor * m.mass);
 
       m.applyForce(gravity);
       m.update();

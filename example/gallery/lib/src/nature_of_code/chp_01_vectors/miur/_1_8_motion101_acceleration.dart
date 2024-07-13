@@ -6,6 +6,8 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
+final f.Vector2 moverInitAcc = f.Vector2(-0.001, 0.01);
+
 class Mover {
   static const size = 24.0;
   static const topSpeed = 10.0;
@@ -17,7 +19,7 @@ class Mover {
   Mover()
       : position = f.Vector2.zero(),
         velocity = f.Vector2.zero(),
-        acceleration = f.Vector2(-0.001, 0.01);
+        acceleration = moverInitAcc;
 
   Mover.update({
     required this.position,

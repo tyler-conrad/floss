@@ -6,8 +6,6 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const int numMovers = 500;
-
 class Mover {
   static const double size = 12.0;
   static const double g = 0.4;
@@ -66,6 +64,8 @@ class Mover {
 }
 
 class MutualAttractionModel extends f.Model {
+  static const int numMovers = 500;
+
   final List<Mover> movers;
 
   MutualAttractionModel.init({required super.size})

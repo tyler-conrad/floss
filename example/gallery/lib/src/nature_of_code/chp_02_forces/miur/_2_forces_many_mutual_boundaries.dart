@@ -7,13 +7,16 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const int numMovers = 20;
-
 class Mover {
   static const double size = 8.0;
   static const double g = 0.4;
   static const double padding = 50.0;
+  static const double massMin = 1.0;
+  static const double massMax = 2.0;
+  static const double forceLenMin = 5.0;
+  static const double forceLenMax = 25.0;
 
+  final f.Vector2 forceFactor = f.Vector2(0.1, 0.1);
   final double mass;
   final f.Vector2 position;
   final f.Vector2 velocity;
@@ -59,7 +62,7 @@ class Mover {
   f.Vector2 attract(Mover m) {
     final force = position - m.position;
     double d = force.length;
-    d = math.min(math.max(5.0, d), 25.0);
+    d = math.min(math.max(forceLenMin, d), forceLenMax);
     force.normalize();
     final strength = (g * mass * m.mass) / (d * d);
     return force * strength;
@@ -83,20 +86,22 @@ class Mover {
 
     if (force.length > 0.0) {
       force.normalize();
-      force.multiply(f.Vector2(0.1, 0.1));
+      force.multiply(forceFactor);
       applyForce(force);
     }
   }
 }
 
 class ForcesManyMutualBoundariesModel extends f.Model {
+  static const int numMovers = 20;
+
   final List<Mover> movers;
 
   ForcesManyMutualBoundariesModel.init({required super.size})
       : movers = List.generate(
           numMovers,
           (_) => Mover(
-            m: u.randDoubleRange(1.0, 2.0),
+            m: u.randDoubleRange(Mover.massMin, Mover.massMax),
             position: f.Vector2(
               u.randDoubleRange(0.0, size.width),
               u.randDoubleRange(0.0, size.height),

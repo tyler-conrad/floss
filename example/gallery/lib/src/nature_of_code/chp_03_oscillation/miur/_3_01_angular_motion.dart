@@ -4,10 +4,9 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const double halfSize = 60.0;
-const double circleRadius = 8.0;
-
 class AngularMotionModel extends f.Model {
+  static const initAngAcc = -0.0001;
+
   final double angle;
   final double angleVelocity;
   final double angleAcceleration;
@@ -15,7 +14,7 @@ class AngularMotionModel extends f.Model {
   AngularMotionModel.init({required super.size})
       : angle = 0.0,
         angleVelocity = 0.0,
-        angleAcceleration = -0.0001;
+        angleAcceleration = initAngAcc;
 
   AngularMotionModel.update({
     required super.size,
@@ -27,6 +26,9 @@ class AngularMotionModel extends f.Model {
 
 class AngularMotionIur<M extends AngularMotionModel> extends f.IurBase<M>
     implements f.Iur<M> {
+  static const double halfSize = 60.0;
+  static const double circleRadius = 8.0;
+
   @override
   M update({
     required M model,

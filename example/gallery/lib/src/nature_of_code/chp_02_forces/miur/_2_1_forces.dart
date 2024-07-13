@@ -4,11 +4,12 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const initPosOffset = 60.0;
+final f.Vector2 moverInitAcc = f.Vector2(-0.001, 0.01);
 
 class Mover  {
-  static const size = 24.0;
-  static const mass = 1.0;
+  static const double size = 24.0;
+  static const double mass = 1.0;
+  static const double initPosOffset = 60.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;
@@ -20,7 +21,7 @@ class Mover  {
           rect.top + initPosOffset,
         ),
         velocity = f.Vector2.zero(),
-        acceleration = f.Vector2(-0.001, 0.01);
+        acceleration = moverInitAcc;
 
   void applyForce(f.Vector2 force) {
     final f = force / mass;
@@ -90,6 +91,9 @@ class ForcesModel extends f.Model {
 
 class ForcesIur<M extends ForcesModel> extends f.IurBase<M>
     implements f.Iur<M> {
+  final f.Vector2 wind = f.Vector2(0.01, 0.0);
+  final f.Vector2 gravity = f.Vector2(0.0, 0.1);
+
   @override
   M update({
     required M model,
@@ -97,9 +101,6 @@ class ForcesIur<M extends ForcesModel> extends f.IurBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    final wind = f.Vector2(0.01, 0.0);
-    final gravity = f.Vector2(0.0, 0.1);
-
     model.mover.applyForce(wind);
     model.mover.applyForce(gravity);
     model.mover.update();

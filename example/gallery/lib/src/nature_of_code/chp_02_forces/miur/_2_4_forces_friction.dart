@@ -1,16 +1,13 @@
 import 'package:flutter/painting.dart' as p;
-import 'package:flutter/widgets.dart' as w;
-
-import 'package:collection/collection.dart';
 
 import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const int numMovers = 20;
-
 class Mover {
   static const double size = 8.0;
+  static const double massMin = 1.0;
+  static const double massMax = 4.0;
 
   final double mass;
   final f.Vector2 position;
@@ -73,13 +70,15 @@ class Mover {
 }
 
 class FrictionModel extends f.Model {
+  static const int numMovers = 20;
+
   final List<Mover> movers;
 
   FrictionModel.init({required super.size})
       : movers = List.generate(
           numMovers,
           (_) => Mover(
-            m: u.randDoubleRange(1.0, 4.0),
+            m: u.randDoubleRange(Mover.massMin, Mover.massMax),
             position: f.Vector2(
               u.randDoubleRange(0.0, size.width),
               0.0,
@@ -95,6 +94,11 @@ class FrictionModel extends f.Model {
 
 class FrictionIur<M extends FrictionModel> extends f.IurBase<M>
     implements f.Iur<M> {
+  static const double gFactor = 0.1;
+  static const double c = 0.05;
+
+  final f.Vector2 wind = f.Vector2(0.01, 0.0);
+
   @override
   M update({
     required M model,
@@ -102,11 +106,10 @@ class FrictionIur<M extends FrictionModel> extends f.IurBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    final wind = f.Vector2(0.01, 0.0);
     for (final m in model.movers) {
-      final gravity = f.Vector2(0.0, 0.1 * m.mass);
+      final f.Vector2 gravity = f.Vector2(0.0, gFactor * m.mass);
 
-      const double c = 0.05;
+
       f.Vector2 friction = m.velocity;
       if (friction.length > 0.0) {
         friction *= -1.0;

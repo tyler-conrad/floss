@@ -1,15 +1,13 @@
 import 'package:flutter/painting.dart' as p;
 
-import 'package:collection/collection.dart';
-
 import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const int numMovers = 20;
-
-class Mover  {
+class Mover {
   static const double size = 8.0;
+  static const double massMin = 1.0;
+  static const double massMax = 4.0;
 
   final double mass;
   final f.Vector2 position;
@@ -18,13 +16,8 @@ class Mover  {
 
   Mover({
     required double m,
-    required double x,
-    required double y,
+    required this.position,
   })  : mass = m,
-        position = f.Vector2(
-          x,
-          y,
-        ),
         velocity = f.Vector2.zero(),
         acceleration = f.Vector2.zero();
 
@@ -61,8 +54,7 @@ class Mover  {
         f.Circle(
           c: f.Offset.zero,
           radius: mass * size,
-          paint: f.Paint()
-            ..color = u.transparent5black,
+          paint: f.Paint()..color = u.transparent5black,
         ),
         f.Circle(
           c: f.Offset.zero,
@@ -78,15 +70,16 @@ class Mover  {
 }
 
 class RealGravityModel extends f.Model {
+  static const int numMovers = 20;
+
   final List<Mover> movers;
 
   RealGravityModel.init({required super.size})
       : movers = List.generate(
           numMovers,
           (_) => Mover(
-            m: u.randDoubleRange(1.0, 4.0),
-            x: 0.0,
-            y: 0.0,
+            m: u.randDoubleRange(Mover.massMin, Mover.massMax),
+            position: f.Vector2.zero(),
           ),
         ).toList();
 
@@ -98,6 +91,10 @@ class RealGravityModel extends f.Model {
 
 class RealGravityIur<M extends RealGravityModel> extends f.IurBase<M>
     implements f.Iur<M> {
+  static const double gFactor = 0.1;
+
+  final wind = f.Vector2(0.01, 0.0);
+
   @override
   M update({
     required M model,
@@ -105,15 +102,10 @@ class RealGravityIur<M extends RealGravityModel> extends f.IurBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    final wind = f.Vector2(0.01, 0.0);
     for (final m in model.movers) {
       m.applyForce(wind);
-      m.applyForce(
-        f.Vector2(
-          0.0,
-          0.1 * m.mass,
-        ),
-      );
+      final gravity = f.Vector2(0.0, gFactor * m.mass);
+      m.applyForce(gravity);
       m.update();
       m.checkEdges(
         f.Rect.fromOffsetSize(

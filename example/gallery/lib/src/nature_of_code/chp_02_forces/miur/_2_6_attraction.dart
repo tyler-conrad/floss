@@ -9,6 +9,8 @@ import '../../utils.dart' as u;
 class Attractor {
   static const double g = 1.0;
   static const double mass = 20.0;
+  static const double forceLenMin = 5.0;
+  static const double forceLenMax = 25.0;
 
   final f.Vector2 position;
   bool dragging;
@@ -30,9 +32,9 @@ class Attractor {
   f.Vector2 attract(Mover m) {
     final force = position - m.position;
     double d = force.length;
-    d = math.min(math.max(5.0, d), 25.0);
+    d = math.min(math.max(forceLenMin, d), forceLenMax);
     force.normalize();
-    final strength = (g * mass * m.mass) / (d * d);
+    final strength = (g * mass * Mover.mass) / (d * d);
     return force * strength;
   }
 
@@ -96,16 +98,19 @@ class Attractor {
   }
 }
 
+final f.Vector2 moverInitVel = f.Vector2(1.0, 0.0);
+
 class Mover {
   static const double size = 8.0;
+  static const double posFactor = 0.3;
+  static const double mass = 1.0;
 
-  final double mass = 1.0;
   final f.Vector2 position;
   final f.Vector2 velocity;
   final f.Vector2 acceleration;
 
   Mover({required this.position})
-      : velocity = f.Vector2(1.0, 0.0),
+      : velocity = moverInitVel,
         acceleration = f.Vector2.zero();
 
   void applyForce(f.Vector2 force) {
@@ -154,8 +159,8 @@ class AttractionModel extends f.Model {
   AttractionModel.init({required super.size})
       : mover = Mover(
           position: f.Vector2(
-            size.width * 0.3,
-            size.height * 0.3,
+            size.width * Mover.posFactor,
+            size.height * Mover.posFactor,
           ),
         ),
         attractor = Attractor(

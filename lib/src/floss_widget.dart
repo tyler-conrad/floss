@@ -11,19 +11,12 @@ import 'canvas_ops.dart' as go;
 import 'config.dart' as c;
 import 'miur.dart' as miur;
 
-class _ModelWrapper<M> {
-  M _model;
-
-  _ModelWrapper({required M model}) : _model = model;
-}
-
 class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
   final c.Config _config;
-  m.Size _size;
-  final _ModelWrapper<M> _modelWrapper;
   final m.ValueNotifier<Duration> _elapsed;
   final ie.InputEventList _inputEvents;
-
+  m.Size _size;
+  M _model;
   ui.Image? _background;
 
   _FlossPainter({
@@ -36,17 +29,15 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
         _elapsed = elapsed,
         _inputEvents = inputEvents,
         _config = config,
-        _modelWrapper = _ModelWrapper(
-          model: config.iur.init(
-            modelCtor: config.modelCtor,
-            size: g.Size.fromSize(size),
-          ),
+        _model = config.iur.init(
+          modelCtor: config.modelCtor,
+          size: g.Size.fromSize(size),
         );
 
   void _tick(Duration elapsed) {
     _elapsed.value = elapsed;
-    _modelWrapper._model = _config.iur.update(
-      model: _modelWrapper._model,
+    _model = _config.iur.update(
+      model: _model,
       time: elapsed,
       size: g.Size.fromSize(_size),
       inputEvents: _inputEvents,
@@ -57,7 +48,7 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
   void _paint(m.Canvas canvas, m.Size size) {
     _size = size;
     _config.iur
-        .render(model: _modelWrapper._model)
+        .render(model: _model)
         .draw(canvas: canvas)
         .toList();
   }
@@ -69,7 +60,7 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
   ) {
     _size = size;
 
-    final drawing = _config.iur.render(model: _modelWrapper._model);
+    final drawing = _config.iur.render(model: _model);
 
     try {
       assert(
@@ -136,25 +127,6 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
   @override
   bool shouldRepaint(covariant m.CustomPainter oldDelegate) =>
       this != oldDelegate;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is _FlossPainter &&
-          _size == other._size &&
-          _elapsed == other._elapsed &&
-          _inputEvents == other._inputEvents &&
-          _modelWrapper == other._modelWrapper &&
-          _config == other._config;
-
-  @override
-  int get hashCode => Object.hash(
-        _size,
-        _elapsed,
-        _inputEvents,
-        _modelWrapper,
-        _config,
-      );
 }
 
 class _CanvasTicker<IUR> extends m.StatefulWidget {

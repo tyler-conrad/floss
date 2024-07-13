@@ -6,21 +6,13 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const int numMovers = 20;
-const double fDistMin = 5.0;
-const double fDistMax = 25.0;
-const double aVelFactor = 0.1;
-const double aVelMin = -0.1;
-const double aVelMax = 0.1;
-const double velHalfRange = 1.0;
-const double massMin = 0.1;
-const double massMax = 2.0;
-
 final rng = m.Random();
 
 class Attractor {
   static const double g = 0.4;
   static const double mass = 20.0;
+  static const double forceLenDistMin = 5.0;
+  static const double forceLenDistMax = 25.0;
 
   final f.Vector2 location;
 
@@ -32,7 +24,7 @@ class Attractor {
 
   f.Vector2 attract(Mover m) {
     final force = (location - m.location);
-    final distance = force.length.clamp(fDistMin, fDistMax);
+    final distance = force.length.clamp(forceLenDistMin, forceLenDistMax);
     force.normalize();
     final strength = (g * mass * m.mass) / (distance * distance);
     return force * strength;
@@ -62,6 +54,12 @@ class Attractor {
 
 class Mover {
   static const double size = 16.0;
+  static const double angVelFactor = 0.1;
+  static const double angVelMin = -0.1;
+  static const double angVelMax = 0.1;
+  static const double velHalfRange = 1.0;
+  static const double massMin = 0.1;
+  static const double massMax = 2.0;
 
   final double mass;
   final f.Vector2 location;
@@ -100,8 +98,8 @@ class Mover {
   Mover update() {
     velocity.add(acceleration);
     location.add(velocity);
-    final aAcc = acceleration.x * aVelFactor;
-    final aVel = (aVelocity + aAcc).clamp(aVelMin, aVelMax);
+    final aAcc = acceleration.x * angVelFactor;
+    final aVel = (aVelocity + aAcc).clamp(angVelMin, angVelMax);
     final a = angle + aVel;
     acceleration.setValues(0.0, 0.0);
 
@@ -156,6 +154,8 @@ class Mover {
 }
 
 class ForcesAngularMotionModel extends f.Model {
+  static const int numMovers = 20;
+
   final List<Mover> movers;
   final Attractor attractor;
 
@@ -163,7 +163,7 @@ class ForcesAngularMotionModel extends f.Model {
       : movers = List.generate(
           numMovers,
           (_) => Mover(
-            mass: u.randDoubleRange(massMin, massMax),
+            mass: u.randDoubleRange(Mover.massMin, Mover.massMax),
             location: f.Vector2(
               u.randDoubleRange(0.0, size.width),
               u.randDoubleRange(0.0, size.height),

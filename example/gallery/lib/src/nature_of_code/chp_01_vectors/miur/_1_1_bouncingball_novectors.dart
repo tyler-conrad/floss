@@ -4,10 +4,11 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const double pos = 100.0;
-const double ballSize = 25.0;
-
 class BallModel extends f.Model {
+  static const double pos = 100.0;
+  static const double initXSpeed = 2.5;
+  static const double initYSpeed = 2.0;
+
   final double x;
   final double y;
   final double xSpeed;
@@ -16,8 +17,8 @@ class BallModel extends f.Model {
   BallModel.init({required super.size})
       : x = pos,
         y = pos,
-        xSpeed = 2.5,
-        ySpeed = 2.0;
+        xSpeed = initXSpeed,
+        ySpeed = initYSpeed;
 
   BallModel.update({
     required super.size,
@@ -30,6 +31,8 @@ class BallModel extends f.Model {
 
 class BallIur<M extends BallModel> extends f.IurBase<M>
     implements f.Iur<M> {
+  static const double ballSize = 25.0;
+
   @override
   M update({
     required M model,

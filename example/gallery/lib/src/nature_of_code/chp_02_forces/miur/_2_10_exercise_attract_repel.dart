@@ -7,12 +7,12 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const int numMovers = 20;
-
 class Attractor {
   static const double g = 1.0;
   static const double mass = 10.0;
   static const double radius = mass * 3.0;
+  static const massMin = 5.0;
+  static const massMax = 25.0;
 
   final f.Vector2 position;
   final f.Vector2 dragOffset;
@@ -34,7 +34,7 @@ class Attractor {
   f.Vector2 attract(Mover m) {
     final force = position - m.position;
     double d = force.length;
-    d = math.min(math.max(5.0, d), 25.0);
+    d = math.min(math.max(massMin, d), massMax);
     force.normalize();
     final strength = (g * mass * m.mass) / (d * d);
     return force * strength;
@@ -93,6 +93,11 @@ class Attractor {
 }
 
 class Mover {
+  static const double forceLenMin = 1.0;
+  static const double forceLenMax = 10000.0;
+  static const double massMin = 4.0;
+  static const double massMax = 12.0;
+
   final double mass;
   final f.Vector2 position;
   final f.Vector2 velocity;
@@ -137,7 +142,7 @@ class Mover {
   f.Vector2 repel(Mover m) {
     final force = position - m.position;
     double d = force.length;
-    d = math.min(math.max(1.0, d), 10000.0);
+    d = math.min(math.max(forceLenMin, d), forceLenMax);
     force.normalize();
     final strength = (Attractor.g * mass * m.mass) / (d * d);
     return force * (-1.0 * strength);
@@ -145,6 +150,8 @@ class Mover {
 }
 
 class AttractRepelModel extends f.Model {
+  static const int numMovers = 20;
+
   final List<Mover> movers;
   final Attractor attractor;
   final f.Vector2 mouse;
@@ -153,7 +160,7 @@ class AttractRepelModel extends f.Model {
       : movers = List.generate(
           numMovers,
           (_) => Mover(
-              mass: u.randDoubleRange(4.0, 12.0),
+              mass: u.randDoubleRange(Mover.massMin, Mover.massMax),
               position: f.Vector2(
                 u.randDoubleRange(0.0, size.width),
                 u.randDoubleRange(0.0, size.height),

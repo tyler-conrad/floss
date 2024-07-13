@@ -6,6 +6,8 @@ import '../../utils.dart' as u;
 
 class Mover {
   static const size = 24.0;
+  static const double velXHalfRange = 2.0;
+  static const double velYHalfRange = 2.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;
@@ -22,8 +24,8 @@ class Mover {
           ),
         ),
         velocity = f.Vector2(
-          u.randDoubleRange(-2.0, 2.0),
-          u.randDoubleRange(-2.0, 2.0),
+          u.randDoubleRange(-velXHalfRange, velXHalfRange),
+          u.randDoubleRange(-velYHalfRange, velYHalfRange),
         );
 
   void update() {

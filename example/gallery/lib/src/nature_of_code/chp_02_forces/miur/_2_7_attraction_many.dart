@@ -7,11 +7,11 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const int numMovers = 90;
-
 class Attractor  {
   static const double g = 1.0;
   static const double mass = 20.0;
+  static const double forceLenMin = 5.0;
+  static const double forceLenMax = 25.0;
 
   final f.Vector2 position;
   bool dragging;
@@ -33,7 +33,7 @@ class Attractor  {
   f.Vector2 attract(Mover m) {
     final force = position - m.position;
     double d = force.length;
-    d = math.min(math.max(5.0, d), 25.0);
+    d = math.min(math.max(forceLenMin, d), forceLenMax);
     force.normalize();
     final strength = (g * mass * m.mass) / (d * d);
     return force * strength;
@@ -99,8 +99,13 @@ class Attractor  {
   }
 }
 
+final f.Vector2 moverInitVel = f.Vector2(1.0, 0.0);
+
 class Mover  {
   static const double size = 8.0;
+  static const massMin = 0.1;
+  static const massMax = 2.0;
+
 
   final double mass;
   final f.Vector2 position;
@@ -110,7 +115,7 @@ class Mover  {
   Mover({
     required this.mass,
     required this.position,
-  })  : velocity = f.Vector2(1.0, 0.0),
+  })  : velocity = moverInitVel,
         acceleration = f.Vector2.zero();
 
   void applyForce(f.Vector2 force) {
@@ -148,6 +153,8 @@ class Mover  {
 }
 
 class AttractionManyModel extends f.Model {
+  static const int numMovers = 90;
+
   final List<Mover> movers;
   final Attractor attractor;
 
@@ -155,7 +162,7 @@ class AttractionManyModel extends f.Model {
       : movers = List.generate(
           numMovers,
           (_) => Mover(
-              mass: u.randDoubleRange(0.1, 2.0),
+              mass: u.randDoubleRange(Mover.massMin, Mover.massMax),
               position: f.Vector2(
                 u.randDoubleRange(0.0, size.width),
                 u.randDoubleRange(0.0, size.height),

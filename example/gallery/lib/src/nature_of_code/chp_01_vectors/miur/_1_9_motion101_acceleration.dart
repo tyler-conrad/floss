@@ -11,6 +11,8 @@ final _rand = m.Random();
 class Mover  {
   static const size = 24.0;
   static const topSpeed = 6.0;
+  static const double accXHalfRange = 1.0;
+  static const double accYHalfRange = 1.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;
@@ -29,8 +31,8 @@ class Mover  {
 
   Mover update() {
     final acc = f.Vector2(
-      1.0 - _rand.nextDouble() * 2.0,
-      1.0 - _rand.nextDouble() * 2.0,
+      _rand.nextDouble() * 2.0 * accXHalfRange - accXHalfRange,
+      _rand.nextDouble() * 2.0 * accYHalfRange - accYHalfRange,
     );
     final a = acc * _rand.nextDouble() * 2.0;
 

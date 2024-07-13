@@ -4,6 +4,9 @@ import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
+final f.Vector2 ballInitPos = f.Vector2(100.0, 100.0);
+final f.Vector2 ballInitVel = f.Vector2(2.5, 2.0);
+
 class Ball {
   static const double size = 8.0;
 
@@ -11,8 +14,8 @@ class Ball {
   final f.Vector2 velocity;
 
   Ball()
-      : position = f.Vector2(100.0, 100.0),
-        velocity = f.Vector2(2.5, 2.0);
+      : position = ballInitPos,
+        velocity = ballInitVel;
 
   Ball.init({
     required this.position,

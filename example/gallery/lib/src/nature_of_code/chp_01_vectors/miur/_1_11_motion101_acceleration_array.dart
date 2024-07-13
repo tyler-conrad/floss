@@ -1,17 +1,13 @@
 import 'package:flutter/painting.dart' as p;
-import 'package:flutter/widgets.dart' as w;
-
-import 'package:collection/collection.dart';
 
 import 'package:floss/floss.dart' as f;
 
 import '../../utils.dart' as u;
 
-const int numMovers = 20;
-
 class Mover  {
   static const size = 24.0;
   static const topSpeed = 5.0;
+  static const double accFactor = 0.2;
 
   final f.Vector2 position;
   final f.Vector2 velocity;
@@ -39,7 +35,7 @@ class Mover  {
 
   Mover update(f.Vector2 mouse) {
     final acc = mouse - position;
-    final a = acc.normalized() * 0.2;
+    final a = acc.normalized() * accFactor;
 
     final vel = velocity + a;
     final v = vel.clampLenMax(topSpeed);
@@ -75,6 +71,8 @@ class Mover  {
 }
 
 class AccArrayModel extends f.Model {
+  static const int numMovers = 20;
+
   final f.Vector2 mouse;
   final List<Mover> movers;
 
