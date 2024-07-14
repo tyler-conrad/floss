@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'vector2.dart';
 
-class Offset{
+class Offset {
   final ui.Offset offset;
 
   Offset(double dx, double dy) : this.fromOffset(ui.Offset(dx, dy));
@@ -253,24 +253,24 @@ class Rect {
         );
 
   Rect.fromVecLTSizeWH(
-      Vector2 pos,
-      Size size,
-      ) : this.fromLTWH(
-    pos.x,
-    pos.y,
-    size.width,
-    size.height,
-  );
+    Vector2 pos,
+    Size size,
+  ) : this.fromLTWH(
+          pos.x,
+          pos.y,
+          size.width,
+          size.height,
+        );
 
   Rect.fromOffsetLTVecWH(
-      Offset offset,
-      Vector2 size,
-      ) : this.fromLTWH(
-    offset.dx,
-    offset.dy,
-    size.x,
-    size.y,
-  );
+    Offset offset,
+    Vector2 size,
+  ) : this.fromLTWH(
+          offset.dx,
+          offset.dy,
+          size.x,
+          size.y,
+        );
 
   Rect.fromVecLTWH(
     Vector2 pos,
@@ -316,12 +316,12 @@ class Rect {
     required Offset center,
     required Size size,
   }) : this.fromRect(
-    ui.Rect.fromCenter(
-      center: center.offset,
-      width: size.width,
-      height: size.height,
-    ),
-  );
+          ui.Rect.fromCenter(
+            center: center.offset,
+            width: size.width,
+            height: size.height,
+          ),
+        );
 
   Rect.fromVecCenterSize({
     required Vector2 center,
@@ -345,10 +345,10 @@ class Rect {
     required Vector2 center,
     required Vector2 size,
   }) : this.fromCenter(
-    center: Offset.fromVec(center),
-    width: size.x,
-    height: size.y,
-  );
+          center: Offset.fromVec(center),
+          width: size.x,
+          height: size.y,
+        );
 
   Rect.fromPoints(Offset a, Offset b)
       : this.fromRect(

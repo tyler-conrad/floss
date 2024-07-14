@@ -1,22 +1,119 @@
-import 'package:flutter/material.dart' as m;
+import 'package:flutter/painting.dart' as p;
+import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
-import 'miur/_3_01_angular_motion.dart' as e;
-
 import '../utils.dart' as u;
 
-void main() {
-  m.runApp(
-    u.ExamplesWidget(
-      title: 'Angular Motion',
-      child: f.FlossWidget(
-        config: f.Config(
-          modelCtor: e.AngularMotionModel.init,
-          iur: e.AngularMotionIur(),
-          clearCanvas: const f.ClearCanvas(),
-        ),
-      ),
-    ),
-  );
+class _AngularMotionModel extends f.Model {
+  static const initAngAcc = -0.0001;
+
+  final double angle;
+  final double angleVelocity;
+  final double angleAcceleration;
+
+  _AngularMotionModel.init({required super.size})
+      : angle = 0.0,
+        angleVelocity = 0.0,
+        angleAcceleration = initAngAcc;
+
+  _AngularMotionModel.update({
+    required super.size,
+    required this.angle,
+    required this.angleVelocity,
+    required this.angleAcceleration,
+  });
 }
+
+class _AngularMotionIur<M extends _AngularMotionModel> extends f.IurBase<M>
+    implements f.Iur<M> {
+  static const double halfSize = 60.0;
+  static const double circleRadius = 8.0;
+
+  @override
+  M update({
+    required M model,
+    required Duration time,
+    required f.Size size,
+    required f.InputEventList inputEvents,
+  }) {
+    final angle = model.angle + model.angleVelocity;
+    final angleVelocity = model.angleVelocity + model.angleAcceleration;
+    return _AngularMotionModel.update(
+      size: size,
+      angle: angle,
+      angleVelocity: angleVelocity,
+      angleAcceleration: model.angleAcceleration,
+    ) as M;
+  }
+
+  @override
+  f.Drawing render({
+    required M model,
+  }) {
+    return f.Translate(
+      translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
+      canvasOps: [
+        f.Rotate(
+          radians: model.angle,
+          canvasOps: [
+            f.Line(
+              p1: f.Offset(-halfSize, 0.0),
+              p2: f.Offset(halfSize, 0.0),
+              paint: f.Paint()
+                ..color = u.black
+                ..strokeWidth = 2.0,
+            ),
+            f.Translate(
+              translation: f.Vector2(halfSize, 0.0),
+              canvasOps: [
+                f.Circle(
+                  c: f.Offset.zero,
+                  radius: circleRadius,
+                  paint: f.Paint()..color = u.gray5,
+                ),
+                f.Circle(
+                  c: f.Offset.zero,
+                  radius: circleRadius,
+                  paint: f.Paint()
+                    ..color = u.black
+                    ..style = p.PaintingStyle.stroke
+                    ..strokeWidth = 2.0,
+                ),
+              ],
+            ),
+            f.Translate(
+              translation: f.Vector2(-halfSize, 0.0),
+              canvasOps: [
+                f.Circle(
+                  c: f.Offset.zero,
+                  radius: circleRadius,
+                  paint: f.Paint()..color = u.gray5,
+                ),
+                f.Circle(
+                  c: f.Offset.zero,
+                  radius: circleRadius,
+                  paint: f.Paint()
+                    ..color = u.black
+                    ..style = p.PaintingStyle.stroke
+                    ..strokeWidth = 2.0,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+const String title = 'Angular Motion';
+
+f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      config: f.Config(
+        modelCtor: _AngularMotionModel.init,
+        iur: _AngularMotionIur(),
+        clearCanvas: const f.ClearCanvas(),
+      ),
+      focusNode: focusNode,
+    );

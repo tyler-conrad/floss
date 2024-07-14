@@ -47,10 +47,7 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
 
   void _paint(m.Canvas canvas, m.Size size) {
     _size = size;
-    _config.iur
-        .render(model: _model)
-        .draw(canvas: canvas)
-        .toList();
+    _config.iur.render(model: _model).draw(canvas: canvas).toList();
   }
 
   void _paintWithBackground(
@@ -192,7 +189,7 @@ class _CanvasTickerState<M> extends m.State<_CanvasTicker>
 }
 
 class FlossWidget extends m.StatefulWidget {
-  final _focusNode = m.FocusNode();
+  final focusNode;
   final _inputEvents = ie.InputEventList(list: []);
 
   final c.Config _config;
@@ -200,25 +197,19 @@ class FlossWidget extends m.StatefulWidget {
   FlossWidget({
     super.key,
     required c.Config config,
+    required this.focusNode,
   }) : _config = config;
 
   @override
-  m.State<FlossWidget> createState() => _FlossApp();
+  m.State<FlossWidget> createState() => _FlossWidgetState();
 }
 
-class _FlossApp extends m.State<FlossWidget>
+class _FlossWidgetState extends m.State<FlossWidget>
     with m.SingleTickerProviderStateMixin {
-  @override
-  void dispose() {
-    widget._focusNode.dispose();
-    super.dispose();
-  }
-
   @override
   m.Widget build(m.BuildContext context) {
     return m.KeyboardListener(
-      focusNode: widget._focusNode,
-      autofocus: true,
+      focusNode: widget.focusNode,
       onKeyEvent: (event) {
         widget._inputEvents.list.add(
           ie.KeyEvent(

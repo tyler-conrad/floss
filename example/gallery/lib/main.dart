@@ -1,125 +1,160 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as m;
 
-void main() {
-  runApp(const MyApp());
+import 'package:floss/floss.dart' as f;
+
+import 'src/nature_of_code/chp_01_vectors/_1_1_bouncing_ball_no_vectors.dart'
+    as c1_1;
+import 'src/nature_of_code/chp_01_vectors/_1_2_bouncing_ball_vectors_object.dart'
+    as c1_2;
+import 'src/nature_of_code/chp_01_vectors/_1_3_vector_subtraction.dart' as c1_3;
+import 'src/nature_of_code/chp_01_vectors/_1_4_vector_multiplication.dart'
+    as c1_4;
+import 'src/nature_of_code/chp_01_vectors/_1_5_vector_magnitude.dart' as c1_5;
+import 'src/nature_of_code/chp_01_vectors/_1_6_vector_normalize.dart' as c1_6;
+import 'src/nature_of_code/chp_01_vectors/_1_7_motion101.dart' as c1_7;
+import 'src/nature_of_code/chp_01_vectors/_1_8_motion101_acceleration.dart'
+    as c1_8;
+import 'src/nature_of_code/chp_01_vectors/_1_9_motion101_acceleration.dart'
+    as c1_9;
+import 'src/nature_of_code/chp_01_vectors/_1_10_motion101_acceleration.dart'
+    as c1_10;
+import 'src/nature_of_code/chp_01_vectors/_1_11_motion101_acceleration_array.dart'
+    as c1_11;
+import 'src/nature_of_code/chp_02_forces/_2_1_forces.dart' as c2_1;
+import 'src/nature_of_code/chp_02_forces/_2_2_forces_many.dart' as c2_2;
+import 'src/nature_of_code/chp_02_forces/_2_3_forces_many_real_gravity.dart'
+    as c2_3;
+import 'src/nature_of_code/chp_02_forces/_2_4_forces_no_friction.dart'
+    as c2_4_1;
+import 'src/nature_of_code/chp_02_forces/_2_4_forces_friction.dart' as c2_4_2;
+import 'src/nature_of_code/chp_02_forces/_2_5_fluid_resistance.dart' as c2_5;
+import 'src/nature_of_code/chp_02_forces/_2_6_attraction.dart' as c2_6;
+import 'src/nature_of_code/chp_02_forces/_2_7_attraction_many.dart' as c2_7;
+import 'src/nature_of_code/chp_02_forces/_2_8_mutual_attraction.dart' as c2_8;
+import 'src/nature_of_code/chp_02_forces/_2_9_forces_many_mutual_boundaries.dart'
+    as c2_9;
+import 'src/nature_of_code/chp_02_forces/_2_10_attract_repel.dart' as c2_10;
+import 'src/nature_of_code/chp_03_oscillation/_3_01_angular_motion.dart'
+    as c3_1;
+import 'src/nature_of_code/chp_03_oscillation/_3_02_forces_angular_motion.dart'
+    as c3_2;
+
+class Example {
+  final String title;
+  final f.FlossWidget Function(m.FocusNode) widget;
+
+  const Example(this.title, this.widget);
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+const examples = <Example>[
+  Example(c1_1.title, c1_1.widget),
+  Example(c1_2.title, c1_2.widget),
+  Example(c1_3.title, c1_3.widget),
+  Example(c1_4.title, c1_4.widget),
+  Example(c1_5.title, c1_5.widget),
+  Example(c1_6.title, c1_6.widget),
+  Example(c1_7.title, c1_7.widget),
+  Example(c1_8.title, c1_8.widget),
+  Example(c1_9.title, c1_9.widget),
+  Example(c1_10.title, c1_10.widget),
+  Example(c1_11.title, c1_11.widget),
+  Example(c2_1.title, c2_1.widget),
+  Example(c2_2.title, c2_2.widget),
+  Example(c2_3.title, c2_3.widget),
+  Example(c2_4_1.title, c2_4_1.widget),
+  Example(c2_4_2.title, c2_4_2.widget),
+  Example(c2_5.title, c2_5.widget),
+  Example(c2_6.title, c2_6.widget),
+  Example(c2_7.title, c2_7.widget),
+  Example(c2_8.title, c2_8.widget),
+  Example(c2_9.title, c2_9.widget),
+  Example(c2_10.title, c2_10.widget),
+  Example(c3_1.title, c3_1.widget),
+  Example(c3_2.title, c3_2.widget),
+];
+
+class FlossGallery extends m.StatefulWidget {
+  static const List<String> tabTitles = ['Nature of Code', 'Generative Design'];
+
+  final m.FocusNode _focusNode = m.FocusNode();
+
+  FlossGallery({super.key});
+
+  @override
+  m.State<FlossGallery> createState() => _FlossGalleryState();
+}
+
+class _FlossGalleryState extends m.State<FlossGallery> {
+  @override
+  void dispose() {
+    widget._focusNode.dispose();
+    super.dispose();
+  }
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+  m.Widget build(m.BuildContext context) {
+    return m.MaterialApp(
+      title: 'Floss Gallery',
+      theme: m.ThemeData(
+        colorScheme: m.ColorScheme.fromSeed(
+          seedColor: m.Colors.blueGrey,
+          brightness: m.Brightness.light,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // darkTheme: m.ThemeData.dark(),
+      home: m.DefaultTabController(
+        initialIndex: 0,
+        length: FlossGallery.tabTitles.length,
+        child: m.Scaffold(
+          appBar: m.AppBar(
+            title: const m.Text('Floss Gallery'),
+            bottom: m.TabBar(
+              tabs: FlossGallery.tabTitles
+                  .map((title) => m.Tab(text: title))
+                  .toList(),
+            ),
+          ),
+          body: m.TabBarView(
+            children: [
+              m.LayoutBuilder(
+                builder:
+                    (m.BuildContext context, m.BoxConstraints constraints) {
+                  return m.GridView.count(
+                    crossAxisCount: 2,
+                    addAutomaticKeepAlives: false,
+                    addRepaintBoundaries: true,
+                    childAspectRatio:
+                        constraints.maxWidth / constraints.maxHeight,
+                    shrinkWrap: true,
+                    children: examples
+                        .map(
+                          (example) => m.GridTile(
+                            child: m.Card(
+                              elevation: 3.0,
+                              child: m.Column(
+                                children: [
+                                  m.Text(example.title),
+                                  m.Expanded(
+                                      child: example.widget(widget._focusNode)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  );
+                },
+              ),
+              const m.Text('Generative Design'),
+            ],
+          ),
+        ),
+      ),
     );
   }
+}
+
+void main() {
+  m.runApp(FlossGallery());
 }

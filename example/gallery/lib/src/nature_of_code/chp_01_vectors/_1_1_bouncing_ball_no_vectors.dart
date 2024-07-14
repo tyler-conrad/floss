@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart' as m;
+import 'package:flutter/painting.dart' as p;
+import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
-import '../../utils.dart' as u;
+import '../utils.dart' as u;
 
-class BallModel extends f.Model {
+class _BallModel extends f.Model {
   static const double pos = 100.0;
   static const double initXSpeed = 2.5;
   static const double initYSpeed = 2.0;
@@ -14,13 +15,13 @@ class BallModel extends f.Model {
   final double xSpeed;
   final double ySpeed;
 
-  BallModel.init({required super.size})
+  _BallModel.init({required super.size})
       : x = pos,
         y = pos,
         xSpeed = initXSpeed,
         ySpeed = initYSpeed;
 
-  BallModel.update({
+  _BallModel.update({
     required super.size,
     required this.x,
     required this.y,
@@ -29,8 +30,7 @@ class BallModel extends f.Model {
   });
 }
 
-class BallIur<M extends BallModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _BallIur<M extends _BallModel> extends f.IurBase<M> implements f.Iur<M> {
   static const double ballSize = 25.0;
 
   @override
@@ -44,7 +44,7 @@ class BallIur<M extends BallModel> extends f.IurBase<M>
     final y = model.y + model.ySpeed;
     final xSpeed = (x > size.width || x < 0) ? -model.xSpeed : model.xSpeed;
     final ySpeed = (y > size.height || y < 0) ? -model.ySpeed : model.ySpeed;
-    return BallModel.update(
+    return _BallModel.update(
       size: size,
       x: x,
       y: y,
@@ -71,9 +71,20 @@ class BallIur<M extends BallModel> extends f.IurBase<M>
           paint: f.Paint()
             ..color = u.black
             ..paint
-            ..style = m.PaintingStyle.stroke,
+            ..style = p.PaintingStyle.stroke,
         ),
       ],
     );
   }
 }
+
+const String title = 'Bouncing Ball No Vectors';
+
+f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      config: f.Config(
+        modelCtor: _BallModel.init,
+        iur: _BallIur(),
+        clearCanvas: const f.ClearCanvas(),
+      ),
+      focusNode: focusNode,
+    );

@@ -1,28 +1,29 @@
 import 'package:flutter/painting.dart' as p;
+import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
-import '../../utils.dart' as u;
+import '../utils.dart' as u;
 
 final f.Vector2 ballInitPos = f.Vector2(100.0, 100.0);
 final f.Vector2 ballInitVel = f.Vector2(2.5, 2.0);
 
-class Ball {
+class _Ball {
   static const double size = 8.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;
 
-  Ball()
+  _Ball()
       : position = ballInitPos,
         velocity = ballInitVel;
 
-  Ball.init({
+  _Ball.init({
     required this.position,
     required this.velocity,
   });
 
-  Ball update(f.Size size) {
+  _Ball update(f.Size size) {
     position.add(velocity);
     if (position.x > size.width || position.x < 0) {
       velocity.x = -velocity.x;
@@ -30,7 +31,7 @@ class Ball {
     if (position.y > size.height || position.y < 0) {
       velocity.y = -velocity.y;
     }
-    return Ball.init(
+    return _Ball.init(
       position: position,
       velocity: velocity,
     );
@@ -57,19 +58,18 @@ class Ball {
   }
 }
 
-class BallModel extends f.Model {
-  final Ball ball;
+class _BallModel extends f.Model {
+  final _Ball ball;
 
-  BallModel.init({required super.size}) : ball = Ball();
+  _BallModel.init({required super.size}) : ball = _Ball();
 
-  BallModel.update({
+  _BallModel.update({
     required super.size,
     required this.ball,
   });
 }
 
-class BallIur<M extends BallModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _BallIur<M extends _BallModel> extends f.IurBase<M> implements f.Iur<M> {
   @override
   M update({
     required M model,
@@ -77,7 +77,7 @@ class BallIur<M extends BallModel> extends f.IurBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    return BallModel.update(
+    return _BallModel.update(
       size: size,
       ball: model.ball.update(size),
     ) as M;
@@ -88,3 +88,18 @@ class BallIur<M extends BallModel> extends f.IurBase<M>
     return model.ball.display();
   }
 }
+
+const String title = 'Bouncing Ball Vectors Object';
+
+f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      config: f.Config(
+        modelCtor: _BallModel.init,
+        iur: _BallIur(),
+        clearCanvas: f.NoClearCanvas(
+          paint: f.Paint()
+            ..color = u.transparentWhite
+            ..blendMode = p.BlendMode.srcOver,
+        ),
+      ),
+      focusNode: focusNode,
+    );

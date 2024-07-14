@@ -56,5 +56,6 @@ class ExamplesWidget extends m.StatelessWidget {
         _child = child;
 
   @override
-  m.Widget build(m.BuildContext context) => m.MaterialApp(title: _title, home: m.Scaffold(body: _child));
+  m.Widget build(m.BuildContext context) =>
+      m.MaterialApp(title: _title, home: m.Scaffold(body: _child));
 }

@@ -1,18 +1,21 @@
 import 'package:flutter/painting.dart' as p;
+import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
-import '../../utils.dart' as u;
+import '../utils.dart' as u;
 
-class Mover {
+class _Mover {
   static const double size = 8.0;
+  static const double massMin = 1.0;
+  static const double massMax = 4.0;
 
   final double mass;
   final f.Vector2 position;
   final f.Vector2 velocity;
   final f.Vector2 acceleration;
 
-  Mover({
+  _Mover({
     required double m,
     required this.position,
   })  : mass = m,
@@ -67,30 +70,32 @@ class Mover {
   }
 }
 
-class ForcesManyModel extends f.Model {
+class _NoFrictionModel extends f.Model {
   static const int numMovers = 20;
 
-  final List<Mover> movers;
+  final List<_Mover> movers;
 
-  ForcesManyModel.init({required super.size})
+  _NoFrictionModel.init({required super.size})
       : movers = List.generate(
           numMovers,
-          (_) => Mover(
-            m: u.randDoubleRange(0.1, 4.0),
-            position: f.Vector2.zero(),
+          (_) => _Mover(
+            m: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
+            position: f.Vector2(
+              u.randDoubleRange(0.0, size.width),
+              0.0,
+            ),
           ),
         ).toList();
 
-  ForcesManyModel.update({
+  _NoFrictionModel.update({
     required super.size,
     required this.movers,
   });
 }
 
-class ForcesManyIur<M extends ForcesManyModel> extends f.IurBase<M>
+class _NoFrictionIur<M extends _NoFrictionModel> extends f.IurBase<M>
     implements f.Iur<M> {
-  final f.Vector2 wind = f.Vector2(0.01, 0.0);
-  final f.Vector2 gravity = f.Vector2(0.0, 0.1);
+  static const double gFactor = 0.1;
 
   @override
   M update({
@@ -99,8 +104,10 @@ class ForcesManyIur<M extends ForcesManyModel> extends f.IurBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
+    final wind = f.Vector2(0.01, 0.0);
     for (final m in model.movers) {
       m.applyForce(wind);
+      final gravity = f.Vector2(0.0, gFactor * m.mass);
       m.applyForce(gravity);
       m.update();
       m.checkEdges(
@@ -111,7 +118,7 @@ class ForcesManyIur<M extends ForcesManyModel> extends f.IurBase<M>
       );
     }
 
-    return ForcesManyModel.update(
+    return _NoFrictionModel.update(
       size: size,
       movers: model.movers,
     ) as M;
@@ -126,3 +133,14 @@ class ForcesManyIur<M extends ForcesManyModel> extends f.IurBase<M>
     );
   }
 }
+
+const String title = 'Forces - No Friction';
+
+f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      config: f.Config(
+        modelCtor: _NoFrictionModel.init,
+        iur: _NoFrictionIur(),
+        clearCanvas: const f.ClearCanvas(),
+      ),
+      focusNode: focusNode,
+    );

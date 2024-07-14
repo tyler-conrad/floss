@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
-import '../../utils.dart' as u;
+import '../utils.dart' as u;
 
-class Attractor {
+class _Attractor {
   static const double g = 1.0;
   static const double mass = 10.0;
   static const double radius = mass * 3.0;
@@ -19,19 +19,19 @@ class Attractor {
   bool dragging;
   bool rollover;
 
-  Attractor({required this.position})
+  _Attractor({required this.position})
       : dragOffset = f.Vector2.zero(),
         dragging = false,
         rollover = false;
 
-  Attractor.update({
+  _Attractor.update({
     required this.position,
     required this.dragOffset,
     required this.dragging,
     required this.rollover,
   });
 
-  f.Vector2 attract(Mover m) {
+  f.Vector2 attract(_Mover m) {
     final force = position - m.position;
     double d = force.length;
     d = math.min(math.max(massMin, d), massMax);
@@ -92,7 +92,7 @@ class Attractor {
   }
 }
 
-class Mover {
+class _Mover {
   static const double forceLenMin = 1.0;
   static const double forceLenMax = 10000.0;
   static const double massMin = 4.0;
@@ -103,7 +103,7 @@ class Mover {
   final f.Vector2 velocity;
   final f.Vector2 acceleration;
 
-  Mover({
+  _Mover({
     required this.mass,
     required this.position,
   })  : velocity = f.Vector2.zero(),
@@ -139,34 +139,34 @@ class Mover {
     );
   }
 
-  f.Vector2 repel(Mover m) {
+  f.Vector2 repel(_Mover m) {
     final force = position - m.position;
     double d = force.length;
     d = math.min(math.max(forceLenMin, d), forceLenMax);
     force.normalize();
-    final strength = (Attractor.g * mass * m.mass) / (d * d);
+    final strength = (_Attractor.g * mass * m.mass) / (d * d);
     return force * (-1.0 * strength);
   }
 }
 
-class AttractRepelModel extends f.Model {
+class _AttractRepelModel extends f.Model {
   static const int numMovers = 20;
 
-  final List<Mover> movers;
-  final Attractor attractor;
+  final List<_Mover> movers;
+  final _Attractor attractor;
   final f.Vector2 mouse;
 
-  AttractRepelModel.init({required super.size})
+  _AttractRepelModel.init({required super.size})
       : movers = List.generate(
           numMovers,
-          (_) => Mover(
-              mass: u.randDoubleRange(Mover.massMin, Mover.massMax),
+          (_) => _Mover(
+              mass: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
               position: f.Vector2(
                 u.randDoubleRange(0.0, size.width),
                 u.randDoubleRange(0.0, size.height),
               )),
         ).toList(),
-        attractor = Attractor(
+        attractor = _Attractor(
           position: f.Vector2(
             size.width * 0.5,
             size.height * 0.5,
@@ -177,7 +177,7 @@ class AttractRepelModel extends f.Model {
           size.height * 0.5,
         );
 
-  AttractRepelModel.update({
+  _AttractRepelModel.update({
     required super.size,
     required this.movers,
     required this.attractor,
@@ -185,7 +185,7 @@ class AttractRepelModel extends f.Model {
   });
 }
 
-class AttractRepelIur<M extends AttractRepelModel> extends f.IurBase<M>
+class _AttractRepelIur<M extends _AttractRepelModel> extends f.IurBase<M>
     implements f.Iur<M> {
   @override
   M update({
@@ -239,7 +239,7 @@ class AttractRepelIur<M extends AttractRepelModel> extends f.IurBase<M>
       left.update();
     }
 
-    return AttractRepelModel.update(
+    return _AttractRepelModel.update(
       size: size,
       movers: model.movers,
       attractor: model.attractor,
@@ -259,3 +259,14 @@ class AttractRepelIur<M extends AttractRepelModel> extends f.IurBase<M>
     );
   }
 }
+
+const String title = 'Attract Repel';
+
+f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      config: f.Config(
+        modelCtor: _AttractRepelModel.init,
+        iur: _AttractRepelIur(),
+        clearCanvas: const f.ClearCanvas(),
+      ),
+      focusNode: focusNode,
+    );

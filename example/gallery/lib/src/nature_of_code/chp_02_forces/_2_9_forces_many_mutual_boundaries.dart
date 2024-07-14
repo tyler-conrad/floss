@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
-import '../../utils.dart' as u;
+import '../utils.dart' as u;
 
-class Mover {
+class _Mover {
   static const double size = 8.0;
   static const double g = 0.4;
   static const double padding = 50.0;
@@ -22,7 +22,7 @@ class Mover {
   final f.Vector2 velocity;
   final f.Vector2 acceleration;
 
-  Mover({
+  _Mover({
     required double m,
     required this.position,
   })  : mass = m,
@@ -59,7 +59,7 @@ class Mover {
     );
   }
 
-  f.Vector2 attract(Mover m) {
+  f.Vector2 attract(_Mover m) {
     final force = position - m.position;
     double d = force.length;
     d = math.min(math.max(forceLenMin, d), forceLenMax);
@@ -92,16 +92,16 @@ class Mover {
   }
 }
 
-class ForcesManyMutualBoundariesModel extends f.Model {
+class _ForcesManyMutualBoundariesModel extends f.Model {
   static const int numMovers = 20;
 
-  final List<Mover> movers;
+  final List<_Mover> movers;
 
-  ForcesManyMutualBoundariesModel.init({required super.size})
+  _ForcesManyMutualBoundariesModel.init({required super.size})
       : movers = List.generate(
           numMovers,
-          (_) => Mover(
-            m: u.randDoubleRange(Mover.massMin, Mover.massMax),
+          (_) => _Mover(
+            m: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
             position: f.Vector2(
               u.randDoubleRange(0.0, size.width),
               u.randDoubleRange(0.0, size.height),
@@ -109,13 +109,13 @@ class ForcesManyMutualBoundariesModel extends f.Model {
           ),
         ).toList();
 
-  ForcesManyMutualBoundariesModel.update({
+  _ForcesManyMutualBoundariesModel.update({
     required super.size,
     required this.movers,
   });
 }
 
-class ForcesManyMutualBoundariesIur<M extends ForcesManyMutualBoundariesModel>
+class _ForcesManyMutualBoundariesIur<M extends _ForcesManyMutualBoundariesModel>
     extends f.IurBase<M> implements f.Iur<M> {
   @override
   M update({
@@ -138,7 +138,7 @@ class ForcesManyMutualBoundariesIur<M extends ForcesManyMutualBoundariesModel>
       );
       left.update();
     }
-    return ForcesManyMutualBoundariesModel.update(
+    return _ForcesManyMutualBoundariesModel.update(
       size: size,
       movers: model.movers,
     ) as M;
@@ -153,3 +153,14 @@ class ForcesManyMutualBoundariesIur<M extends ForcesManyMutualBoundariesModel>
     );
   }
 }
+
+const String title = 'Forces - Many Mutual Boundaries';
+
+f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      config: f.Config(
+        modelCtor: _ForcesManyMutualBoundariesModel.init,
+        iur: _ForcesManyMutualBoundariesIur(),
+        clearCanvas: const f.ClearCanvas(),
+      ),
+      focusNode: focusNode,
+    );

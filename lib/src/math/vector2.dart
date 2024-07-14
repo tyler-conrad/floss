@@ -82,7 +82,7 @@ class Vector2 {
 
   double operator [](int i) => _v[i];
 
-  void operator []=(int i, double v) => this._v[i] = v;
+  void operator []=(int i, double v) => _v[i] = v;
 
   void absolute() => _v.absolute();
 
@@ -132,7 +132,8 @@ class Vector2 {
 
   double normalize() => _v.normalize();
 
-  Vector2 normalizeInto(Vector2 out) => Vector2.fromVec(_v.normalizeInto(out._v));
+  Vector2 normalizeInto(Vector2 out) =>
+      Vector2.fromVec(_v.normalizeInto(out._v));
 
   Vector2 normalized() => Vector2.fromVec(_v.normalized());
 
