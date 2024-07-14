@@ -15,6 +15,7 @@ class _VecSubModel extends f.Model {
   });
 }
 
+//
 class _VecSubIur<M extends _VecSubModel> extends f.IurBase<M>
     implements f.Iur<M> {
   @override
@@ -25,7 +26,7 @@ class _VecSubIur<M extends _VecSubModel> extends f.IurBase<M>
     required f.InputEventList inputEvents,
   }) {
     f.Vector2? mouse;
-    for (final ie in inputEvents.list) {
+    for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
           mouse = f.Vector2(

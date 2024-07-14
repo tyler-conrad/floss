@@ -196,7 +196,7 @@ class _AttractRepelIur<M extends _AttractRepelModel> extends f.IurBase<M>
   }) {
     f.Vector2? mouse;
 
-    for (final ie in inputEvents.list) {
+    for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
           mouse = f.Vector2(

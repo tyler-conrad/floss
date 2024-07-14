@@ -108,7 +108,7 @@ class _AccArrayIur<M extends _AccArrayModel> extends f.IurBase<M>
     required f.InputEventList inputEvents,
   }) {
     f.Vector2? mousePos;
-    for (final ie in inputEvents.list) {
+    for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
           mousePos = f.Vector2(

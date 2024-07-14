@@ -12,52 +12,48 @@ import 'config.dart' as c;
 import 'miur.dart' as miur;
 
 class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
-  final c.Config _config;
-  final m.ValueNotifier<Duration> _elapsed;
-  final ie.InputEventList _inputEvents;
-  m.Size _size;
-  M _model;
-  ui.Image? _background;
+  final c.Config config;
+  final m.ValueNotifier<Duration> elapsed;
+  final ie.InputEventList inputEvents;
+  m.Size size;
+  M model;
+  ui.Image? background;
 
   _FlossPainter({
-    required m.Size size,
-    required m.ValueNotifier<Duration> elapsed,
-    required ie.InputEventList inputEvents,
-    required c.Config config,
     required m.Listenable super.repaint,
-  })  : _size = size,
-        _elapsed = elapsed,
-        _inputEvents = inputEvents,
-        _config = config,
-        _model = config.iur.init(
+    required this.size,
+    required this.elapsed,
+    required this.inputEvents,
+    required this.config,
+  }) : model = config.iur.init(
           modelCtor: config.modelCtor,
           size: g.Size.fromSize(size),
         );
 
-  void _tick(Duration elapsed) {
-    _elapsed.value = elapsed;
-    _model = _config.iur.update(
-      model: _model,
-      time: elapsed,
-      size: g.Size.fromSize(_size),
-      inputEvents: _inputEvents,
+  void _tick(Duration elapsed_) {
+    elapsed.value = elapsed_;
+    model = config.iur.update(
+      model: model,
+      time: elapsed_,
+      size: g.Size.fromSize(size),
+      inputEvents: inputEvents,
     );
-    _inputEvents.clear();
+    inputEvents.clear();
   }
 
-  void _paint(m.Canvas canvas, m.Size size) {
-    _size = size;
-    _config.iur.render(model: _model).draw(canvas: canvas).toList();
+  void _paint(m.Canvas canvas, m.Size s) {
+    size = s;
+    config.iur.render(model: model).draw(canvas: canvas).toList();
   }
 
   void _paintWithBackground(
     m.Canvas canvas,
-    m.Size size,
+    m.Size s,
     pt.Paint paint,
   ) {
-    _size = size;
+    size = s;
 
-    final drawing = _config.iur.render(model: _model);
+    final drawing = config.iur.render(model: model);
 
     try {
       assert(
@@ -73,18 +69,18 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
 
     final pictures = go.Drawing(
       canvasOps: [
-        if (_background != null)
+        if (background != null)
           go.Image(
-            image: _background!,
+            image: background!,
             offset: g.Offset.zero,
             paint: paint,
           ),
         go.BackgroundPicture(
           size: g.Size.fromSize(size),
           canvasOps: [
-            if (_background != null)
+            if (background != null)
               go.Image(
-                image: _background!,
+                image: background!,
                 offset: g.Offset.zero,
                 paint: paint,
               ),
@@ -98,7 +94,7 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
         case go.BackgroundPictureType(:final picture):
           picture.toImage(size.width.round(), size.height.round()).then(
             (i) {
-              _background = i;
+              background = i;
             },
           );
         case go.CanvasPictureType():
@@ -112,7 +108,7 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
     m.Canvas canvas,
     m.Size size,
   ) {
-    switch (_config.clearCanvas) {
+    switch (config.clearCanvas) {
       case c.ClearCanvas():
         _paint(canvas, size);
 
@@ -127,19 +123,17 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
 }
 
 class _CanvasTicker<IUR> extends m.StatefulWidget {
-  final c.Config _config;
-  final m.Size _size;
-  final ie.InputEventList _inputEvents;
-  final _time = m.ValueNotifier(Duration.zero);
+  final c.Config config;
+  final m.Size size;
+  final ie.InputEventList inputEvents;
+  final time = m.ValueNotifier(Duration.zero);
 
   _CanvasTicker({
     super.key,
-    required c.Config config,
-    required m.Size size,
-    required ie.InputEventList inputEvents,
-  })  : _config = config,
-        _size = size,
-        _inputEvents = inputEvents;
+    required this.config,
+    required this.size,
+    required this.inputEvents,
+  });
 
   @override
   m.State<_CanvasTicker> createState() => _CanvasTickerState();
@@ -147,28 +141,28 @@ class _CanvasTicker<IUR> extends m.StatefulWidget {
 
 class _CanvasTickerState<M> extends m.State<_CanvasTicker>
     with m.SingleTickerProviderStateMixin {
-  late final s.Ticker _ticker;
-  late final _FlossPainter _painter;
+  late final s.Ticker ticker;
+  late final _FlossPainter painter;
 
   @override
   void initState() {
     super.initState();
-    _painter = _FlossPainter(
-      repaint: widget._time,
-      config: widget._config,
-      size: widget._size,
-      elapsed: widget._time,
-      inputEvents: widget._inputEvents,
+    painter = _FlossPainter(
+      repaint: widget.time,
+      config: widget.config,
+      size: widget.size,
+      elapsed: widget.time,
+      inputEvents: widget.inputEvents,
     );
 
-    _ticker = createTicker(_painter._tick);
-    _ticker.start();
+    ticker = createTicker(painter._tick);
+    ticker.start();
   }
 
   @override
   void dispose() {
-    widget._time.dispose();
-    _ticker.dispose();
+    widget.time.dispose();
+    ticker.dispose();
     super.dispose();
   }
 
@@ -177,11 +171,11 @@ class _CanvasTickerState<M> extends m.State<_CanvasTicker>
     return m.RepaintBoundary(
       child: m.ClipRect(
         child: m.CustomPaint(
-          size: widget._size,
+          size: widget.size,
           isComplex: true,
           willChange: true,
-          painter: _painter,
-          child: m.Container(),
+          painter: painter,
+          child: const m.SizedBox.expand(),
         ),
       ),
     );
@@ -189,16 +183,15 @@ class _CanvasTickerState<M> extends m.State<_CanvasTicker>
 }
 
 class FlossWidget extends m.StatefulWidget {
-  final focusNode;
-  final _inputEvents = ie.InputEventList(list: []);
-
   final c.Config _config;
+  final m.FocusNode _focusNode;
 
-  FlossWidget({
+  const FlossWidget({
     super.key,
     required c.Config config,
-    required this.focusNode,
-  }) : _config = config;
+    required m.FocusNode focusNode,
+  })  : _focusNode = focusNode,
+        _config = config;
 
   @override
   m.State<FlossWidget> createState() => _FlossWidgetState();
@@ -206,12 +199,14 @@ class FlossWidget extends m.StatefulWidget {
 
 class _FlossWidgetState extends m.State<FlossWidget>
     with m.SingleTickerProviderStateMixin {
+  final ie.InputEventList inputEvents = ie.InputEventList();
+
   @override
   m.Widget build(m.BuildContext context) {
     return m.KeyboardListener(
-      focusNode: widget.focusNode,
+      focusNode: widget._focusNode,
       onKeyEvent: (event) {
-        widget._inputEvents.list.add(
+        inputEvents.add(
           ie.KeyEvent(
             event: event,
           ),
@@ -220,63 +215,63 @@ class _FlossWidgetState extends m.State<FlossWidget>
       child: m.Listener(
         behavior: m.HitTestBehavior.deferToChild,
         onPointerDown: (event) {
-          widget._inputEvents.list.add(
+          inputEvents.add(
             ie.PointerDown(
               event: event,
             ),
           );
         },
         onPointerMove: (event) {
-          widget._inputEvents.list.add(
+          inputEvents.add(
             ie.PointerMove(
               event: event,
             ),
           );
         },
         onPointerUp: (event) {
-          widget._inputEvents.list.add(
+          inputEvents.add(
             ie.PointerUp(
               event: event,
             ),
           );
         },
         onPointerHover: (event) {
-          widget._inputEvents.list.add(
+          inputEvents.add(
             ie.PointerHover(
               event: event,
             ),
           );
         },
         onPointerCancel: (event) {
-          widget._inputEvents.list.add(
+          inputEvents.add(
             ie.PointerCancel(
               event: event,
             ),
           );
         },
         onPointerPanZoomStart: (event) {
-          widget._inputEvents.list.add(
+          inputEvents.add(
             ie.PointerPanZoomStart(
               event: event,
             ),
           );
         },
         onPointerPanZoomUpdate: (event) {
-          widget._inputEvents.list.add(
+          inputEvents.add(
             ie.PointerPanZoomUpdate(
               event: event,
             ),
           );
         },
         onPointerPanZoomEnd: (event) {
-          widget._inputEvents.list.add(
+          inputEvents.add(
             ie.PointerPanZoomEnd(
               event: event,
             ),
           );
         },
         onPointerSignal: (event) {
-          widget._inputEvents.list.add(
+          inputEvents.add(
             ie.PointerSignal(
               event: event,
             ),
@@ -285,262 +280,262 @@ class _FlossWidgetState extends m.State<FlossWidget>
         child: m.GestureDetector(
           behavior: m.HitTestBehavior.deferToChild,
           onTapDown: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.TapDown(
                 details: details,
               ),
             );
           },
           onTapUp: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.TapUp(
                 details: details,
               ),
             );
           },
           onTap: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.Tap(),
             );
           },
           onTapCancel: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.TapCancel(),
             );
           },
           onSecondaryTap: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.SecondaryTap(),
             );
           },
           onSecondaryTapDown: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.SecondaryTapDown(
                 details: details,
               ),
             );
           },
           onSecondaryTapUp: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.SecondaryTapUp(
                 details: details,
               ),
             );
           },
           onSecondaryTapCancel: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.SecondaryTapCancel(),
             );
           },
           onTertiaryTapDown: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.TertiaryTapDown(
                 details: details,
               ),
             );
           },
           onTertiaryTapUp: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.TertiaryTapUp(
                 details: details,
               ),
             );
           },
           onTertiaryTapCancel: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.TertiaryTapCancel(),
             );
           },
           onDoubleTapDown: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.DoubleTapDown(
                 details: details,
               ),
             );
           },
           onDoubleTap: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.DoubleTap(),
             );
           },
           onDoubleTapCancel: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.DoubleTapCancel(),
             );
           },
           onLongPressDown: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.LongPressDown(
                 details: details,
               ),
             );
           },
           onLongPressCancel: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.LongPressCancel(),
             );
           },
           onLongPress: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.LongPress(),
             );
           },
           onLongPressStart: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.LongPressStart(
                 details: details,
               ),
             );
           },
           onLongPressMoveUpdate: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.LongPressMoveUpdate(
                 details: details,
               ),
             );
           },
           onLongPressUp: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.LongPressUp(),
             );
           },
           onLongPressEnd: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.LongPressEnd(
                 details: details,
               ),
             );
           },
           onSecondaryLongPressDown: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.SecondaryLongPressDown(
                 details: details,
               ),
             );
           },
           onSecondaryLongPressCancel: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.SecondaryLongPressCancel(),
             );
           },
           onSecondaryLongPress: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.SecondaryLongPress(),
             );
           },
           onSecondaryLongPressStart: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.SecondaryLongPressStart(
                 details: details,
               ),
             );
           },
           onSecondaryLongPressMoveUpdate: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.SecondaryLongPressMoveUpdate(
                 details: details,
               ),
             );
           },
           onSecondaryLongPressUp: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.SecondaryLongPressUp(),
             );
           },
           onSecondaryLongPressEnd: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.SecondaryLongPressEnd(
                 details: details,
               ),
             );
           },
           onTertiaryLongPressDown: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.TertiaryLongPressDown(
                 details: details,
               ),
             );
           },
           onTertiaryLongPressCancel: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.TertiaryLongPressCancel(),
             );
           },
           onTertiaryLongPress: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.TertiaryLongPress(),
             );
           },
           onTertiaryLongPressStart: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.TertiaryLongPressStart(
                 details: details,
               ),
             );
           },
           onTertiaryLongPressMoveUpdate: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.TertiaryLongPressMoveUpdate(
                 details: details,
               ),
             );
           },
           onTertiaryLongPressUp: () {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               const ie.TertiaryLongPressUp(),
             );
           },
           onTertiaryLongPressEnd: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.TertiaryLongPressEnd(
                 details: details,
               ),
             );
           },
           onForcePressStart: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.ForcePressStart(
                 details: details,
               ),
             );
           },
           onForcePressPeak: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.ForcePressPeak(
                 details: details,
               ),
             );
           },
           onForcePressUpdate: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.ForcePressUpdate(
                 details: details,
               ),
             );
           },
           onForcePressEnd: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.ForcePressEnd(
                 details: details,
               ),
             );
           },
           onScaleStart: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.ScaleStart(
                 details: details,
               ),
             );
           },
           onScaleUpdate: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.ScaleUpdate(
                 details: details,
               ),
             );
           },
           onScaleEnd: (details) {
-            widget._inputEvents.list.add(
+            inputEvents.add(
               ie.ScaleEnd(
                 details: details,
               ),
@@ -550,7 +545,7 @@ class _FlossWidgetState extends m.State<FlossWidget>
             builder: (context, constraints) {
               return _CanvasTicker(
                 size: constraints.biggest,
-                inputEvents: widget._inputEvents,
+                inputEvents: inputEvents,
                 config: widget._config,
               );
             },

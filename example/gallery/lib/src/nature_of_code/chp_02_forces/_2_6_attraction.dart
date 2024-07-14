@@ -23,13 +23,6 @@ class _Attractor {
         rollover = false,
         dragOffset = f.Vector2.zero();
 
-  _Attractor.update({
-    required this.position,
-    required this.dragging,
-    required this.rollover,
-    required this.dragOffset,
-  });
-
   f.Vector2 attract(_Mover m) {
     final force = position - m.position;
     double d = force.length;
@@ -187,7 +180,7 @@ class _AttractionIur<M extends _AttractionModel> extends f.IurBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    for (final ie in inputEvents.list) {
+    for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
           model.attractor.clicked(

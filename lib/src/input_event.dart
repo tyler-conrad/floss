@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/gestures.dart' as g;
 import 'package:flutter/services.dart' as s;
 
@@ -311,9 +313,13 @@ class KeyEvent extends InputEvent {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class InputEventList {
-  final List<InputEvent> list;
-  InputEventList({required this.list});
+class InputEventList with IterableMixin<InputEvent> {
+  final List<InputEvent> _list = [];
 
-  void clear() => list.clear();
+  void add(InputEvent event) => _list.add(event);
+
+  void clear() => _list.clear();
+
+  @override
+  Iterator<InputEvent> get iterator => _list.iterator;
 }

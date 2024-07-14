@@ -143,7 +143,7 @@ class _FluidIur<M extends _FluidModel> extends f.IurBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    for (final ie in inputEvents.list) {
+    for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown():
           model.movers.clear();

@@ -622,10 +622,6 @@ class Drawing extends CanvasOp implements ICanvasOp {
 
   const Drawing({required List<CanvasOp> canvasOps}) : _canvasOps = canvasOps;
 
-  // Iterable<PictureType> _draw(
-  //         {required List<CanvasOp> canvasOps, required ui.Canvas canvas}) =>
-  //     canvasOps.map((co) => co.draw(canvas: canvas)).expand((e) => e);
-
   Iterable<PictureType> _draw({required ui.Canvas canvas}) =>
       _canvasOps.expand((op) => op.draw(canvas: canvas));
 
@@ -641,112 +637,53 @@ class Drawing extends CanvasOp implements ICanvasOp {
   @override
   Iterable<PictureType> draw({required ui.Canvas canvas}) {
     switch (this) {
-      case Translate(
-          :final _translation,
-          // :final _canvasOps,
-        ):
+      case Translate(:final _translation):
         canvas.save();
-        canvas.translate(
-          _translation.x,
-          _translation.y,
-        );
-        final d = _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+        canvas.translate(_translation.x, _translation.y);
+        final d = _draw(canvas: canvas).toList();
         canvas.restore();
         return d;
 
-      case Rotate(
-          :final _radians,
-          // :final _canvasOps,
-        ):
+      case Rotate(:final _radians):
         canvas.save();
         canvas.rotate(_radians);
-        final d = _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+        final d = _draw(canvas: canvas).toList();
         canvas.restore();
         return d;
 
-      case Scale(
-          :final _scale,
-          // :final _canvasOps,
-        ):
+      case Scale(:final _scale):
         canvas.save();
-        canvas.scale(
-          _scale.x,
-          _scale.y,
-        );
-        final d = _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+        canvas.scale(_scale.x, _scale.y);
+        final d = _draw(canvas: canvas).toList();
         canvas.restore();
         return d;
 
-      case Skew(
-          :final _skew,
-          // :final _canvasOps,
-        ):
+      case Skew(:final _skew):
         canvas.save();
-        canvas.skew(
-          _skew.x,
-          _skew.y,
-        );
-        final d = _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+        canvas.skew(_skew.x, _skew.y);
+        final d = _draw(canvas: canvas).toList();
         canvas.restore();
         return d;
 
-      case Transform(
-          :final _matrix4,
-          // :final _canvasOps,
-        ):
+      case Transform(:final _matrix4):
         canvas.save();
         canvas.transform(
-          td.Float64List.fromList(
-            _matrix4.storage,
-          ),
+          td.Float64List.fromList(_matrix4.storage),
         );
-        final d = _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+        final d = _draw(canvas: canvas).toList();
         canvas.restore();
         return d;
 
-      case ClipPath(
-          :final _path,
-          :final _doAntiAlias,
-          // :final _canvasOps,
-        ):
+      case ClipPath(:final _path, :final _doAntiAlias):
         canvas.save();
-        final ps = _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
-        canvas.clipPath(
-          _path,
-          doAntiAlias: _doAntiAlias,
-        );
+        final ps = _draw(canvas: canvas).toList();
+        canvas.clipPath(_path, doAntiAlias: _doAntiAlias);
         canvas.restore();
         return ps;
 
-      case ClipRect(
-          :final _rect,
-          :final _clipOp,
-          :final _doAntiAlias,
-          // :final _canvasOps,
-        ):
+      case ClipRect(:final _rect, :final _clipOp, :final _doAntiAlias):
         canvas.save();
-        final ps = _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+        final ps = _draw(canvas: canvas).toList();
         canvas.clipRect(
           _rect.rect,
           clipOp: _clipOp,
@@ -755,97 +692,45 @@ class Drawing extends CanvasOp implements ICanvasOp {
         canvas.restore();
         return ps;
 
-      case ClipRRect(
-          :final _rrect,
-          :final _doAntiAlias,
-          // :final _canvasOps,
-        ):
+      case ClipRRect(:final _rrect, :final _doAntiAlias):
         canvas.save();
-        final ps = _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
-        canvas.clipRRect(
-          _rrect.rrect,
-          doAntiAlias: _doAntiAlias,
-        );
+        final ps = _draw(canvas: canvas).toList();
+        canvas.clipRRect(_rrect.rrect, doAntiAlias: _doAntiAlias);
         canvas.restore();
         return ps;
 
-      case Save(
-          // :final _canvasOps,
-        ):
+      case Save():
         canvas.save();
-        return _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+        return _draw(canvas: canvas).toList();
 
-      case SaveLayer(
-          :final _bounds,
-          :final _paint,
-          // :final _canvasOps,
-        ):
-        canvas.saveLayer(
-          _bounds.rect,
-          _paint.paint,
-        );
-        return _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+      case SaveLayer(:final _bounds, :final _paint):
+        canvas.saveLayer(_bounds.rect, _paint.paint);
+        return _draw(canvas: canvas).toList();
 
-      case Restore(
-          // :final _canvasOps,
-        ):
+      case Restore():
         canvas.restore();
-        return _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+        return _draw(canvas: canvas).toList();
 
-      case RestoreToCount(
-          :final _count,
-          // :final _canvasOps,
-        ):
+      case RestoreToCount(:final _count):
         canvas.restoreToCount(_count);
-        return _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+        return _draw(canvas: canvas).toList();
 
-      case BackgroundPicture(
-          :final _size,
-          :final _canvasOps,
-        ):
+      case BackgroundPicture(:final _size):
         final ui.PictureRecorder recorder = ui.PictureRecorder();
         final canvas = ui.Canvas(
           recorder,
-          g.Rect.fromOffsetSize(
-            g.Offset(0.0, 0.0),
-            _size,
-          ).rect,
+          g.Rect.fromOffsetSize(g.Offset(0.0, 0.0), _size).rect,
         );
         final painter = _Painter(
-          drawing: _BackgroundDrawing(
-            canvasOps: _canvasOps,
-          ),
-        )..paint(
-            canvas,
-            _size.size,
-          );
+          drawing: _BackgroundDrawing(canvasOps: _canvasOps),
+        )..paint(canvas, _size.size);
         return [
           ...painter._pictures,
           BackgroundPictureType(picture: recorder.endRecording()),
         ];
 
-      case Drawing(
-          // :final _canvasOps,
-        ):
-        return _draw(
-          // canvasOps: _canvasOps,
-          canvas: canvas,
-        ).toList();
+      case Drawing():
+        return _draw(canvas: canvas).toList();
     }
   }
 }

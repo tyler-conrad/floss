@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart' as m;
 
+import 'package:collection/collection.dart';
+
 import 'package:floss/floss.dart' as f;
 
 import 'src/nature_of_code/chp_01_vectors/_1_1_bouncing_ball_no_vectors.dart'
@@ -46,108 +48,302 @@ class Example {
   const Example(this.title, this.widget);
 }
 
-const examples = <Example>[
-  Example(c1_1.title, c1_1.widget),
-  Example(c1_2.title, c1_2.widget),
-  Example(c1_3.title, c1_3.widget),
-  Example(c1_4.title, c1_4.widget),
-  Example(c1_5.title, c1_5.widget),
-  Example(c1_6.title, c1_6.widget),
-  Example(c1_7.title, c1_7.widget),
-  Example(c1_8.title, c1_8.widget),
-  Example(c1_9.title, c1_9.widget),
-  Example(c1_10.title, c1_10.widget),
-  Example(c1_11.title, c1_11.widget),
-  Example(c2_1.title, c2_1.widget),
-  Example(c2_2.title, c2_2.widget),
-  Example(c2_3.title, c2_3.widget),
-  Example(c2_4_1.title, c2_4_1.widget),
-  Example(c2_4_2.title, c2_4_2.widget),
-  Example(c2_5.title, c2_5.widget),
-  Example(c2_6.title, c2_6.widget),
-  Example(c2_7.title, c2_7.widget),
-  Example(c2_8.title, c2_8.widget),
-  Example(c2_9.title, c2_9.widget),
-  Example(c2_10.title, c2_10.widget),
-  Example(c3_1.title, c3_1.widget),
-  Example(c3_2.title, c3_2.widget),
+final examples = <Example>[
+  const Example(c1_1.title, c1_1.widget),
+  const Example(c1_2.title, c1_2.widget),
+  const Example(c1_3.title, c1_3.widget),
+  const Example(c1_4.title, c1_4.widget),
+  const Example(c1_5.title, c1_5.widget),
+  const Example(c1_6.title, c1_6.widget),
+  const Example(c1_7.title, c1_7.widget),
+  const Example(c1_8.title, c1_8.widget),
+  const Example(c1_9.title, c1_9.widget),
+  const Example(c1_10.title, c1_10.widget),
+  const Example(c1_11.title, c1_11.widget),
+  const Example(c2_1.title, c2_1.widget),
+  const Example(c2_2.title, c2_2.widget),
+  const Example(c2_3.title, c2_3.widget),
+  const Example(c2_4_1.title, c2_4_1.widget),
+  const Example(c2_4_2.title, c2_4_2.widget),
+  const Example(c2_5.title, c2_5.widget),
+  const Example(c2_6.title, c2_6.widget),
+  const Example(c2_7.title, c2_7.widget),
+  const Example(c2_8.title, c2_8.widget),
+  const Example(c2_9.title, c2_9.widget),
+  const Example(c2_10.title, c2_10.widget),
+  const Example(c3_1.title, c3_1.widget),
+  const Example(c3_2.title, c3_2.widget),
 ];
 
-class FlossGallery extends m.StatefulWidget {
-  static const List<String> tabTitles = ['Nature of Code', 'Generative Design'];
+class _ExampleGridTile extends m.StatefulWidget {
+  final Example example;
+  final m.FocusNode focusNode;
+  final void Function() onPressed;
 
-  final m.FocusNode _focusNode = m.FocusNode();
-
-  FlossGallery({super.key});
+  const _ExampleGridTile({
+    super.key,
+    required this.example,
+    required this.focusNode,
+    required this.onPressed,
+  });
 
   @override
-  m.State<FlossGallery> createState() => _FlossGalleryState();
+  m.State<_ExampleGridTile> createState() => _ExampleGridTileState();
 }
 
-class _FlossGalleryState extends m.State<FlossGallery> {
+class _ExampleGridTileState extends m.State<_ExampleGridTile>
+    with m.SingleTickerProviderStateMixin {
+  m.ValueNotifier<bool> minimizeButtonActive = m.ValueNotifier<bool>(false);
+
+  final m.Tween<double> upTween = m.Tween<double>(
+    begin: 0.0,
+    end: 1.0,
+  );
+
+  final m.Tween<double> downTween = m.Tween<double>(
+    begin: 1.0,
+    end: 0.0,
+  );
+
+  late final m.AnimationController controller;
+  late final m.Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = m.AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+    animation = m.CurvedAnimation(
+      parent: controller,
+      curve: m.Curves.easeInOut,
+    );
+
+    minimizeButtonActive.addListener(() {
+      if (minimizeButtonActive.value) {
+        controller.forward();
+      } else {
+        controller.reverse();
+      }
+    });
+  }
+
   @override
   void dispose() {
-    widget._focusNode.dispose();
+    controller.dispose();
     super.dispose();
   }
 
-  // This widget is the root of your application.
+  @override
+  m.Widget build(m.BuildContext context) {
+    final colorScheme = m.Theme.of(context).colorScheme;
+    return m.Card.outlined(
+      color: colorScheme.onPrimary,
+      elevation: 3.0,
+      child: m.Column(
+        children: [
+          m.Row(
+            children: [
+              const m.Spacer(flex: 6),
+              m.Text(widget.example.title),
+              const m.Spacer(flex: 4),
+              m.Stack(
+                children: [
+                  m.FadeTransition(
+                    opacity: upTween.animate(animation),
+                    child: m.IconButton(
+                      icon: const m.Icon(m.Icons.minimize_rounded),
+                      onPressed: () {
+                        setState(() {
+                          minimizeButtonActive.value =
+                              !minimizeButtonActive.value;
+                          widget.onPressed();
+                        });
+                      },
+                    ),
+                  ),
+                  m.FadeTransition(
+                    opacity: m.CurvedAnimation(
+                      parent: downTween.animate(animation),
+                      curve: m.Curves.easeInOut,
+                    ),
+                    child: m.IconButton(
+                      icon: const m.Icon(m.Icons.crop_square_rounded),
+                      onPressed: () {
+                        minimizeButtonActive.value =
+                            !minimizeButtonActive.value;
+                        widget.onPressed();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          m.Expanded(child: widget.example.widget(widget.focusNode)),
+        ],
+      ),
+    );
+  }
+}
+
+class _FlossGallery extends m.StatefulWidget {
+  static const List<String> _tabTitles = [
+    'Nature of Code',
+    'Generative Design'
+  ];
+
+  const _FlossGallery();
+
+  @override
+  m.State<_FlossGallery> createState() => _FlossGalleryState();
+}
+
+class _FlossGalleryState extends m.State<_FlossGallery> {
+  static const crossAxisCount = 2;
+
+  final m.FocusNode focusNode = m.FocusNode();
+  final globalKeys = {
+    for (var example in examples) example.title: m.GlobalKey()
+  };
+
+  late final List<m.Widget> children;
+
+  m.ThemeMode themeMode = m.ThemeMode.system;
+  int? removedIndex;
+  m.Widget? expanded;
+  double scrollOffset = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    children = examples.mapIndexed<m.Widget>(
+      (i, example) {
+        switch (example) {
+          case Example():
+            return _ExampleGridTile(
+              key: globalKeys[example.title],
+              example: example,
+              focusNode: focusNode,
+              onPressed: () {
+                if (removedIndex == null && expanded == null) {
+                  setState(
+                    () {
+                      removedIndex = i;
+                      expanded = children.removeAt(i);
+                      children.insert(
+                        i,
+                        m.GridTile(child: m.Container()),
+                      );
+                    },
+                  );
+                } else {
+                  setState(() {
+                    children.removeAt(removedIndex!);
+                    children.insert(removedIndex!, expanded!);
+                    expanded = null;
+                    removedIndex = null;
+                  });
+                }
+              },
+            );
+        }
+      },
+    ).toList();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   m.Widget build(m.BuildContext context) {
     return m.MaterialApp(
       title: 'Floss Gallery',
       theme: m.ThemeData(
         colorScheme: m.ColorScheme.fromSeed(
-          seedColor: m.Colors.blueGrey,
+          seedColor: m.Colors.white,
           brightness: m.Brightness.light,
+          dynamicSchemeVariant: m.DynamicSchemeVariant.monochrome,
         ),
       ),
-      // darkTheme: m.ThemeData.dark(),
+      darkTheme: m.ThemeData(
+        colorScheme: m.ColorScheme.fromSeed(
+          seedColor: m.Colors.black,
+          brightness: m.Brightness.dark,
+          dynamicSchemeVariant: m.DynamicSchemeVariant.monochrome,
+        ),
+      ),
+      themeMode: themeMode,
       home: m.DefaultTabController(
         initialIndex: 0,
-        length: FlossGallery.tabTitles.length,
+        length: _FlossGallery._tabTitles.length,
         child: m.Scaffold(
           appBar: m.AppBar(
             title: const m.Text('Floss Gallery'),
+            leading: m.IconButton(
+              icon: const m.Icon(m.Icons.brightness_4),
+              onPressed: () {
+                setState(() {
+                  themeMode = themeMode == m.ThemeMode.light
+                      ? m.ThemeMode.dark
+                      : m.ThemeMode.light;
+                });
+              },
+            ),
             bottom: m.TabBar(
-              tabs: FlossGallery.tabTitles
+              tabs: _FlossGallery._tabTitles
                   .map((title) => m.Tab(text: title))
                   .toList(),
             ),
           ),
-          body: m.TabBarView(
-            children: [
-              m.LayoutBuilder(
-                builder:
-                    (m.BuildContext context, m.BoxConstraints constraints) {
-                  return m.GridView.count(
-                    crossAxisCount: 2,
-                    addAutomaticKeepAlives: false,
-                    addRepaintBoundaries: true,
-                    childAspectRatio:
-                        constraints.maxWidth / constraints.maxHeight,
-                    shrinkWrap: true,
-                    children: examples
-                        .map(
-                          (example) => m.GridTile(
-                            child: m.Card(
-                              elevation: 3.0,
-                              child: m.Column(
-                                children: [
-                                  m.Text(example.title),
-                                  m.Expanded(
-                                      child: example.widget(widget._focusNode)),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  );
-                },
-              ),
-              const m.Text('Generative Design'),
-            ],
+          body: m.LayoutBuilder(
+            builder: (m.BuildContext context, m.BoxConstraints constraints) {
+              final scrollController =
+                  m.ScrollController(initialScrollOffset: scrollOffset);
+              return m.Stack(
+                children: [
+                  m.TabBarView(
+                    children: [
+                      m.GridView.count(
+                        key: m.ValueKey(children.toString()),
+                        controller: scrollController
+                          ..addListener(() {
+                            setState(() {
+                              scrollOffset = scrollController.offset;
+                            });
+                          }),
+                        crossAxisCount: crossAxisCount,
+                        addAutomaticKeepAlives: true,
+                        addRepaintBoundaries: true,
+                        childAspectRatio:
+                            constraints.maxWidth / constraints.maxHeight,
+                        shrinkWrap: true,
+                        children: children,
+                      ),
+                      const m.Text('Generative Design'),
+                    ],
+                  ),
+                  if (expanded != null)
+                    m.Positioned(
+                      left: (removedIndex! % 2) *
+                          constraints.maxWidth /
+                          crossAxisCount,
+                      top: removedIndex! ~/
+                              _FlossGalleryState.crossAxisCount *
+                              constraints.maxHeight /
+                              _FlossGalleryState.crossAxisCount -
+                          scrollOffset,
+                      width: constraints.maxWidth / crossAxisCount,
+                      height: constraints.maxHeight / crossAxisCount,
+                      child: expanded!,
+                    ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -156,5 +352,5 @@ class _FlossGalleryState extends m.State<FlossGallery> {
 }
 
 void main() {
-  m.runApp(FlossGallery());
+  m.runApp(const _FlossGallery());
 }

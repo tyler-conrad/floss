@@ -96,7 +96,7 @@ class _AccIur<M extends _AccModel> extends f.IurBase<M> implements f.Iur<M> {
     required f.InputEventList inputEvents,
   }) {
     f.Vector2? mousePos;
-    for (final ie in inputEvents.list) {
+    for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
           mousePos = f.Vector2(event.localPosition.dx, event.localPosition.dy);
