@@ -138,6 +138,7 @@ class _FrictionIur<M extends _FrictionModel> extends f.IurBase<M>
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return f.Drawing(
       canvasOps: model.movers.map((m) => m.display()).toList(),
@@ -148,10 +149,10 @@ class _FrictionIur<M extends _FrictionModel> extends f.IurBase<M>
 const String title = 'Forces - Friction';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _FrictionModel.init,
         iur: _FrictionIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

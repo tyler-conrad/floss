@@ -188,6 +188,7 @@ class _FluidIur<M extends _FluidModel> extends f.IurBase<M>
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return f.Drawing(
       canvasOps: [
@@ -201,10 +202,10 @@ class _FluidIur<M extends _FluidModel> extends f.IurBase<M>
 const String title = 'Fluid Resistance';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _FluidModel.init,
         iur: _FluidIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

@@ -1,7 +1,7 @@
-import 'dart:math' as m;
+import 'dart:math' as math;
 
 import 'package:flutter/painting.dart' as p;
-
+import 'package:flutter/widgets.dart' as w;
 import 'package:flutter/material.dart' as m;
 
 import 'package:floss/floss.dart' as f;
@@ -27,7 +27,7 @@ final p.Color transparent7Black = const p.HSLColor.fromAHSL(
   0.0,
 ).toColor();
 
-final p.Color transparentWhite = const m.HSLColor.fromAHSL(
+final p.Color transparentWhite = const p.HSLColor.fromAHSL(
   0.93,
   0.0,
   0.0,
@@ -41,12 +41,12 @@ final p.Color gray5 = const p.HSLColor.fromAHSL(
   0.5,
 ).toColor();
 
-final _rand = m.Random();
+final _rand = math.Random();
 
 double randDoubleRange(double min, double max) =>
     min + _rand.nextDouble() * (max - min);
 
-class ExamplesWidget extends m.StatelessWidget {
+class ExamplesWidget extends w.StatelessWidget {
   final String _title;
   final f.FlossWidget _child;
 
@@ -56,6 +56,6 @@ class ExamplesWidget extends m.StatelessWidget {
         _child = child;
 
   @override
-  m.Widget build(m.BuildContext context) =>
+  w.Widget build(w.BuildContext context) =>
       m.MaterialApp(title: _title, home: m.Scaffold(body: _child));
 }

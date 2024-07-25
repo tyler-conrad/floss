@@ -127,6 +127,7 @@ class _NoFrictionIur<M extends _NoFrictionModel> extends f.IurBase<M>
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return f.Drawing(
       canvasOps: model.movers.map((m) => m.display()).toList(),
@@ -137,10 +138,10 @@ class _NoFrictionIur<M extends _NoFrictionModel> extends f.IurBase<M>
 const String title = 'Forces - No Friction';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _NoFrictionModel.init,
         iur: _NoFrictionIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

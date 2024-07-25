@@ -115,6 +115,7 @@ class _MutualAttractionIur<M extends _MutualAttractionModel>
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return f.Drawing(
       canvasOps: model.movers.map((m) => m.display()).toList(),
@@ -125,10 +126,10 @@ class _MutualAttractionIur<M extends _MutualAttractionModel>
 const String title = 'Mutual Attraction';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _MutualAttractionModel.init,
         iur: _MutualAttractionIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

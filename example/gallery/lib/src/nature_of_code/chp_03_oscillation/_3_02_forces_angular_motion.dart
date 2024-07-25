@@ -1,4 +1,4 @@
-import 'dart:math' as m;
+import 'dart:math' as math;
 
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
@@ -7,7 +7,7 @@ import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
 
-final rng = m.Random();
+final rng = math.Random();
 
 class _Attractor {
   static const double g = 0.4;
@@ -18,10 +18,6 @@ class _Attractor {
   final f.Vector2 location;
 
   _Attractor({required this.location});
-
-  _Attractor.update({
-    required this.location,
-  });
 
   f.Vector2 attract(_Mover m) {
     final force = (location - m.location);
@@ -202,15 +198,20 @@ class _ForcesAngularMotionIur<M extends _ForcesAngularMotionModel>
     ).toList();
 
     return _ForcesAngularMotionModel.update(
-      size: size,
-      movers: movers,
-      attractor: model.attractor,
-    ) as M;
+        size: size,
+        movers: movers,
+        attractor: _Attractor(
+          location: f.Vector2(
+            size.width * 0.5,
+            size.height * 0.5,
+          ),
+        )) as M;
   }
 
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return f.Drawing(
       canvasOps: [
@@ -224,10 +225,10 @@ class _ForcesAngularMotionIur<M extends _ForcesAngularMotionModel>
 const String title = 'Forces - Angular Motion';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _ForcesAngularMotionModel.init,
         iur: _ForcesAngularMotionIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

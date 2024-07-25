@@ -111,6 +111,7 @@ class _MotionIur<M extends _MotionModel> extends f.IurBase<M>
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return model.mover.display();
   }
@@ -119,6 +120,7 @@ class _MotionIur<M extends _MotionModel> extends f.IurBase<M>
 const String title = 'Motion 101';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _MotionModel.init,
         iur: _MotionIur(),
@@ -128,5 +130,4 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
             ..blendMode = p.BlendMode.srcOver,
         ),
       ),
-      focusNode: focusNode,
     );

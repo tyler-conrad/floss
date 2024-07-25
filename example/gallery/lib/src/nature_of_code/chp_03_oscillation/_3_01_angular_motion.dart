@@ -27,7 +27,7 @@ class _AngularMotionModel extends f.Model {
 
 class _AngularMotionIur<M extends _AngularMotionModel> extends f.IurBase<M>
     implements f.Iur<M> {
-  static const double halfSize = 60.0;
+  static const double halfLength = 60.0;
   static const double circleRadius = 8.0;
 
   @override
@@ -50,6 +50,7 @@ class _AngularMotionIur<M extends _AngularMotionModel> extends f.IurBase<M>
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return f.Translate(
       translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
@@ -58,14 +59,14 @@ class _AngularMotionIur<M extends _AngularMotionModel> extends f.IurBase<M>
           radians: model.angle,
           canvasOps: [
             f.Line(
-              p1: f.Offset(-halfSize, 0.0),
-              p2: f.Offset(halfSize, 0.0),
+              p1: f.Offset(-halfLength, 0.0),
+              p2: f.Offset(halfLength, 0.0),
               paint: f.Paint()
                 ..color = u.black
                 ..strokeWidth = 2.0,
             ),
             f.Translate(
-              translation: f.Vector2(halfSize, 0.0),
+              translation: f.Vector2(halfLength, 0.0),
               canvasOps: [
                 f.Circle(
                   c: f.Offset.zero,
@@ -83,7 +84,7 @@ class _AngularMotionIur<M extends _AngularMotionModel> extends f.IurBase<M>
               ],
             ),
             f.Translate(
-              translation: f.Vector2(-halfSize, 0.0),
+              translation: f.Vector2(-halfLength, 0.0),
               canvasOps: [
                 f.Circle(
                   c: f.Offset.zero,
@@ -110,10 +111,10 @@ class _AngularMotionIur<M extends _AngularMotionModel> extends f.IurBase<M>
 const String title = 'Angular Motion';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _AngularMotionModel.init,
         iur: _AngularMotionIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart' as m;
+import 'package:flutter/widgets.dart' as w;
 import 'package:flutter/scheduler.dart' as s;
 
 import 'logger.dart';
@@ -11,20 +12,22 @@ import 'canvas_ops.dart' as go;
 import 'config.dart' as c;
 import 'miur.dart' as miur;
 
-class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
+class _FlossPainter<M, IUR extends miur.Iur<M>> extends w.CustomPainter {
   final c.Config config;
-  final m.ValueNotifier<Duration> elapsed;
+  final w.ValueNotifier<Duration> elapsed;
   final ie.InputEventList inputEvents;
-  m.Size size;
+  final ui.Brightness brightness;
+  w.Size size;
   M model;
   ui.Image? background;
 
   _FlossPainter({
-    required m.Listenable super.repaint,
+    required w.Listenable super.repaint,
     required this.size,
     required this.elapsed,
     required this.inputEvents,
     required this.config,
+    required this.brightness,
   }) : model = config.iur.init(
           modelCtor: config.modelCtor,
           size: g.Size.fromSize(size),
@@ -41,19 +44,26 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
     inputEvents.clear();
   }
 
-  void _paint(m.Canvas canvas, m.Size s) {
+  void _paint(w.Canvas canvas, w.Size s) {
     size = s;
-    config.iur.render(model: model).draw(canvas: canvas).toList();
+    config.iur
+        .render(
+          model: model,
+          isLightTheme: brightness == ui.Brightness.light,
+        )
+        .draw(canvas: canvas)
+        .toList();
   }
 
   void _paintWithBackground(
-    m.Canvas canvas,
-    m.Size s,
+    w.Canvas canvas,
+    w.Size s,
     pt.Paint paint,
   ) {
     size = s;
 
-    final drawing = config.iur.render(model: model);
+    final drawing = config.iur
+        .render(model: model, isLightTheme: brightness == ui.Brightness.light);
 
     try {
       assert(
@@ -105,8 +115,8 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
 
   @override
   void paint(
-    m.Canvas canvas,
-    m.Size size,
+    w.Canvas canvas,
+    w.Size size,
   ) {
     switch (config.clearCanvas) {
       case c.ClearCanvas():
@@ -118,29 +128,31 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends m.CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant m.CustomPainter oldDelegate) =>
+  bool shouldRepaint(covariant w.CustomPainter oldDelegate) =>
       this != oldDelegate;
 }
 
-class _CanvasTicker<IUR> extends m.StatefulWidget {
+class _CanvasTicker<IUR> extends w.StatefulWidget {
   final c.Config config;
-  final m.Size size;
+  final w.Size size;
   final ie.InputEventList inputEvents;
-  final time = m.ValueNotifier(Duration.zero);
+  final ui.Brightness brightness;
+  final time = w.ValueNotifier(Duration.zero);
 
   _CanvasTicker({
     super.key,
     required this.config,
     required this.size,
     required this.inputEvents,
+    required this.brightness,
   });
 
   @override
-  m.State<_CanvasTicker> createState() => _CanvasTickerState();
+  w.State<_CanvasTicker> createState() => _CanvasTickerState();
 }
 
-class _CanvasTickerState<M> extends m.State<_CanvasTicker>
-    with m.SingleTickerProviderStateMixin {
+class _CanvasTickerState<M> extends w.State<_CanvasTicker>
+    with w.SingleTickerProviderStateMixin {
   late final s.Ticker ticker;
   late final _FlossPainter painter;
 
@@ -153,6 +165,7 @@ class _CanvasTickerState<M> extends m.State<_CanvasTicker>
       size: widget.size,
       elapsed: widget.time,
       inputEvents: widget.inputEvents,
+      brightness: widget.brightness,
     );
 
     ticker = createTicker(painter._tick);
@@ -167,43 +180,43 @@ class _CanvasTickerState<M> extends m.State<_CanvasTicker>
   }
 
   @override
-  m.Widget build(m.BuildContext context) {
-    return m.RepaintBoundary(
-      child: m.ClipRect(
-        child: m.CustomPaint(
+  w.Widget build(w.BuildContext context) {
+    return w.RepaintBoundary(
+      child: w.ClipRect(
+        child: w.CustomPaint(
           size: widget.size,
           isComplex: true,
           willChange: true,
           painter: painter,
-          child: const m.SizedBox.expand(),
+          child: const w.SizedBox.expand(),
         ),
       ),
     );
   }
 }
 
-class FlossWidget extends m.StatefulWidget {
+class FlossWidget extends w.StatefulWidget {
+  final w.FocusNode _focusNode;
   final c.Config _config;
-  final m.FocusNode _focusNode;
 
   const FlossWidget({
     super.key,
+    required w.FocusNode focusNode,
     required c.Config config,
-    required m.FocusNode focusNode,
   })  : _focusNode = focusNode,
         _config = config;
 
   @override
-  m.State<FlossWidget> createState() => _FlossWidgetState();
+  w.State<FlossWidget> createState() => _FlossWidgetState();
 }
 
-class _FlossWidgetState extends m.State<FlossWidget>
-    with m.SingleTickerProviderStateMixin {
+class _FlossWidgetState extends w.State<FlossWidget>
+    with w.SingleTickerProviderStateMixin {
   final ie.InputEventList inputEvents = ie.InputEventList();
 
   @override
-  m.Widget build(m.BuildContext context) {
-    return m.KeyboardListener(
+  w.Widget build(w.BuildContext context) {
+    return w.KeyboardListener(
       focusNode: widget._focusNode,
       onKeyEvent: (event) {
         inputEvents.add(
@@ -212,8 +225,8 @@ class _FlossWidgetState extends m.State<FlossWidget>
           ),
         );
       },
-      child: m.Listener(
-        behavior: m.HitTestBehavior.deferToChild,
+      child: w.Listener(
+        behavior: w.HitTestBehavior.deferToChild,
         onPointerDown: (event) {
           inputEvents.add(
             ie.PointerDown(
@@ -277,8 +290,8 @@ class _FlossWidgetState extends m.State<FlossWidget>
             ),
           );
         },
-        child: m.GestureDetector(
-          behavior: m.HitTestBehavior.deferToChild,
+        child: w.GestureDetector(
+          behavior: w.HitTestBehavior.deferToChild,
           onTapDown: (details) {
             inputEvents.add(
               ie.TapDown(
@@ -541,12 +554,13 @@ class _FlossWidgetState extends m.State<FlossWidget>
               ),
             );
           },
-          child: m.LayoutBuilder(
+          child: w.LayoutBuilder(
             builder: (context, constraints) {
               return _CanvasTicker(
                 size: constraints.biggest,
                 inputEvents: inputEvents,
                 config: widget._config,
+                brightness: m.Theme.of(context).brightness,
               );
             },
           ),

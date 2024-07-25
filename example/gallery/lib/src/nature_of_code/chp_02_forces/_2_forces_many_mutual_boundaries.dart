@@ -147,6 +147,7 @@ class _ForcesManyMutualBoundariesIur<M extends _ForcesManyMutualBoundariesModel>
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return f.Drawing(
       canvasOps: model.movers.map((m) => m.display()).toList(),
@@ -157,10 +158,10 @@ class _ForcesManyMutualBoundariesIur<M extends _ForcesManyMutualBoundariesModel>
 const String title = 'Forces - Many Mutual Boundaries';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _ForcesManyMutualBoundariesModel.init,
         iur: _ForcesManyMutualBoundariesIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

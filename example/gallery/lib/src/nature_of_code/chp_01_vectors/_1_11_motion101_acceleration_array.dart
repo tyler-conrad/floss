@@ -131,6 +131,7 @@ class _AccArrayIur<M extends _AccArrayModel> extends f.IurBase<M>
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return f.Drawing(canvasOps: model.movers.map((m) => m.display()).toList());
   }
@@ -139,10 +140,10 @@ class _AccArrayIur<M extends _AccArrayModel> extends f.IurBase<M>
 const String title = 'Motion 101: Acceleration Array';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _AccArrayModel.init,
         iur: _AccArrayIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

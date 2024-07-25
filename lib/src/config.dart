@@ -1,12 +1,12 @@
-import 'paint.dart' as pt;
-import 'miur.dart' as m;
+import 'paint.dart' as p;
+import 'miur.dart' as miur;
 
 sealed class ClearCanvasType {
   const ClearCanvasType();
 }
 
 class NoClearCanvas extends ClearCanvasType {
-  final pt.Paint paint;
+  final p.Paint paint;
 
   const NoClearCanvas({required this.paint});
 }
@@ -16,8 +16,8 @@ class ClearCanvas extends ClearCanvasType {
 }
 
 class Config<M> {
-  final m.ModelCtor<M> modelCtor;
-  final m.Iur<M> iur;
+  final miur.ModelCtor<M> modelCtor;
+  final miur.Iur<M> iur;
   final ClearCanvasType clearCanvas;
 
   Config({

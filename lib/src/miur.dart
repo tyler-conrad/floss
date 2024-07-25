@@ -15,7 +15,6 @@ class Model {
   final g.Size size;
 
   Model({required this.size});
-  Model.init({required g.Size size}) : this(size: size);
 }
 
 abstract interface class Iur<M> {
@@ -32,7 +31,8 @@ abstract interface class Iur<M> {
   });
 
   co.Drawing render({
-    required covariant M model,
+    required M model,
+    required bool isLightTheme,
   });
 }
 
@@ -58,6 +58,7 @@ class IurBase<M extends Model> implements Iur<M> {
   @override
   co.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return const co.Drawing(canvasOps: []);
   }

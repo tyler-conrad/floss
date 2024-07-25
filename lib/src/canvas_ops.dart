@@ -225,7 +225,7 @@ sealed class CanvasOp implements ICanvasOp {
         ):
         canvas.drawPoints(
           _pointMode,
-          _points.map((p) => p.offset).toList(),
+          _points.map((v) => g.Offset.fromVec(v).offset).toList(),
           _paint.paint,
         );
 
@@ -512,12 +512,12 @@ class PathBuilder extends CanvasOp {
 
 class Points extends CanvasOp {
   final ui.PointMode _pointMode;
-  final List<g.Offset> _points;
+  final List<v.Vector2> _points;
   final pt.Paint _paint;
 
   const Points({
     required ui.PointMode pointMode,
-    required List<g.Offset> points,
+    required List<v.Vector2> points,
     required pt.Paint paint,
   })  : _pointMode = pointMode,
         _points = points,

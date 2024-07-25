@@ -118,6 +118,7 @@ class _AccIur<M extends _AccModel> extends f.IurBase<M> implements f.Iur<M> {
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return model.mover.display();
   }
@@ -126,10 +127,10 @@ class _AccIur<M extends _AccModel> extends f.IurBase<M> implements f.Iur<M> {
 const String title = 'Motion 101: Acceleration 3';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _AccModel.init,
         iur: _AccIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

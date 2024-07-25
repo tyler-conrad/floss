@@ -18,7 +18,7 @@ class _Ball {
       : position = ballInitPos,
         velocity = ballInitVel;
 
-  _Ball.init({
+  _Ball.update({
     required this.position,
     required this.velocity,
   });
@@ -31,7 +31,7 @@ class _Ball {
     if (position.y > size.height || position.y < 0) {
       velocity.y = -velocity.y;
     }
-    return _Ball.init(
+    return _Ball.update(
       position: position,
       velocity: velocity,
     );
@@ -84,7 +84,7 @@ class _BallIur<M extends _BallModel> extends f.IurBase<M> implements f.Iur<M> {
   }
 
   @override
-  f.Drawing render({required M model}) {
+  f.Drawing render({required M model, required bool isLightTheme}) {
     return model.ball.display();
   }
 }
@@ -92,6 +92,7 @@ class _BallIur<M extends _BallModel> extends f.IurBase<M> implements f.Iur<M> {
 const String title = 'Bouncing Ball Vectors Object';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _BallModel.init,
         iur: _BallIur(),
@@ -101,5 +102,4 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
             ..blendMode = p.BlendMode.srcOver,
         ),
       ),
-      focusNode: focusNode,
     );

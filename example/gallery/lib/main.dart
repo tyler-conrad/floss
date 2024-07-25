@@ -33,13 +33,25 @@ import 'src/nature_of_code/chp_02_forces/_2_5_fluid_resistance.dart' as c2_5;
 import 'src/nature_of_code/chp_02_forces/_2_6_attraction.dart' as c2_6;
 import 'src/nature_of_code/chp_02_forces/_2_7_attraction_many.dart' as c2_7;
 import 'src/nature_of_code/chp_02_forces/_2_8_mutual_attraction.dart' as c2_8;
-import 'src/nature_of_code/chp_02_forces/_2_9_forces_many_mutual_boundaries.dart'
-    as c2_9;
+import 'src/nature_of_code/chp_02_forces/_2_forces_many_mutual_boundaries.dart'
+    as c2_fmmb;
 import 'src/nature_of_code/chp_02_forces/_2_10_attract_repel.dart' as c2_10;
 import 'src/nature_of_code/chp_03_oscillation/_3_01_angular_motion.dart'
     as c3_1;
 import 'src/nature_of_code/chp_03_oscillation/_3_02_forces_angular_motion.dart'
     as c3_2;
+import 'src/nature_of_code/chp_03_oscillation/_3_04_polar_to_cartesian.dart'
+    as c3_4_ptc;
+import 'src/nature_of_code/chp_03_oscillation/_3_04_polar_to_cartesian_trail.dart'
+    as c3_4_ptct;
+import 'src/nature_of_code/chp_03_oscillation/_3_05_simple_harmonic_motion.dart'
+    as c3_5;
+import 'src/nature_of_code/chp_03_oscillation/_3_06_simple_harmonic_motion.dart'
+    as c3_6;
+import 'src/nature_of_code/chp_03_oscillation/_3_07_oscillating_objects.dart'
+    as c3_7;
+import 'src/nature_of_code/chp_03_oscillation/_3_08_static_wave_lines.dart'
+    as c3_8;
 
 class Example {
   final String title;
@@ -69,21 +81,29 @@ final examples = <Example>[
   const Example(c2_6.title, c2_6.widget),
   const Example(c2_7.title, c2_7.widget),
   const Example(c2_8.title, c2_8.widget),
-  const Example(c2_9.title, c2_9.widget),
+  const Example(c2_fmmb.title, c2_fmmb.widget),
   const Example(c2_10.title, c2_10.widget),
   const Example(c3_1.title, c3_1.widget),
   const Example(c3_2.title, c3_2.widget),
+  const Example(c3_4_ptc.title, c3_4_ptc.widget),
+  const Example(c3_4_ptct.title, c3_4_ptct.widget),
+  const Example(c3_5.title, c3_5.widget),
+  const Example(c3_6.title, c3_6.widget),
+  const Example(c3_7.title, c3_7.widget),
+  const Example(c3_8.title, c3_8.widget),
 ];
 
 class _ExampleGridTile extends m.StatefulWidget {
   final Example example;
   final m.FocusNode focusNode;
+  final Map<String, bool> activeButtons;
   final void Function() onPressed;
 
   const _ExampleGridTile({
     super.key,
     required this.example,
     required this.focusNode,
+    required this.activeButtons,
     required this.onPressed,
   });
 
@@ -93,7 +113,7 @@ class _ExampleGridTile extends m.StatefulWidget {
 
 class _ExampleGridTileState extends m.State<_ExampleGridTile>
     with m.SingleTickerProviderStateMixin {
-  m.ValueNotifier<bool> minimizeButtonActive = m.ValueNotifier<bool>(false);
+  m.ValueNotifier<bool> minimize = m.ValueNotifier<bool>(false);
 
   final m.Tween<double> upTween = m.Tween<double>(
     begin: 0.0,
@@ -108,6 +128,8 @@ class _ExampleGridTileState extends m.State<_ExampleGridTile>
   late final m.AnimationController controller;
   late final m.Animation<double> animation;
 
+  bool animating = false;
+
   @override
   void initState() {
     super.initState();
@@ -120,11 +142,25 @@ class _ExampleGridTileState extends m.State<_ExampleGridTile>
       curve: m.Curves.easeInOut,
     );
 
-    minimizeButtonActive.addListener(() {
-      if (minimizeButtonActive.value) {
-        controller.forward();
+    minimize.addListener(() {
+      if (minimize.value) {
+        setState(() {
+          animating = true;
+        });
+        controller.forward().whenCompleteOrCancel(() {
+          setState(() {
+            animating = false;
+          });
+        });
       } else {
-        controller.reverse();
+        setState(() {
+          animating = true;
+        });
+        controller.reverse().whenCompleteOrCancel(() {
+          setState(() {
+            animating = false;
+          });
+        });
       }
     });
   }
@@ -145,38 +181,37 @@ class _ExampleGridTileState extends m.State<_ExampleGridTile>
         children: [
           m.Row(
             children: [
-              const m.Spacer(flex: 6),
-              m.Text(widget.example.title),
-              const m.Spacer(flex: 4),
+              const m.SizedBox(width: 40.0),
+              m.Expanded(
+                child: m.Align(
+                  alignment: m.Alignment.center,
+                  child: m.Text(widget.example.title),
+                ),
+              ),
               m.Stack(
                 children: [
+                  m.FadeTransition(
+                    opacity: downTween.animate(animation),
+                    child: m.IconButton(
+                      icon: const m.Icon(m.Icons.crop_square_rounded),
+                      onPressed:
+                          (!widget.activeButtons[widget.example.title]! ||
+                                  animating)
+                              ? null
+                              : onPressed,
+                    ),
+                  ),
                   m.FadeTransition(
                     opacity: upTween.animate(animation),
                     child: m.IconButton(
                       icon: const m.Icon(m.Icons.minimize_rounded),
-                      onPressed: () {
-                        setState(() {
-                          minimizeButtonActive.value =
-                              !minimizeButtonActive.value;
-                          widget.onPressed();
-                        });
-                      },
+                      onPressed:
+                          (!widget.activeButtons[widget.example.title]! ||
+                                  animating)
+                              ? null
+                              : onPressed,
                     ),
-                  ),
-                  m.FadeTransition(
-                    opacity: m.CurvedAnimation(
-                      parent: downTween.animate(animation),
-                      curve: m.Curves.easeInOut,
-                    ),
-                    child: m.IconButton(
-                      icon: const m.Icon(m.Icons.crop_square_rounded),
-                      onPressed: () {
-                        minimizeButtonActive.value =
-                            !minimizeButtonActive.value;
-                        widget.onPressed();
-                      },
-                    ),
-                  ),
+                  )
                 ],
               ),
             ],
@@ -185,6 +220,13 @@ class _ExampleGridTileState extends m.State<_ExampleGridTile>
         ],
       ),
     );
+  }
+
+  void onPressed() {
+    setState(() {
+      minimize.value = !minimize.value;
+      widget.onPressed();
+    });
   }
 }
 
@@ -205,14 +247,15 @@ class _FlossGalleryState extends m.State<_FlossGallery> {
 
   final m.FocusNode focusNode = m.FocusNode();
   final globalKeys = {
-    for (var example in examples) example.title: m.GlobalKey()
+    for (final example in examples) example.title: m.GlobalKey()
   };
+  final activeButtons = {for (final example in examples) example.title: true};
 
   late final List<m.Widget> children;
 
-  m.ThemeMode themeMode = m.ThemeMode.system;
   int? removedIndex;
-  m.Widget? expanded;
+  bool? maximize;
+  m.Widget? maximizeSelection;
   double scrollOffset = 0.0;
 
   @override
@@ -226,26 +269,24 @@ class _FlossGalleryState extends m.State<_FlossGallery> {
               key: globalKeys[example.title],
               example: example,
               focusNode: focusNode,
+              activeButtons: activeButtons,
               onPressed: () {
-                if (removedIndex == null && expanded == null) {
-                  setState(
-                    () {
-                      removedIndex = i;
-                      expanded = children.removeAt(i);
-                      children.insert(
-                        i,
-                        m.GridTile(child: m.Container()),
-                      );
-                    },
-                  );
-                } else {
+                if (removedIndex == null && maximizeSelection == null) {
                   setState(() {
-                    children.removeAt(removedIndex!);
-                    children.insert(removedIndex!, expanded!);
-                    expanded = null;
-                    removedIndex = null;
+                    activeButtons.updateAll((k, v) => k == example.title);
+                    removedIndex = i;
+                    maximizeSelection = children.removeAt(i);
+                    children.insert(
+                      i,
+                      m.GridTile(child: m.Container()),
+                    );
                   });
                 }
+                Future.delayed(const Duration(milliseconds: 1000 ~/ 30), () {
+                  setState(() {
+                    maximize = !(maximize ?? false);
+                  });
+                });
               },
             );
         }
@@ -259,41 +300,41 @@ class _FlossGalleryState extends m.State<_FlossGallery> {
     super.dispose();
   }
 
+  double left(m.BoxConstraints constraints) => (maximize ?? false)
+      ? 0.0
+      : (removedIndex! % 2) * constraints.maxWidth / crossAxisCount;
+
+  double top(m.BoxConstraints constraints) => (maximize ?? false)
+      ? 0.0
+      : removedIndex! ~/
+              _FlossGalleryState.crossAxisCount *
+              constraints.maxHeight /
+              _FlossGalleryState.crossAxisCount -
+          scrollOffset;
+
+  double width(m.BoxConstraints constraints) => (maximize ?? false)
+      ? constraints.maxWidth
+      : constraints.maxWidth / crossAxisCount;
+
+  double height(m.BoxConstraints constraints) => (maximize ?? false)
+      ? constraints.maxHeight
+      : constraints.maxHeight / crossAxisCount;
+
   @override
   m.Widget build(m.BuildContext context) {
     return m.MaterialApp(
       title: 'Floss Gallery',
       theme: m.ThemeData(
         colorScheme: m.ColorScheme.fromSeed(
-          seedColor: m.Colors.white,
-          brightness: m.Brightness.light,
-          dynamicSchemeVariant: m.DynamicSchemeVariant.monochrome,
+          seedColor: m.Colors.blueGrey,
         ),
       ),
-      darkTheme: m.ThemeData(
-        colorScheme: m.ColorScheme.fromSeed(
-          seedColor: m.Colors.black,
-          brightness: m.Brightness.dark,
-          dynamicSchemeVariant: m.DynamicSchemeVariant.monochrome,
-        ),
-      ),
-      themeMode: themeMode,
       home: m.DefaultTabController(
         initialIndex: 0,
         length: _FlossGallery._tabTitles.length,
         child: m.Scaffold(
           appBar: m.AppBar(
             title: const m.Text('Floss Gallery'),
-            leading: m.IconButton(
-              icon: const m.Icon(m.Icons.brightness_4),
-              onPressed: () {
-                setState(() {
-                  themeMode = themeMode == m.ThemeMode.light
-                      ? m.ThemeMode.dark
-                      : m.ThemeMode.light;
-                });
-              },
-            ),
             bottom: m.TabBar(
               tabs: _FlossGallery._tabTitles
                   .map((title) => m.Tab(text: title))
@@ -304,44 +345,59 @@ class _FlossGalleryState extends m.State<_FlossGallery> {
             builder: (m.BuildContext context, m.BoxConstraints constraints) {
               final scrollController =
                   m.ScrollController(initialScrollOffset: scrollOffset);
-              return m.Stack(
-                children: [
-                  m.TabBarView(
-                    children: [
-                      m.GridView.count(
-                        key: m.ValueKey(children.toString()),
-                        controller: scrollController
-                          ..addListener(() {
-                            setState(() {
-                              scrollOffset = scrollController.offset;
-                            });
-                          }),
-                        crossAxisCount: crossAxisCount,
-                        addAutomaticKeepAlives: true,
-                        addRepaintBoundaries: true,
-                        childAspectRatio:
-                            constraints.maxWidth / constraints.maxHeight,
-                        shrinkWrap: true,
-                        children: children,
-                      ),
-                      const m.Text('Generative Design'),
-                    ],
-                  ),
-                  if (expanded != null)
-                    m.Positioned(
-                      left: (removedIndex! % 2) *
-                          constraints.maxWidth /
-                          crossAxisCount,
-                      top: removedIndex! ~/
-                              _FlossGalleryState.crossAxisCount *
-                              constraints.maxHeight /
-                              _FlossGalleryState.crossAxisCount -
-                          scrollOffset,
-                      width: constraints.maxWidth / crossAxisCount,
-                      height: constraints.maxHeight / crossAxisCount,
-                      child: expanded!,
+              return m.SizedBox(
+                width: constraints.maxWidth,
+                height: constraints.maxHeight,
+                child: m.Stack(
+                  children: [
+                    m.TabBarView(
+                      children: [
+                        m.GridView.count(
+                          key: m.ValueKey(children.toString()),
+                          controller: scrollController
+                            ..addListener(() {
+                              setState(() {
+                                scrollOffset = scrollController.offset;
+                              });
+                            }),
+                          crossAxisCount: crossAxisCount,
+                          addAutomaticKeepAlives: true,
+                          addRepaintBoundaries: true,
+                          childAspectRatio:
+                              constraints.maxWidth / constraints.maxHeight,
+                          shrinkWrap: true,
+                          children: children,
+                        ),
+                        const m.Text('Generative Design'),
+                      ],
                     ),
-                ],
+                    if (maximizeSelection != null)
+                      m.AnimatedPositioned(
+                        duration: const Duration(seconds: 1),
+                        curve: m.Curves.fastOutSlowIn,
+                        left: left(constraints),
+                        top: top(constraints),
+                        width: width(constraints),
+                        height: height(constraints),
+                        onEnd: () {
+                          setState(
+                            () {
+                              if (!(maximize ?? true)) {
+                                maximize = false;
+                                activeButtons.updateAll((k, v) => true);
+                                children.removeAt(removedIndex!);
+                                children.insert(
+                                    removedIndex!, maximizeSelection!);
+                                maximizeSelection = null;
+                                removedIndex = null;
+                              }
+                            },
+                          );
+                        },
+                        child: maximizeSelection!,
+                      ),
+                  ],
+                ),
               );
             },
           ),

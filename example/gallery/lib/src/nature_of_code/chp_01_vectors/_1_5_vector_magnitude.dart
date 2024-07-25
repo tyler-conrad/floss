@@ -9,6 +9,7 @@ class _VecMagModel extends f.Model {
   final f.Vector2? mouse;
 
   _VecMagModel.init({required super.size}) : mouse = null;
+
   _VecMagModel.update({
     required super.size,
     required this.mouse,
@@ -46,6 +47,7 @@ class _VecMagIur<M extends _VecMagModel> extends f.IurBase<M>
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     final center = f.Vector2(
       model.size.width * 0.5,
@@ -82,10 +84,10 @@ class _VecMagIur<M extends _VecMagModel> extends f.IurBase<M>
 const String title = 'Vector Magnitude';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _VecMagModel.init,
         iur: _VecMagIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

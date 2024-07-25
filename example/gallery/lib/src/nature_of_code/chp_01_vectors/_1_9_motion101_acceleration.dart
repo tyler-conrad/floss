@@ -1,4 +1,4 @@
-import 'dart:math' as m;
+import 'dart:math' as math;
 
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
@@ -7,13 +7,11 @@ import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
 
-final _rand = m.Random();
-
 class _Mover {
   static const size = 24.0;
   static const topSpeed = 6.0;
-  static const double accXHalfRange = 1.0;
-  static const double accYHalfRange = 1.0;
+  static const double accXRange = 1.0;
+  static const double accYRange = 1.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;
@@ -32,18 +30,18 @@ class _Mover {
 
   _Mover update() {
     final acc = f.Vector2(
-      _rand.nextDouble() * 2.0 * accXHalfRange - accXHalfRange,
-      _rand.nextDouble() * 2.0 * accYHalfRange - accYHalfRange,
+      u.randDoubleRange(-accXRange, accXRange),
+      u.randDoubleRange(-accYRange, accYRange),
     );
-    final a = acc * _rand.nextDouble() * 2.0;
+    final a = acc * u.randDoubleRange(0.0, 2.0);
 
     final vel = velocity + a;
     final v = f.Vector2(
-      m.min(
+      math.min(
         vel.x,
         topSpeed,
       ),
-      m.min(
+      math.min(
         vel.y,
         topSpeed,
       ),
@@ -128,6 +126,7 @@ class _AccIur<M extends _AccModel> extends f.IurBase<M> implements f.Iur<M> {
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return model.mover.display();
   }
@@ -136,10 +135,10 @@ class _AccIur<M extends _AccModel> extends f.IurBase<M> implements f.Iur<M> {
 const String title = 'Motion 101: Acceleration 2';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _AccModel.init,
         iur: _AccIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );

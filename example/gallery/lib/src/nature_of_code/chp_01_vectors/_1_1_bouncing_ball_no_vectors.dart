@@ -31,7 +31,7 @@ class _BallModel extends f.Model {
 }
 
 class _BallIur<M extends _BallModel> extends f.IurBase<M> implements f.Iur<M> {
-  static const double ballSize = 25.0;
+  static const double ballRadius = 25.0;
 
   @override
   M update({
@@ -56,18 +56,19 @@ class _BallIur<M extends _BallModel> extends f.IurBase<M> implements f.Iur<M> {
   @override
   f.Drawing render({
     required M model,
+    required bool isLightTheme,
   }) {
     return f.Translate(
       translation: f.Vector2(model.x, model.y),
       canvasOps: [
         f.Circle(
           c: f.Offset.zero,
-          radius: ballSize,
+          radius: ballRadius,
           paint: f.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset.zero,
-          radius: ballSize,
+          radius: ballRadius,
           paint: f.Paint()
             ..color = u.black
             ..paint
@@ -81,10 +82,10 @@ class _BallIur<M extends _BallModel> extends f.IurBase<M> implements f.Iur<M> {
 const String title = 'Bouncing Ball No Vectors';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
+      focusNode: focusNode,
       config: f.Config(
         modelCtor: _BallModel.init,
         iur: _BallIur(),
         clearCanvas: const f.ClearCanvas(),
       ),
-      focusNode: focusNode,
     );
