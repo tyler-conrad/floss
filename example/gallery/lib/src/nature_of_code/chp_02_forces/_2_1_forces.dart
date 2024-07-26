@@ -25,8 +25,7 @@ class _Mover {
         acceleration = moverInitAcc;
 
   void applyForce(f.Vector2 force) {
-    final f = force / mass;
-    acceleration.add(f);
+    acceleration.add(force / mass);
   }
 
   void update() {
@@ -50,26 +49,24 @@ class _Mover {
     }
   }
 
-  f.Drawing display() {
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: size,
-          paint: f.Paint()..color = u.gray5,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: size,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
+  f.Drawing display() => f.Translate(
+        translation: position,
+        canvasOps: [
+          f.Circle(
+            c: f.Offset.zero,
+            radius: size,
+            paint: f.Paint()..color = u.gray5,
+          ),
+          f.Circle(
+            c: f.Offset.zero,
+            radius: size,
+            paint: f.Paint()
+              ..color = u.black
+              ..style = p.PaintingStyle.stroke
+              ..strokeWidth = 2.0,
+          ),
+        ],
+      );
 }
 
 class _ForcesModel extends f.Model {
@@ -121,9 +118,8 @@ class _ForcesIud<M extends _ForcesModel> extends f.IudBase<M>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return model.mover.display();
-  }
+  }) =>
+      model.mover.display();
 }
 
 const String title = 'Forces';

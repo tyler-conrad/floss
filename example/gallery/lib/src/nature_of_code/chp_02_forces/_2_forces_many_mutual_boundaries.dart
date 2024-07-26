@@ -30,8 +30,7 @@ class _Mover {
         acceleration = f.Vector2.zero();
 
   void applyForce(f.Vector2 force) {
-    final f = force / mass;
-    acceleration.add(f);
+    acceleration.add(force / mass);
   }
 
   void update() {
@@ -40,24 +39,22 @@ class _Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  f.Drawing display() {
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: mass * size,
-          paint: f.Paint()
-            ..color = const p.HSLColor.fromAHSL(
-              0.7,
-              0.0,
-              0.0,
-              0.6,
-            ).toColor(),
-        ),
-      ],
-    );
-  }
+  f.Drawing display() => f.Translate(
+        translation: position,
+        canvasOps: [
+          f.Circle(
+            c: f.Offset.zero,
+            radius: mass * size,
+            paint: f.Paint()
+              ..color = const p.HSLColor.fromAHSL(
+                0.7,
+                0.0,
+                0.0,
+                0.6,
+              ).toColor(),
+          ),
+        ],
+      );
 
   f.Vector2 attract(_Mover m) {
     final force = position - m.position;
@@ -148,11 +145,12 @@ class _ForcesManyMutualBoundariesIud<M extends _ForcesManyMutualBoundariesModel>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Drawing(
-      canvasOps: model.movers.map((m) => m.display()).toList(),
-    );
-  }
+  }) =>
+      f.Drawing(
+        canvasOps: [
+          for (final m in model.movers) m.display(),
+        ],
+      );
 }
 
 const String title = 'Forces - Many Mutual Boundaries';

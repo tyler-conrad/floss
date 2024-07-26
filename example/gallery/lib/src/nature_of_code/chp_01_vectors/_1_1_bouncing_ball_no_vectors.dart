@@ -57,26 +57,25 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Translate(
-      translation: f.Vector2(model.x, model.y),
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: ballRadius,
-          paint: f.Paint()..color = u.gray5,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: ballRadius,
-          paint: f.Paint()
-            ..color = u.black
-            ..paint
-            ..style = p.PaintingStyle.stroke,
-        ),
-      ],
-    );
-  }
+  }) =>
+      f.Translate(
+        translation: f.Vector2(model.x, model.y),
+        canvasOps: [
+          f.Circle(
+            c: f.Offset.zero,
+            radius: ballRadius,
+            paint: f.Paint()..color = u.gray5,
+          ),
+          f.Circle(
+            c: f.Offset.zero,
+            radius: ballRadius,
+            paint: f.Paint()
+              ..color = u.black
+              ..paint
+              ..style = p.PaintingStyle.stroke,
+          ),
+        ],
+      );
 }
 
 const String title = 'Bouncing Ball No Vectors';

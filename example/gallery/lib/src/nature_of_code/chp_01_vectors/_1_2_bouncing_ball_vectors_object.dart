@@ -76,17 +76,15 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
     required Duration time,
     required f.Size size,
     required f.InputEventList inputEvents,
-  }) {
-    return _BallModel.update(
-      size: size,
-      ball: model.ball.update(size),
-    ) as M;
-  }
+  }) =>
+      _BallModel.update(
+        size: size,
+        ball: model.ball.update(size),
+      ) as M;
 
   @override
-  f.Drawing draw({required M model, required bool isLightTheme}) {
-    return model.ball.display();
-  }
+  f.Drawing draw({required M model, required bool isLightTheme}) =>
+      model.ball.display();
 }
 
 const String title = 'Bouncing Ball Vectors Object';

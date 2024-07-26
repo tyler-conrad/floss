@@ -24,13 +24,6 @@ class _Attractor {
         dragging = false,
         rollover = false;
 
-  _Attractor.update({
-    required this.position,
-    required this.dragOffset,
-    required this.dragging,
-    required this.rollover,
-  });
-
   f.Vector2 attract(_Mover m) {
     final force = position - m.position;
     double d = force.length;
@@ -110,8 +103,7 @@ class _Mover {
         acceleration = f.Vector2.zero();
 
   void applyForce(f.Vector2 force) {
-    final f = force / mass;
-    acceleration.add(f);
+    acceleration.add(force / mass);
   }
 
   void update() {
@@ -120,29 +112,26 @@ class _Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  f.Drawing display() {
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: mass,
-          paint: f.Paint()
-            ..color = const p.HSLColor.fromAHSL(
-              0.5,
-              0.0,
-              0.0,
-              0.6,
-            ).toColor(),
-        ),
-      ],
-    );
-  }
+  f.Drawing display() => f.Translate(
+        translation: position,
+        canvasOps: [
+          f.Circle(
+            c: f.Offset.zero,
+            radius: mass,
+            paint: f.Paint()
+              ..color = const p.HSLColor.fromAHSL(
+                0.5,
+                0.0,
+                0.0,
+                0.6,
+              ).toColor(),
+          ),
+        ],
+      );
 
   f.Vector2 repel(_Mover m) {
     final force = position - m.position;
-    double d = force.length;
-    d = math.min(math.max(forceLenMin, d), forceLenMax);
+    final double d = math.min(math.max(forceLenMin, force.length), forceLenMax);
     force.normalize();
     final strength = (_Attractor.g * mass * m.mass) / (d * d);
     return force * (-1.0 * strength);
@@ -251,14 +240,13 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Drawing(
-      canvasOps: [
-        model.attractor.display(),
-        for (final m in model.movers) m.display(),
-      ],
-    );
-  }
+  }) =>
+      f.Drawing(
+        canvasOps: [
+          model.attractor.display(),
+          for (final m in model.movers) m.display(),
+        ],
+      );
 }
 
 const String title = 'Attract Repel';

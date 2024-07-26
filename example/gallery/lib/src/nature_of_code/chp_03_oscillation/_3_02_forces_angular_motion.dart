@@ -27,26 +27,24 @@ class _Attractor {
     return force * strength;
   }
 
-  f.Drawing display() {
-    return f.Translate(
-      translation: location,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: mass,
-          paint: f.Paint()..color = u.gray5,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: mass,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
+  f.Drawing display() => f.Translate(
+        translation: location,
+        canvasOps: [
+          f.Circle(
+            c: f.Offset.zero,
+            radius: mass,
+            paint: f.Paint()..color = u.gray5,
+          ),
+          f.Circle(
+            c: f.Offset.zero,
+            radius: mass,
+            paint: f.Paint()
+              ..color = u.black
+              ..style = p.PaintingStyle.stroke
+              ..strokeWidth = 2.0,
+          ),
+        ],
+      );
 }
 
 class _Mover {
@@ -189,37 +187,33 @@ class _ForcesAngularMotionIud<M extends _ForcesAngularMotionModel>
     required Duration time,
     required f.Size size,
     required f.InputEventList inputEvents,
-  }) {
-    final movers = model.movers.map(
-      (m) {
-        m.applyForce(model.attractor.attract(m));
-        return m.update();
-      },
-    ).toList();
-
-    return _ForcesAngularMotionModel.update(
-        size: size,
-        movers: movers,
-        attractor: _Attractor(
-          location: f.Vector2(
-            size.width * 0.5,
-            size.height * 0.5,
-          ),
-        )) as M;
-  }
+  }) =>
+      _ForcesAngularMotionModel.update(
+          size: size,
+          movers: model.movers.map(
+            (m) {
+              m.applyForce(model.attractor.attract(m));
+              return m.update();
+            },
+          ).toList(),
+          attractor: _Attractor(
+            location: f.Vector2(
+              size.width * 0.5,
+              size.height * 0.5,
+            ),
+          )) as M;
 
   @override
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Drawing(
-      canvasOps: [
-        model.attractor.display(),
-        for (final m in model.movers) m.display(),
-      ],
-    );
-  }
+  }) =>
+      f.Drawing(
+        canvasOps: [
+          model.attractor.display(),
+          for (final m in model.movers) m.display(),
+        ],
+      );
 }
 
 const String title = 'Forces - Angular Motion';

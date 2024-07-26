@@ -50,20 +50,19 @@ class _StaticWaveLinesIud<M extends _StaticWaveLinesModel> extends f.IudBase<M>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Translate(
-      translation: f.Vector2(0.0, model.size.height * 0.5),
-      canvasOps: [
-        f.Points(
-          pointMode: ui.PointMode.polygon,
-          points: model.vertices,
-          paint: f.Paint()
-            ..color = u.black
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
+  }) =>
+      f.Translate(
+        translation: f.Vector2(0.0, model.size.height * 0.5),
+        canvasOps: [
+          f.Points(
+            pointMode: ui.PointMode.polygon,
+            points: model.vertices,
+            paint: f.Paint()
+              ..color = u.black
+              ..strokeWidth = 2.0,
+          ),
+        ],
+      );
 }
 
 const String title = 'Static Wave Lines';

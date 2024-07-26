@@ -39,26 +39,24 @@ class _Mover {
     );
   }
 
-  f.Drawing display() {
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: size,
-          paint: f.Paint()..color = u.gray5,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: size,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
+  f.Drawing display() => f.Translate(
+        translation: position,
+        canvasOps: [
+          f.Circle(
+            c: f.Offset.zero,
+            radius: size,
+            paint: f.Paint()..color = u.gray5,
+          ),
+          f.Circle(
+            c: f.Offset.zero,
+            radius: size,
+            paint: f.Paint()
+              ..color = u.black
+              ..style = p.PaintingStyle.stroke
+              ..strokeWidth = 2.0,
+          ),
+        ],
+      );
 }
 
 class _AccModel extends f.Model {
@@ -119,9 +117,8 @@ class _AccIud<M extends _AccModel> extends f.IudBase<M> implements f.Iud<M> {
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return model.mover.display();
-  }
+  }) =>
+      model.mover.display();
 }
 
 const String title = 'Motion 101: Acceleration 3';

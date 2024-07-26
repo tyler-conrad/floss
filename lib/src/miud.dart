@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'math/geometry.dart' as g;
 import 'canvas_ops.dart' as co;
 import 'input_event.dart' as ie;

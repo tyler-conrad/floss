@@ -47,25 +47,23 @@ class _Mover {
     }
   }
 
-  f.Drawing display() {
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: size,
-          paint: f.Paint()..color = u.gray5,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: size,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke,
-        ),
-      ],
-    );
-  }
+  f.Drawing display() => f.Translate(
+        translation: position,
+        canvasOps: [
+          f.Circle(
+            c: f.Offset.zero,
+            radius: size,
+            paint: f.Paint()..color = u.gray5,
+          ),
+          f.Circle(
+            c: f.Offset.zero,
+            radius: size,
+            paint: f.Paint()
+              ..color = u.black
+              ..style = p.PaintingStyle.stroke,
+          ),
+        ],
+      );
 }
 
 class _MotionModel extends f.Model {
@@ -112,9 +110,8 @@ class _MotionIud<M extends _MotionModel> extends f.IudBase<M>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return model.mover.display();
-  }
+  }) =>
+      model.mover.display();
 }
 
 const String title = 'Motion 101';

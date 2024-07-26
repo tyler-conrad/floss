@@ -12,6 +12,7 @@ class _PolarToCartesianTrailModel extends f.Model {
 
   final double r;
   final double theta;
+
   _PolarToCartesianTrailModel.init({required super.size})
       : r = size.height * rFactor,
         theta = 0.0;

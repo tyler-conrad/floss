@@ -108,8 +108,7 @@ class _Mover {
         acceleration = f.Vector2.zero();
 
   void applyForce(f.Vector2 force) {
-    final f = force / mass;
-    acceleration.add(f);
+    acceleration.add(force / mass);
   }
 
   void update() {
@@ -118,32 +117,30 @@ class _Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  f.Drawing display() {
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: size,
-          paint: f.Paint()
-            ..color = const p.HSLColor.fromAHSL(
-              1.0,
-              0.0,
-              0.0,
-              0.3,
-            ).toColor(),
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: size,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
+  f.Drawing display() => f.Translate(
+        translation: position,
+        canvasOps: [
+          f.Circle(
+            c: f.Offset.zero,
+            radius: size,
+            paint: f.Paint()
+              ..color = const p.HSLColor.fromAHSL(
+                1.0,
+                0.0,
+                0.0,
+                0.3,
+              ).toColor(),
+          ),
+          f.Circle(
+            c: f.Offset.zero,
+            radius: size,
+            paint: f.Paint()
+              ..color = u.black
+              ..style = p.PaintingStyle.stroke
+              ..strokeWidth = 2.0,
+          ),
+        ],
+      );
 }
 
 class _AttractionModel extends f.Model {
@@ -224,14 +221,13 @@ class _AttractionIud<M extends _AttractionModel> extends f.IudBase<M>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Drawing(
-      canvasOps: [
-        model.mover.display(),
-        model.attractor.display(),
-      ],
-    );
-  }
+  }) =>
+      f.Drawing(
+        canvasOps: [
+          model.mover.display(),
+          model.attractor.display(),
+        ],
+      );
 }
 
 const String title = 'Attraction';

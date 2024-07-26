@@ -92,13 +92,13 @@ class _OscillatingObjectsIud<M extends _OscillatingObjectsModel>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Translate(
-      translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
-      canvasOps:
-          model.oscillators.map((oscillator) => oscillator.display()).toList(),
-    );
-  }
+  }) =>
+      f.Translate(
+        translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
+        canvasOps: model.oscillators
+            .map((oscillator) => oscillator.display())
+            .toList(),
+      );
 }
 
 const String title = 'Oscillating Objects';

@@ -23,8 +23,7 @@ class _Mover {
         acceleration = f.Vector2.zero();
 
   void applyForce(f.Vector2 force) {
-    final f = force / mass;
-    acceleration.add(f);
+    acceleration.add(force / mass);
   }
 
   void update() {
@@ -48,26 +47,24 @@ class _Mover {
     }
   }
 
-  f.Drawing display() {
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: mass * size,
-          paint: f.Paint()..color = u.transparent5black,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: mass * size,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
+  f.Drawing display() => f.Translate(
+        translation: position,
+        canvasOps: [
+          f.Circle(
+            c: f.Offset.zero,
+            radius: mass * size,
+            paint: f.Paint()..color = u.transparent5black,
+          ),
+          f.Circle(
+            c: f.Offset.zero,
+            radius: mass * size,
+            paint: f.Paint()
+              ..color = u.black
+              ..style = p.PaintingStyle.stroke
+              ..strokeWidth = 2.0,
+          ),
+        ],
+      );
 }
 
 class _NoFrictionModel extends f.Model {
@@ -128,11 +125,12 @@ class _NoFrictionIud<M extends _NoFrictionModel> extends f.IudBase<M>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Drawing(
-      canvasOps: model.movers.map((m) => m.display()).toList(),
-    );
-  }
+  }) =>
+      f.Drawing(
+        canvasOps: [
+          for (final m in model.movers) m.display(),
+        ],
+      );
 }
 
 const String title = 'Forces - No Friction';
