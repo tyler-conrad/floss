@@ -39,7 +39,7 @@ class _Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  f.Drawing display() => f.Translate(
+  f.Drawing draw() => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
@@ -148,7 +148,7 @@ class _ForcesManyMutualBoundariesIud<M extends _ForcesManyMutualBoundariesModel>
   }) =>
       f.Drawing(
         canvasOps: [
-          for (final m in model.movers) m.display(),
+          for (final m in model.movers) m.draw(),
         ],
       );
 }

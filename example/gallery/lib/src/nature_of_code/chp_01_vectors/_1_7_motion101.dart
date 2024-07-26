@@ -47,7 +47,7 @@ class _Mover {
     }
   }
 
-  f.Drawing display() => f.Translate(
+  f.Drawing draw() => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
@@ -111,7 +111,7 @@ class _MotionIud<M extends _MotionModel> extends f.IudBase<M>
     required M model,
     required bool isLightTheme,
   }) =>
-      model.mover.display();
+      model.mover.draw();
 }
 
 const String title = 'Motion 101';

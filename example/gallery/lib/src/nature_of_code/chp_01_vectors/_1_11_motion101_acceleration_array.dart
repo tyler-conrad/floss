@@ -48,7 +48,7 @@ class _Mover {
     );
   }
 
-  f.Drawing display() => f.Translate(
+  f.Drawing draw() => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
@@ -131,7 +131,7 @@ class _AccArrayIud<M extends _AccArrayModel> extends f.IudBase<M>
     required M model,
     required bool isLightTheme,
   }) =>
-      f.Drawing(canvasOps: model.movers.map((m) => m.display()).toList());
+      f.Drawing(canvasOps: model.movers.map((m) => m.draw()).toList());
 }
 
 const String title = 'Motion 101: Acceleration Array';

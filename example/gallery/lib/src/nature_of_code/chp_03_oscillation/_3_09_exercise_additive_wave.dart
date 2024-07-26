@@ -14,8 +14,8 @@ class _AdditiveWaveModel extends f.Model {
   static const int numCircles = 80;
   static const double minAmplitude = 20.0;
   static const double maxAmplitude = 30.0;
-  static const double minDxFactor = 100.0;
-  static const double maxDxFactor = 300.0;
+  static const double minPeriod = 100.0;
+  static const double maxPeriod = 300.0;
   static const double circleRadius = 8.0;
   static const double thetaTerm = 0.02;
 
@@ -33,7 +33,7 @@ class _AdditiveWaveModel extends f.Model {
           (_) =>
               2.0 *
               math.pi /
-              u.randDoubleRange(minDxFactor, maxDxFactor) *
+              u.randDoubleRange(minPeriod, maxPeriod) *
               (size.width / numCircles),
         ),
         yValues = List.filled(numCircles, 0.0);
@@ -109,7 +109,7 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
       );
 }
 
-const String title = 'Additive Wave';
+const String title = 'Additive Wave 1';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,

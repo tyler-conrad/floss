@@ -54,7 +54,7 @@ class _Pendulum {
     );
   }
 
-  f.Drawing display(f.Size size) {
+  f.Drawing draw(f.Size size) {
     final pos = f.Offset.fromVec(position);
     final r = radiusFactor * math.sqrt(size.width * size.height);
 
@@ -106,7 +106,7 @@ class _PendulumIud<M extends _PendulumModel> extends f.IudBase<M>
     required M model,
     required bool isLightTheme,
   }) =>
-      model.pendulum.display(model.size);
+      model.pendulum.draw(model.size);
 }
 
 const String title = 'Pendulum Simplified';

@@ -28,7 +28,7 @@ class _Oscillator {
     angle.add(velocity);
   }
 
-  f.Drawing display() {
+  f.Drawing draw() {
     final x = amplitude.x * math.sin(angle.x);
     final y = amplitude.y * math.sin(angle.y);
 
@@ -95,9 +95,8 @@ class _OscillatingObjectsIud<M extends _OscillatingObjectsModel>
   }) =>
       f.Translate(
         translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
-        canvasOps: model.oscillators
-            .map((oscillator) => oscillator.display())
-            .toList(),
+        canvasOps:
+            model.oscillators.map((oscillator) => oscillator.draw()).toList(),
       );
 }
 

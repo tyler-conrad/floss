@@ -32,7 +32,7 @@ class _Attractor {
     return force * strength;
   }
 
-  f.Drawing display() {
+  f.Drawing draw() {
     double gray;
     if (dragging) {
       gray = 0.2;
@@ -118,7 +118,7 @@ class _Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  f.Drawing display() => f.Translate(
+  f.Drawing draw() => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
@@ -226,8 +226,8 @@ class _AttractionManyIud<M extends _AttractionManyModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.attractor.display(),
-          for (final m in model.movers) m.display(),
+          model.attractor.draw(),
+          for (final m in model.movers) m.draw(),
         ],
       );
 }

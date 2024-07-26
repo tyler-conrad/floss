@@ -27,7 +27,7 @@ class _Liquid {
     return dragForce;
   }
 
-  f.CanvasOp display() => f.Rectangle(
+  f.CanvasOp draw() => f.Rectangle(
         rect: rect,
         paint: f.Paint()
           ..color = const p.HSLColor.fromAHSL(
@@ -82,7 +82,7 @@ class _Mover {
     }
   }
 
-  f.Drawing display() => f.Translate(
+  f.Drawing draw() => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
@@ -189,8 +189,8 @@ class _FluidIud<M extends _FluidModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.liquid.display(),
-          for (final m in model.movers) m.display(),
+          model.liquid.draw(),
+          for (final m in model.movers) m.draw(),
         ],
       );
 }

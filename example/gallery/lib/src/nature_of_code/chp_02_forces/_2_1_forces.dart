@@ -49,7 +49,7 @@ class _Mover {
     }
   }
 
-  f.Drawing display() => f.Translate(
+  f.Drawing draw() => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
@@ -119,7 +119,7 @@ class _ForcesIud<M extends _ForcesModel> extends f.IudBase<M>
     required M model,
     required bool isLightTheme,
   }) =>
-      model.mover.display();
+      model.mover.draw();
 }
 
 const String title = 'Forces';

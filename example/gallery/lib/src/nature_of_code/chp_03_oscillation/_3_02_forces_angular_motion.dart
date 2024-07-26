@@ -23,7 +23,7 @@ class _Attractor {
     return force * strength;
   }
 
-  f.Drawing display() => f.Translate(
+  f.Drawing draw() => f.Translate(
         translation: location,
         canvasOps: [
           f.Circle(
@@ -105,7 +105,7 @@ class _Mover {
     );
   }
 
-  f.Drawing display() {
+  f.Drawing draw() {
     final s = mass * size;
     return f.Translate(
       translation: location,
@@ -206,8 +206,8 @@ class _ForcesAngularMotionIud<M extends _ForcesAngularMotionModel>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.attractor.display(),
-          for (final m in model.movers) m.display(),
+          model.attractor.draw(),
+          for (final m in model.movers) m.draw(),
         ],
       );
 }

@@ -6,6 +6,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _BallModel extends f.Model {
+  static const double radius = 25.0;
   static const double pos = 100.0;
   static const double initXSpeed = 2.5;
   static const double initYSpeed = 2.0;
@@ -31,8 +32,6 @@ class _BallModel extends f.Model {
 }
 
 class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
-  static const double ballRadius = 25.0;
-
   @override
   M update({
     required M model,
@@ -63,12 +62,12 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
         canvasOps: [
           f.Circle(
             c: f.Offset.zero,
-            radius: ballRadius,
+            radius: _BallModel.radius,
             paint: f.Paint()..color = u.gray5,
           ),
           f.Circle(
             c: f.Offset.zero,
-            radius: ballRadius,
+            radius: _BallModel.radius,
             paint: f.Paint()
               ..color = u.black
               ..paint

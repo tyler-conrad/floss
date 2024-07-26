@@ -43,7 +43,7 @@ class _Mover {
     return force * strength;
   }
 
-  f.Drawing display() => f.Translate(
+  f.Drawing draw() => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
@@ -116,7 +116,7 @@ class _MutualAttractionIud<M extends _MutualAttractionModel>
   }) =>
       f.Drawing(
         canvasOps: [
-          for (final m in model.movers) m.display(),
+          for (final m in model.movers) m.draw(),
         ],
       );
 }

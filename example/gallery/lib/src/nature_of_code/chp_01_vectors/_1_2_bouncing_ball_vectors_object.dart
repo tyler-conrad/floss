@@ -37,7 +37,7 @@ class _Ball {
     );
   }
 
-  f.Drawing display() {
+  f.Drawing draw() {
     return f.Translate(
       translation: position,
       canvasOps: [
@@ -84,7 +84,7 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
 
   @override
   f.Drawing draw({required M model, required bool isLightTheme}) =>
-      model.ball.display();
+      model.ball.draw();
 }
 
 const String title = 'Bouncing Ball Vectors Object';

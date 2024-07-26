@@ -62,7 +62,7 @@ class _Mover {
     }
   }
 
-  f.Drawing display() => f.Translate(
+  f.Drawing draw() => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
@@ -120,7 +120,7 @@ class _AccIud<M extends _AccModel> extends f.IudBase<M> implements f.Iud<M> {
     required M model,
     required bool isLightTheme,
   }) =>
-      model.mover.display();
+      model.mover.draw();
 }
 
 const String title = 'Motion 101: Acceleration 1';

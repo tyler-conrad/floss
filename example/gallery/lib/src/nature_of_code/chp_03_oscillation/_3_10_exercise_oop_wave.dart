@@ -59,7 +59,7 @@ class _Wave {
             .toList(),
       );
 
-  f.Drawing display(f.Size size) => f.Translate(
+  f.Drawing draw(f.Size size) => f.Translate(
         translation: f.Vector2(
           size.width * originFactor.x,
           size.height * originFactor.y,
@@ -135,8 +135,8 @@ class _OopWaveIud<M extends _OopWaveModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.waveOne.display(model.size),
-          model.waveTwo.display(model.size),
+          model.waveOne.draw(model.size),
+          model.waveTwo.draw(model.size),
         ],
       );
 }
