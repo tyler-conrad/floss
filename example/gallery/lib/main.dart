@@ -60,6 +60,8 @@ import 'src/nature_of_code/chp_03_oscillation/_3_09_wave_b.dart' as c3_9_wb;
 import 'src/nature_of_code/chp_03_oscillation/_3_09_wave_c.dart' as c3_9_wc;
 import 'src/nature_of_code/chp_03_oscillation/_3_10_exercise_oop_wave.dart'
     as c3_10_eow;
+import 'src/nature_of_code/chp_03_oscillation/_3_10_pendulum_example_simplified.dart'
+    as c3_10_pes;
 import 'src/nature_of_code/chp_03_oscillation/_3_10_pendulum_example.dart'
     as c3_10_pe;
 
@@ -107,6 +109,7 @@ final examples = <Example>[
   const Example(c3_9_wb.title, c3_9_wb.widget),
   const Example(c3_9_wc.title, c3_9_wc.widget),
   const Example(c3_10_eow.title, c3_10_eow.widget),
+  const Example(c3_10_pes.title, c3_10_pes.widget),
   const Example(c3_10_pe.title, c3_10_pe.widget),
 ];
 
