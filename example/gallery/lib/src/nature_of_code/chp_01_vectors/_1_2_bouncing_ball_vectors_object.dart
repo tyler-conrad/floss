@@ -9,7 +9,7 @@ final f.Vector2 ballInitPos = f.Vector2(100.0, 100.0);
 final f.Vector2 ballInitVel = f.Vector2(2.5, 2.0);
 
 class _Ball {
-  static const double radius = 8.0;
+  static const double radius = 48.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;

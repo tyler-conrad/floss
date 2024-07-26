@@ -6,7 +6,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _BallModel extends f.Model {
-  static const double radius = 25.0;
+  static const double radius = 48.0;
   static const double pos = 100.0;
   static const double initXSpeed = 2.5;
   static const double initYSpeed = 2.0;

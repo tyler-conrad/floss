@@ -10,8 +10,8 @@ import '../utils.dart' as u;
 class _Pendulum {
   static const double gravity = 0.4;
   static const double damping = 0.995;
-  static const double length = 220.0;
-  static const double radius = 28.0;
+  static const double length = 450.0;
+  static const double radius = 48.0;
 
   final f.Vector2 position;
   final f.Vector2 origin;

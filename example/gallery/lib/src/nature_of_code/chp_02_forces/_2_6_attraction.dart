@@ -8,15 +8,17 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Attractor {
-  static const double g = 1.0;
+  static const double gravity = 1.0;
   static const double mass = 20.0;
+  static const radius = 2.0;
   static const double forceLenMin = 5.0;
   static const double forceLenMax = 25.0;
 
   final f.Vector2 position;
+  final f.Vector2 dragOffset;
+
   bool dragging;
   bool rollover;
-  final f.Vector2 dragOffset;
 
   _Attractor({required this.position})
       : dragging = false,
@@ -28,8 +30,7 @@ class _Attractor {
     double d = force.length;
     d = math.min(math.max(forceLenMin, d), forceLenMax);
     force.normalize();
-    final strength = (g * mass * _Mover.mass) / (d * d);
-    return force * strength;
+    return force * (gravity * mass * _Mover.mass) / (d * d);
   }
 
   f.Drawing draw(f.Size size) {
@@ -42,7 +43,7 @@ class _Attractor {
       gray = 0.75;
     }
 
-    final r = u.scale(size) * mass;
+    final r = u.scale(size) * mass * radius;
 
     return f.Drawing(
       canvasOps: [
@@ -69,9 +70,9 @@ class _Attractor {
     );
   }
 
-  void clicked(f.Vector2 mouse) {
+  void clicked({required f.Vector2 mouse, required f.Size size}) {
     final d = (position - mouse).length;
-    if (d < mass) {
+    if (d < u.scale(size) * mass * radius) {
       dragging = true;
       dragOffset.setValues(
         position.x - mouse.x,
@@ -80,7 +81,8 @@ class _Attractor {
     }
   }
 
-  void hover(f.Vector2 mouse) => rollover = (position - mouse).length < mass;
+  void hover({required f.Vector2 mouse, required f.Size size}) =>
+      rollover = (position - mouse).length < u.scale(size) * mass * radius;
 
   void stopDragging() => dragging = false;
 
@@ -97,7 +99,7 @@ class _Attractor {
 final f.Vector2 moverInitVel = f.Vector2(1.0, 0.0);
 
 class _Mover {
-  static const double radius = 8.0;
+  static const double radius = 24.0;
   static const double posFactor = 0.3;
   static const double mass = 1.0;
 
@@ -186,17 +188,19 @@ class _AttractionIud<M extends _AttractionModel> extends f.IudBase<M>
       switch (ie) {
         case f.PointerDown(:final event):
           model.attractor.clicked(
-            f.Vector2(
+            mouse: f.Vector2(
               event.localPosition.dx,
               event.localPosition.dy,
             ),
+            size: size,
           );
         case f.PointerHover(:final event):
           model.attractor.hover(
-            f.Vector2(
+            mouse: f.Vector2(
               event.localPosition.dx,
               event.localPosition.dy,
             ),
+            size: size,
           );
         case f.PointerMove(:final event):
           model.attractor.drag(

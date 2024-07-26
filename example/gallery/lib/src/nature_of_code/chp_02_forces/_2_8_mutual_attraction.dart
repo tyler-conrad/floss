@@ -39,8 +39,7 @@ class _Mover {
     double d = force.length;
     d = math.min(math.max(5.0, d), 25.0);
     force.normalize();
-    final strength = (gravity * mass * m.mass) / (d * d);
-    return force * strength;
+    return force * (gravity * mass * m.mass) / (d * d);
   }
 
   f.Drawing draw(f.Size size) {

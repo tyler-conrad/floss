@@ -8,7 +8,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _SpringSineModel extends f.Model {
-  static const radius = 12.0;
+  static const radius = 48.0;
   static const double angularVel = 0.05;
 
   final double angle;

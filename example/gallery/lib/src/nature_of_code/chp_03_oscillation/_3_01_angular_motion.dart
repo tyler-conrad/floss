@@ -27,8 +27,8 @@ class _AngularMotionModel extends f.Model {
 
 class _AngularMotionIud<M extends _AngularMotionModel> extends f.IudBase<M>
     implements f.Iud<M> {
-  static const double halfLength = 60.0;
-  static const double circleRadius = 8.0;
+  static const double halfLength = 300.0;
+  static const double circleRadius = 24.0;
 
   @override
   M update({

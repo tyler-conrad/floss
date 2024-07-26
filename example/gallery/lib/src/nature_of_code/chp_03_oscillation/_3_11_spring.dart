@@ -8,7 +8,7 @@ import '../utils.dart' as u;
 final f.Vector2 gravity = f.Vector2(0.0, 2.0);
 
 class _Bob {
-  static const double mass = 24.0;
+  static const double mass = 48.0;
   static const double damping = 0.98;
 
   final f.Vector2 position;
@@ -215,7 +215,7 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
         size.width * 0.5,
         u.scale(size) * _Spring.size,
       ),
-      length: size.height * 0.5,
+      length: size.height * 0.6,
     );
 
     model.bob.applyForce(gravity);

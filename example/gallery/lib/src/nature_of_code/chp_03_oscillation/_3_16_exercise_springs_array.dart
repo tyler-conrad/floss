@@ -8,7 +8,7 @@ import '../utils.dart' as u;
 final f.Vector2 gravity = f.Vector2(0.0, 2.0);
 
 class _Bob {
-  static const double mass = 12.0;
+  static const double mass = 24.0;
   static const double damping = 0.95;
 
   final f.Vector2 position;

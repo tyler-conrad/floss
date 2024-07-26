@@ -7,8 +7,8 @@ import '../utils.dart' as u;
 
 class _Mover {
   static const double radius = 24.0;
-  static const double velXHalfRange = 2.0;
-  static const double velYHalfRange = 2.0;
+  static const double velXHalfRange = 4.0;
+  static const double velYHalfRange = 4.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;

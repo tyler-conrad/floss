@@ -10,8 +10,8 @@ import '../utils.dart' as u;
 class _Pendulum {
   static const double gravity = 0.4;
   static const double damping = 0.995;
-  static const double length = 220.0;
-  static const double radius = 28.0;
+  static const double length = 450.0;
+  static const double radius = 48.0;
 
   final f.Vector2 position;
   final f.Vector2 origin;
@@ -60,19 +60,21 @@ class _Pendulum {
 
     return f.Translate(translation: origin, canvasOps: [
       f.Line(
-          p1: f.Offset.zero,
-          p2: pos,
-          paint: f.Paint()
-            ..color = u.black
-            ..strokeWidth = 2.0),
+        p1: f.Offset.zero,
+        p2: pos,
+        paint: f.Paint()
+          ..color = u.black
+          ..strokeWidth = 2.0,
+      ),
       f.Circle(c: pos, radius: r, paint: f.Paint()..color = u.gray5),
       f.Circle(
-          c: f.Offset.fromVec(position),
-          radius: r,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0)
+        c: f.Offset.fromVec(position),
+        radius: r,
+        paint: f.Paint()
+          ..color = u.black
+          ..style = p.PaintingStyle.stroke
+          ..strokeWidth = 2.0,
+      )
     ]);
   }
 }

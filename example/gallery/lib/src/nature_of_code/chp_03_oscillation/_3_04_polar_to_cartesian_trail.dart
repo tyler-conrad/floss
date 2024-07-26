@@ -8,7 +8,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _PolarToCartesianTrailModel extends f.Model {
-  static const radiusFactor = 0.7;
+  static const radiusFactor = 1.4;
 
   final double radius;
   final double theta;

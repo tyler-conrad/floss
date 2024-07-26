@@ -48,17 +48,21 @@ class _Wave {
         period: period,
         amplitude: amplitude,
         yValues: yValues
-            .mapIndexed((x, _) =>
-                math.sin(u.scale(size) *
-                        x *
-                        2.0 *
-                        math.pi /
-                        period *
-                        widthFactor *
-                        size.width /
-                        numCircles +
-                    theta) *
-                amplitude)
+            .mapIndexed(
+              (x, _) =>
+                  amplitude *
+                  math.sin(
+                    u.scale(size) *
+                            x *
+                            2.0 *
+                            math.pi /
+                            period *
+                            widthFactor *
+                            size.width /
+                            numCircles +
+                        theta,
+                  ),
+            )
             .toList(),
       );
 
@@ -70,10 +74,9 @@ class _Wave {
         canvasOps: List.generate(
           numCircles,
           (i) {
-            final s = u.scale(size);
-            final x = s * i * size.width * widthFactor / numCircles;
+            final x = i * size.width * widthFactor / numCircles;
             final y = yValues[i];
-            final r = s * widthFactor * size.width / numCircles * 2.0;
+            final r = widthFactor * size.width / numCircles;
             return f.Circle(
               c: f.Offset(x, y),
               radius: r,

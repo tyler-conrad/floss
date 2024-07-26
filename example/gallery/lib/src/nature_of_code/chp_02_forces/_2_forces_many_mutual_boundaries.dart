@@ -8,8 +8,8 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Mover {
-  static const double radius = 8.0;
-  static const double g = 0.4;
+  static const double radius = 32.0;
+  static const double gravity = 0.4;
   static const double padding = 50.0;
   static const double massMin = 1.0;
   static const double massMax = 2.0;
@@ -61,8 +61,7 @@ class _Mover {
     double d = force.length;
     d = math.min(math.max(forceLenMin, d), forceLenMax);
     force.normalize();
-    final strength = (g * mass * m.mass) / (d * d);
-    return force * strength;
+    return force * (gravity * mass * m.mass) / (d * d);
   }
 
   void boundaries(f.Rect rect) {

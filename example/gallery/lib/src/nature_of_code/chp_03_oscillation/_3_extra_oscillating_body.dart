@@ -10,7 +10,6 @@ import '../utils.dart' as u;
 class _Attractor {
   static const double gravity = 1.0;
   static const double mass = 20.0;
-  static const double radius = 3.0;
   static const double forceLenMin = 5.0;
   static const double forceLenMax = 25.0;
 
@@ -30,20 +29,22 @@ class _Attractor {
     double d = force.length;
     d = math.min(math.max(forceLenMin, d), forceLenMax);
     force.normalize();
-    return force * (gravity * mass * m.mass) / (d * d);
+    return force * (gravity * mass * _Mover.mass) / (d * d);
   }
 
   f.Drawing draw(f.Size size) {
     double gray;
+    double alpha = 1.0;
     if (dragging) {
       gray = 0.2;
     } else if (rollover) {
       gray = 0.4;
     } else {
-      gray = 0.75;
+      alpha = 0.78;
+      gray = 0.7;
     }
 
-    final r = u.scale(size) * radius * mass;
+    final r = u.scale(size) * mass;
 
     return f.Translate(
       translation: position,
@@ -53,7 +54,7 @@ class _Attractor {
           radius: r,
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
-              0.8,
+              alpha,
               0.0,
               0.0,
               gray,
@@ -71,8 +72,12 @@ class _Attractor {
     );
   }
 
-  void clicked({required f.Vector2 mouse, required f.Size size}) {
-    if ((position - mouse).length < u.scale(size) * mass) {
+  void clicked({
+    required f.Vector2 mouse,
+    required f.Size size,
+  }) {
+    final d = (position - mouse).length;
+    if (d < u.scale(size) * mass) {
       dragging = true;
       dragOffset.setValues(
         position.x - mouse.x,
@@ -81,7 +86,10 @@ class _Attractor {
     }
   }
 
-  void hover({required f.Vector2 mouse, required f.Size size}) =>
+  void hover({
+    required f.Vector2 mouse,
+    required f.Size size,
+  }) =>
       rollover = (position - mouse).length < u.scale(size) * mass;
 
   void stopDragging() => dragging = false;
@@ -96,20 +104,19 @@ class _Attractor {
   }
 }
 
-class _Mover {
-  static const double radius = 16.0;
-  static const double massMin = 0.1;
-  static const double massMax = 2.0;
+final f.Vector2 moverInitVel = f.Vector2(1.0, 0.0);
 
-  final double mass;
+class _Mover {
+  static const double radius = 8.0;
+  static const double posFactor = 0.3;
+  static const double mass = 1.0;
+
   final f.Vector2 position;
   final f.Vector2 velocity;
   final f.Vector2 acceleration;
 
-  _Mover({
-    required this.mass,
-    required this.position,
-  })  : velocity = f.Vector2(1.0, 0.0),
+  _Mover({required this.position})
+      : velocity = moverInitVel,
         acceleration = f.Vector2.zero();
 
   void applyForce(f.Vector2 force) {
@@ -123,16 +130,21 @@ class _Mover {
   }
 
   f.Drawing draw(f.Size size) {
-    final r = u.scale(size) * mass * radius;
+    final r = u.scale(size) * radius;
 
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()..color = u.transparent5black,
-        ),
+            c: f.Offset.zero,
+            radius: r,
+            paint: f.Paint()
+              ..color = const p.HSLColor.fromAHSL(
+                1.0,
+                0.0,
+                0.0,
+                0.3,
+              ).toColor()),
         f.Circle(
           c: f.Offset.zero,
           radius: r,
@@ -146,22 +158,17 @@ class _Mover {
   }
 }
 
-class _AttractionManyModel extends f.Model {
-  static const int numMovers = 90;
-
-  final List<_Mover> movers;
+class _AttractionModel extends f.Model {
+  final _Mover mover;
   final _Attractor attractor;
 
-  _AttractionManyModel.init({required super.size})
-      : movers = List.generate(
-          numMovers,
-          (_) => _Mover(
-              mass: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
-              position: f.Vector2(
-                u.randDoubleRange(0.0, size.width),
-                u.randDoubleRange(0.0, size.height),
-              )),
-        ).toList(),
+  _AttractionModel.init({required super.size})
+      : mover = _Mover(
+          position: f.Vector2(
+            size.width * _Mover.posFactor,
+            size.height * _Mover.posFactor,
+          ),
+        ),
         attractor = _Attractor(
           position: f.Vector2(
             size.width * 0.5,
@@ -169,14 +176,14 @@ class _AttractionManyModel extends f.Model {
           ),
         );
 
-  _AttractionManyModel.update({
+  _AttractionModel.update({
     required super.size,
-    required this.movers,
+    required this.mover,
     required this.attractor,
   });
 }
 
-class _AttractionManyIud<M extends _AttractionManyModel> extends f.IudBase<M>
+class _AttractionIud<M extends _AttractionModel> extends f.IudBase<M>
     implements f.Iud<M> {
   @override
   M update({
@@ -217,14 +224,12 @@ class _AttractionManyIud<M extends _AttractionManyModel> extends f.IudBase<M>
       }
     }
 
-    for (final m in model.movers) {
-      m.applyForce(model.attractor.attract(m));
-      m.update();
-    }
+    model.mover.applyForce(model.attractor.attract(model.mover));
+    model.mover.update();
 
-    return _AttractionManyModel.update(
+    return _AttractionModel.update(
       size: size,
-      movers: model.movers,
+      mover: model.mover,
       attractor: model.attractor,
     ) as M;
   }
@@ -236,19 +241,19 @@ class _AttractionManyIud<M extends _AttractionManyModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
+          model.mover.draw(model.size),
           model.attractor.draw(model.size),
-          for (final m in model.movers) m.draw(model.size),
         ],
       );
 }
 
-const String title = 'Attraction - Many';
+const String title = 'Attraction';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
-        modelCtor: _AttractionManyModel.init,
-        iud: _AttractionManyIud(),
+        modelCtor: _AttractionModel.init,
+        iud: _AttractionIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

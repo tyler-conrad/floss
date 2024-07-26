@@ -6,27 +6,27 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Attractor {
-  static const double g = 0.4;
+  static const double gravity = 0.4;
   static const double mass = 20.0;
+  static const double radius = 3.0;
   static const double forceLenDistMin = 5.0;
   static const double forceLenDistMax = 25.0;
 
-  final f.Vector2 location;
+  final f.Vector2 position;
 
-  _Attractor({required this.location});
+  _Attractor({required this.position});
 
   f.Vector2 attract(_Mover m) {
-    final force = (location - m.location);
+    final force = (position - m.position);
     final distance = force.length.clamp(forceLenDistMin, forceLenDistMax);
     force.normalize();
-    final strength = (g * mass * m.mass) / (distance * distance);
-    return force * strength;
+    return force * (gravity * mass * m.mass) / (distance * distance);
   }
 
   f.Drawing draw(f.Size size) {
-    final r = u.scale(size) * mass;
+    final r = u.scale(size) * radius * mass;
     return f.Translate(
-      translation: location,
+      translation: position,
       canvasOps: [
         f.Circle(
             c: f.Offset.zero, radius: r, paint: f.Paint()..color = u.gray5),
@@ -44,7 +44,7 @@ class _Attractor {
 }
 
 class _Mover {
-  static const double size = 16.0;
+  static const double size = 32.0;
   static const double angularVelFactor = 0.1;
   static const double angularVelMin = -0.1;
   static const double angularVelMax = 0.1;
@@ -53,7 +53,7 @@ class _Mover {
   static const double massMax = 2.0;
 
   final double mass;
-  final f.Vector2 location;
+  final f.Vector2 position;
   final f.Vector2 velocity;
   final f.Vector2 acceleration;
   final double angle;
@@ -62,7 +62,7 @@ class _Mover {
 
   _Mover({
     required this.mass,
-    required this.location,
+    required this.position,
   })  : velocity = f.Vector2(
           u.randDoubleRange(-velHalfRange, velHalfRange),
           u.randDoubleRange(-velHalfRange, velHalfRange),
@@ -74,7 +74,7 @@ class _Mover {
 
   _Mover.update({
     required this.mass,
-    required this.location,
+    required this.position,
     required this.velocity,
     required this.acceleration,
     required this.angle,
@@ -88,7 +88,7 @@ class _Mover {
 
   _Mover update() {
     velocity.add(acceleration);
-    location.add(velocity);
+    position.add(velocity);
     final aAcc = acceleration.x * angularVelFactor;
     final aVel = (aVelocity + aAcc).clamp(angularVelMin, angularVelMax);
     final a = angle + aVel;
@@ -96,7 +96,7 @@ class _Mover {
 
     return _Mover.update(
       mass: mass,
-      location: location,
+      position: position,
       velocity: velocity,
       acceleration: acceleration,
       angle: a,
@@ -108,7 +108,7 @@ class _Mover {
   f.Drawing draw(f.Size size) {
     final s = u.scale(size) * mass * _Mover.size;
     return f.Translate(
-      translation: location,
+      translation: position,
       canvasOps: [
         f.Rotate(
           radians: angle,
@@ -155,14 +155,14 @@ class _ForcesAngularMotionModel extends f.Model {
           numMovers,
           (_) => _Mover(
             mass: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
-            location: f.Vector2(
+            position: f.Vector2(
               u.randDoubleRange(0.0, size.width),
               u.randDoubleRange(0.0, size.height),
             ),
           ),
         ).toList(),
         attractor = _Attractor(
-          location: f.Vector2(
+          position: f.Vector2(
             size.width * 0.5,
             size.height * 0.5,
           ),
@@ -193,7 +193,7 @@ class _ForcesAngularMotionIud<M extends _ForcesAngularMotionModel>
             },
           ).toList(),
           attractor: _Attractor(
-            location: f.Vector2(
+            position: f.Vector2(
               size.width * 0.5,
               size.height * 0.5,
             ),

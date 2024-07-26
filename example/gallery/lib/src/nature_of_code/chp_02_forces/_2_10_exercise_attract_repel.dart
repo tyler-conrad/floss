@@ -8,9 +8,9 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Attractor {
-  static const double g = 1.0;
+  static const double gravity = 1.0;
   static const double mass = 10.0;
-  static const double radius = mass * 3.0;
+  static const double radius = mass * 6.0;
   static const double massMin = 5.0;
   static const double massMax = 25.0;
 
@@ -29,8 +29,7 @@ class _Attractor {
     double d = force.length;
     d = math.min(math.max(massMin, d), massMax);
     force.normalize();
-    final strength = (g * mass * mover.mass) / (d * d);
-    return force * strength;
+    return force * (gravity * mass * mover.mass) / (d * d);
   }
 
   f.Drawing draw(f.Size size) {
@@ -87,6 +86,7 @@ class _Attractor {
 }
 
 class _Mover {
+  static const double radius = 4.0;
   static const double forceLenMin = 1.0;
   static const double forceLenMax = 10000.0;
   static const double massMin = 4.0;
@@ -118,7 +118,7 @@ class _Mover {
         canvasOps: [
           f.Circle(
             c: f.Offset.zero,
-            radius: u.scale(size) * mass,
+            radius: u.scale(size) * mass * radius,
             paint: f.Paint()
               ..color = const p.HSLColor.fromAHSL(
                 0.5,
@@ -134,7 +134,7 @@ class _Mover {
     final force = position - m.position;
     final double d = math.min(math.max(forceLenMin, force.length), forceLenMax);
     force.normalize();
-    final strength = (_Attractor.g * mass * m.mass) / (d * d);
+    final strength = (_Attractor.gravity * mass * m.mass) / (d * d);
     return force * -strength;
   }
 }
@@ -144,7 +144,8 @@ class _AttractRepelModel extends f.Model {
 
   final List<_Mover> movers;
   final _Attractor attractor;
-  final f.Vector2 mouse;
+
+  f.Vector2? mouse;
 
   _AttractRepelModel.init({required super.size})
       : movers = List.generate(
@@ -184,38 +185,37 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2? mouse;
-
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
-          mouse = f.Vector2(
+          model.mouse = f.Vector2(
             event.localPosition.dx,
             event.localPosition.dy,
           );
           model.attractor.clicked(
-            mouse: mouse,
+            mouse: model.mouse!,
             size: size,
           );
         case f.PointerHover(:final event):
-          mouse = f.Vector2(
+          model.mouse = f.Vector2(
             event.localPosition.dx,
             event.localPosition.dy,
           );
           model.attractor.over(
-            mouse: mouse,
+            mouse: model.mouse!,
             size: size,
           );
         case f.PointerMove(:final event):
-          mouse = f.Vector2(
+          model.mouse = f.Vector2(
             event.localPosition.dx,
             event.localPosition.dy,
           );
           model.attractor.drag(
-            mouse,
+            model.mouse!,
           );
         case f.PointerUp():
           model.attractor.stopDragging();
+          model.mouse = null;
         default:
           break;
       }
@@ -235,7 +235,7 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
       size: size,
       movers: model.movers,
       attractor: model.attractor,
-      mouse: mouse ?? model.mouse,
+      mouse: model.mouse,
     ) as M;
   }
 
