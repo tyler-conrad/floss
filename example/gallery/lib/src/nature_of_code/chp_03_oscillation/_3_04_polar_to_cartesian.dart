@@ -23,8 +23,8 @@ class _PolarToCartesianModel extends f.Model {
   });
 }
 
-class _PolarToCartesianIur<M extends _PolarToCartesianModel>
-    extends f.IurBase<M> implements f.Iur<M> {
+class _PolarToCartesianIud<M extends _PolarToCartesianModel>
+    extends f.IudBase<M> implements f.Iud<M> {
   static const double circleRadius = 24.0;
 
   @override
@@ -41,7 +41,7 @@ class _PolarToCartesianIur<M extends _PolarToCartesianModel>
       ) as M;
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -82,7 +82,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _PolarToCartesianModel.init,
-        iur: _PolarToCartesianIur(),
+        iud: _PolarToCartesianIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

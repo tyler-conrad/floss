@@ -181,8 +181,8 @@ class _ForcesAngularMotionModel extends f.Model {
   });
 }
 
-class _ForcesAngularMotionIur<M extends _ForcesAngularMotionModel>
-    extends f.IurBase<M> implements f.Iur<M> {
+class _ForcesAngularMotionIud<M extends _ForcesAngularMotionModel>
+    extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -209,7 +209,7 @@ class _ForcesAngularMotionIur<M extends _ForcesAngularMotionModel>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -228,7 +228,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _ForcesAngularMotionModel.init,
-        iur: _ForcesAngularMotionIur(),
+        iud: _ForcesAngularMotionIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

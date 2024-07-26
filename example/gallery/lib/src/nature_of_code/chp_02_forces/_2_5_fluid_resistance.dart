@@ -132,8 +132,8 @@ class _FluidModel extends f.Model {
   });
 }
 
-class _FluidIur<M extends _FluidModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _FluidIud<M extends _FluidModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   static const double gFactor = 0.1;
 
   @override
@@ -186,7 +186,7 @@ class _FluidIur<M extends _FluidModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -205,7 +205,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _FluidModel.init,
-        iur: _FluidIur(),
+        iud: _FluidIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

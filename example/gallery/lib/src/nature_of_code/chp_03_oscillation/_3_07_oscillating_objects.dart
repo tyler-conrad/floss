@@ -70,8 +70,8 @@ class _OscillatingObjectsModel extends f.Model {
   });
 }
 
-class _OscillatingObjectsIur<M extends _OscillatingObjectsModel>
-    extends f.IurBase<M> implements f.Iur<M> {
+class _OscillatingObjectsIud<M extends _OscillatingObjectsModel>
+    extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -89,7 +89,7 @@ class _OscillatingObjectsIur<M extends _OscillatingObjectsModel>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -107,7 +107,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _OscillatingObjectsModel.init,
-        iur: _OscillatingObjectsIur(),
+        iud: _OscillatingObjectsIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

@@ -87,7 +87,7 @@ class _AccModel extends f.Model {
   });
 }
 
-class _AccIur<M extends _AccModel> extends f.IurBase<M> implements f.Iur<M> {
+class _AccIud<M extends _AccModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -116,7 +116,7 @@ class _AccIur<M extends _AccModel> extends f.IurBase<M> implements f.Iur<M> {
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -130,7 +130,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AccModel.init,
-        iur: _AccIur(),
+        iud: _AccIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

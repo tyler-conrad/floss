@@ -53,7 +53,8 @@ import 'src/nature_of_code/chp_03_oscillation/_3_07_oscillating_objects.dart'
 import 'src/nature_of_code/chp_03_oscillation/_3_08_static_wave_lines.dart'
     as c3_8;
 import 'src/nature_of_code/chp_03_oscillation/_3_09_exercise_additive_wave.dart'
-    as c3_9;
+    as c3_9_eaw;
+import 'src/nature_of_code/chp_03_oscillation/_3_09_wave_a.dart' as c3_9_wa;
 
 class Example {
   final String title;
@@ -93,7 +94,8 @@ final examples = <Example>[
   const Example(c3_6.title, c3_6.widget),
   const Example(c3_7.title, c3_7.widget),
   const Example(c3_8.title, c3_8.widget),
-  const Example(c3_9.title, c3_9.widget),
+  const Example(c3_9_eaw.title, c3_9_eaw.widget),
+  const Example(c3_9_wa.title, c3_9_wa.widget),
 ];
 
 class _ExampleGridTile extends m.StatefulWidget {

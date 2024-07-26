@@ -23,8 +23,8 @@ class _PolarToCartesianTrailModel extends f.Model {
   });
 }
 
-class _PolarToCartesianTrailIur<M extends _PolarToCartesianTrailModel>
-    extends f.IurBase<M> implements f.Iur<M> {
+class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
+    extends f.IudBase<M> implements f.Iud<M> {
   static const double circleRadius = 24.0;
 
   @override
@@ -41,7 +41,7 @@ class _PolarToCartesianTrailIur<M extends _PolarToCartesianTrailModel>
       ) as M;
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -82,7 +82,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _PolarToCartesianTrailModel.init,
-        iur: _PolarToCartesianTrailIur(),
+        iud: _PolarToCartesianTrailIud(),
         clearCanvas: f.NoClearCanvas(
             paint: f.Paint()
               ..color = u.transparentWhite

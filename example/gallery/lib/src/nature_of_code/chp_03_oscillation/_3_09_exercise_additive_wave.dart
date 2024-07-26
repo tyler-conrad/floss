@@ -47,8 +47,8 @@ class _AdditiveWaveModel extends f.Model {
   });
 }
 
-class _AdditiveWaveIur<M extends _AdditiveWaveModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -80,7 +80,7 @@ class _AdditiveWaveIur<M extends _AdditiveWaveModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) =>
@@ -114,7 +114,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AdditiveWaveModel.init,
-        iur: _AdditiveWaveIur(),
+        iud: _AdditiveWaveIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

@@ -69,7 +69,7 @@ class _BallModel extends f.Model {
   });
 }
 
-class _BallIur<M extends _BallModel> extends f.IurBase<M> implements f.Iur<M> {
+class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -84,7 +84,7 @@ class _BallIur<M extends _BallModel> extends f.IurBase<M> implements f.Iur<M> {
   }
 
   @override
-  f.Drawing render({required M model, required bool isLightTheme}) {
+  f.Drawing draw({required M model, required bool isLightTheme}) {
     return model.ball.display();
   }
 }
@@ -95,7 +95,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _BallModel.init,
-        iur: _BallIur(),
+        iud: _BallIud(),
         clearCanvas: f.NoClearCanvas(
           paint: f.Paint()
             ..color = u.transparentWhite

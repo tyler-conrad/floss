@@ -115,8 +115,8 @@ class _ForcesManyMutualBoundariesModel extends f.Model {
   });
 }
 
-class _ForcesManyMutualBoundariesIur<M extends _ForcesManyMutualBoundariesModel>
-    extends f.IurBase<M> implements f.Iur<M> {
+class _ForcesManyMutualBoundariesIud<M extends _ForcesManyMutualBoundariesModel>
+    extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -145,7 +145,7 @@ class _ForcesManyMutualBoundariesIur<M extends _ForcesManyMutualBoundariesModel>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -161,7 +161,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _ForcesManyMutualBoundariesModel.init,
-        iur: _ForcesManyMutualBoundariesIur(),
+        iud: _ForcesManyMutualBoundariesIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

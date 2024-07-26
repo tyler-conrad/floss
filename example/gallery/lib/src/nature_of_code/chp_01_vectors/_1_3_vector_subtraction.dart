@@ -17,8 +17,8 @@ class _VecSubModel extends f.Model {
 }
 
 //
-class _VecSubIur<M extends _VecSubModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _VecSubIud<M extends _VecSubModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -46,7 +46,7 @@ class _VecSubIur<M extends _VecSubModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -79,7 +79,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _VecSubModel.init,
-        iur: _VecSubIur(),
+        iud: _VecSubIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

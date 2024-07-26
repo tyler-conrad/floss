@@ -10,9 +10,9 @@ import 'input_event.dart' as ie;
 import 'paint.dart' as pt;
 import 'canvas_ops.dart' as go;
 import 'config.dart' as c;
-import 'miur.dart' as miur;
+import 'miud.dart' as miud;
 
-class _FlossPainter<M, IUR extends miur.Iur<M>> extends w.CustomPainter {
+class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   final c.Config config;
   final w.ValueNotifier<Duration> elapsed;
   final ie.InputEventList inputEvents;
@@ -28,14 +28,14 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends w.CustomPainter {
     required this.inputEvents,
     required this.config,
     required this.brightness,
-  }) : model = config.iur.init(
+  }) : model = config.iud.init(
           modelCtor: config.modelCtor,
           size: g.Size.fromSize(size),
         );
 
   void _tick(Duration elapsed_) {
     elapsed.value = elapsed_;
-    model = config.iur.update(
+    model = config.iud.update(
       model: model,
       time: elapsed_,
       size: g.Size.fromSize(size),
@@ -46,8 +46,8 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends w.CustomPainter {
 
   void _paint(w.Canvas canvas, w.Size s) {
     size = s;
-    config.iur
-        .render(
+    config.iud
+        .draw(
           model: model,
           isLightTheme: brightness == ui.Brightness.light,
         )
@@ -62,8 +62,8 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends w.CustomPainter {
   ) {
     size = s;
 
-    final drawing = config.iur
-        .render(model: model, isLightTheme: brightness == ui.Brightness.light);
+    final drawing = config.iud
+        .draw(model: model, isLightTheme: brightness == ui.Brightness.light);
 
     try {
       assert(
@@ -132,7 +132,7 @@ class _FlossPainter<M, IUR extends miur.Iur<M>> extends w.CustomPainter {
       this != oldDelegate;
 }
 
-class _CanvasTicker<IUR> extends w.StatefulWidget {
+class _CanvasTicker<IUD> extends w.StatefulWidget {
   final c.Config config;
   final w.Size size;
   final ie.InputEventList inputEvents;

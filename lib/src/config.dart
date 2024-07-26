@@ -1,5 +1,5 @@
 import 'paint.dart' as p;
-import 'miur.dart' as miur;
+import 'miud.dart' as miud;
 
 sealed class ClearCanvasType {
   const ClearCanvasType();
@@ -16,13 +16,13 @@ class ClearCanvas extends ClearCanvasType {
 }
 
 class Config<M> {
-  final miur.ModelCtor<M> modelCtor;
-  final miur.Iur<M> iur;
+  final miud.ModelCtor<M> modelCtor;
+  final miud.Iud<M> iud;
   final ClearCanvasType clearCanvas;
 
   Config({
     required this.modelCtor,
-    required this.iur,
+    required this.iud,
     required this.clearCanvas,
   }) : assert(clearCanvas is NoClearCanvas || clearCanvas is ClearCanvas,
             'The "clearCanvas" argument to Config() must be either Clear() or NoClear().');

@@ -90,8 +90,8 @@ class _RealGravityModel extends f.Model {
   });
 }
 
-class _RealGravityIur<M extends _RealGravityModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _RealGravityIud<M extends _RealGravityModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   static const double gFactor = 0.1;
 
   final wind = f.Vector2(0.01, 0.0);
@@ -123,7 +123,7 @@ class _RealGravityIur<M extends _RealGravityModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -139,7 +139,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _RealGravityModel.init,
-        iur: _RealGravityIur(),
+        iud: _RealGravityIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

@@ -6,18 +6,13 @@ import 'input_event.dart' as ie;
 
 typedef ModelCtor<M> = M Function({required g.Size size});
 
-typedef Draw<M> = void Function({
-  required M model,
-  required ui.Canvas canvas,
-});
-
 class Model {
   final g.Size size;
 
   Model({required this.size});
 }
 
-abstract interface class Iur<M> {
+abstract interface class Iud<M> {
   M init({
     required ModelCtor<M> modelCtor,
     required g.Size size,
@@ -30,13 +25,13 @@ abstract interface class Iur<M> {
     required ie.InputEventList inputEvents,
   });
 
-  co.Drawing render({
+  co.Drawing draw({
     required M model,
     required bool isLightTheme,
   });
 }
 
-class IurBase<M extends Model> implements Iur<M> {
+class IudBase<M extends Model> implements Iud<M> {
   @override
   M init({
     required ModelCtor<M> modelCtor,
@@ -56,7 +51,7 @@ class IurBase<M extends Model> implements Iur<M> {
   }
 
   @override
-  co.Drawing render({
+  co.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {

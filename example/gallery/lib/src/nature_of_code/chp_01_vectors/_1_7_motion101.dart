@@ -85,8 +85,8 @@ class _MotionModel extends f.Model {
   });
 }
 
-class _MotionIur<M extends _MotionModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _MotionIud<M extends _MotionModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -109,7 +109,7 @@ class _MotionIur<M extends _MotionModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -123,7 +123,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _MotionModel.init,
-        iur: _MotionIur(),
+        iud: _MotionIud(),
         clearCanvas: f.NoClearCanvas(
           paint: f.Paint()
             ..color = u.transparentWhite

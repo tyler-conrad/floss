@@ -89,8 +89,8 @@ class _ForcesModel extends f.Model {
   });
 }
 
-class _ForcesIur<M extends _ForcesModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _ForcesIud<M extends _ForcesModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   final f.Vector2 wind = f.Vector2(0.01, 0.0);
   final f.Vector2 gravity = f.Vector2(0.0, 0.1);
 
@@ -118,7 +118,7 @@ class _ForcesIur<M extends _ForcesModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -132,7 +132,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _ForcesModel.init,
-        iur: _ForcesIur(),
+        iud: _ForcesIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

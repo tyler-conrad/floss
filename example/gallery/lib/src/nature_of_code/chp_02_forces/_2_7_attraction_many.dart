@@ -171,8 +171,8 @@ class _AttractionManyModel extends f.Model {
   });
 }
 
-class _AttractionManyIur<M extends _AttractionManyModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _AttractionManyIud<M extends _AttractionManyModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -223,7 +223,7 @@ class _AttractionManyIur<M extends _AttractionManyModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -242,7 +242,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AttractionManyModel.init,
-        iur: _AttractionManyIur(),
+        iud: _AttractionManyIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

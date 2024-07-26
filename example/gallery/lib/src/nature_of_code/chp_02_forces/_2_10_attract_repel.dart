@@ -185,8 +185,8 @@ class _AttractRepelModel extends f.Model {
   });
 }
 
-class _AttractRepelIur<M extends _AttractRepelModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -248,7 +248,7 @@ class _AttractRepelIur<M extends _AttractRepelModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -267,7 +267,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AttractRepelModel.init,
-        iur: _AttractRepelIur(),
+        iud: _AttractRepelIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

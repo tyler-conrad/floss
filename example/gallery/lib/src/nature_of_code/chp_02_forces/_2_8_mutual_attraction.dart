@@ -88,8 +88,8 @@ class _MutualAttractionModel extends f.Model {
   });
 }
 
-class _MutualAttractionIur<M extends _MutualAttractionModel>
-    extends f.IurBase<M> implements f.Iur<M> {
+class _MutualAttractionIud<M extends _MutualAttractionModel>
+    extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -113,7 +113,7 @@ class _MutualAttractionIur<M extends _MutualAttractionModel>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -129,7 +129,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _MutualAttractionModel.init,
-        iur: _MutualAttractionIur(),
+        iud: _MutualAttractionIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

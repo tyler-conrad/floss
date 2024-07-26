@@ -93,8 +93,8 @@ class _FrictionModel extends f.Model {
   });
 }
 
-class _FrictionIur<M extends _FrictionModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _FrictionIud<M extends _FrictionModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   static const double gFactor = 0.1;
   static const double c = 0.05;
 
@@ -136,7 +136,7 @@ class _FrictionIur<M extends _FrictionModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -152,7 +152,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _FrictionModel.init,
-        iur: _FrictionIur(),
+        iud: _FrictionIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

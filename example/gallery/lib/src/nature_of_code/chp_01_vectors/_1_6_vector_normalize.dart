@@ -16,8 +16,8 @@ class _VecNormModel extends f.Model {
   });
 }
 
-class _VecNormIur<M extends _VecNormModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _VecNormIud<M extends _VecNormModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   @override
   M update({
     required M model,
@@ -45,7 +45,7 @@ class _VecNormIur<M extends _VecNormModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -80,7 +80,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _VecNormModel.init,
-        iur: _VecNormIur(),
+        iud: _VecNormIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

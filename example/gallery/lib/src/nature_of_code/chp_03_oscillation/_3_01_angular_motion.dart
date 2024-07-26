@@ -25,8 +25,8 @@ class _AngularMotionModel extends f.Model {
   });
 }
 
-class _AngularMotionIur<M extends _AngularMotionModel> extends f.IurBase<M>
-    implements f.Iur<M> {
+class _AngularMotionIud<M extends _AngularMotionModel> extends f.IudBase<M>
+    implements f.Iud<M> {
   static const double halfLength = 60.0;
   static const double circleRadius = 8.0;
 
@@ -48,7 +48,7 @@ class _AngularMotionIur<M extends _AngularMotionModel> extends f.IurBase<M>
   }
 
   @override
-  f.Drawing render({
+  f.Drawing draw({
     required M model,
     required bool isLightTheme,
   }) {
@@ -114,7 +114,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AngularMotionModel.init,
-        iur: _AngularMotionIur(),
+        iud: _AngularMotionIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );
