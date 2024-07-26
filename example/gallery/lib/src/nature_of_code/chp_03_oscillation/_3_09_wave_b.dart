@@ -10,7 +10,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _WaveModel extends f.Model {
-  static const int numCircles = 26;
+  static const int numCircles = 12;
   static const amplitudeFactor = 0.35;
   static const double angleVel = 0.2;
   static const startAngleDt = 0.015;
@@ -52,7 +52,7 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
           final x = i * model.size.width / _WaveModel.numCircles;
           final y =
               _WaveModel.amplitudeFactor * model.size.height * math.sin(angle);
-          final radius = model.size.width / _WaveModel.numCircles * 0.5;
+          final radius = model.size.width / _WaveModel.numCircles;
           return f.Drawing(
             canvasOps: [
               f.Circle(

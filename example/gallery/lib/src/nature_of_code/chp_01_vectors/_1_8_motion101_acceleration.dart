@@ -10,7 +10,7 @@ import '../utils.dart' as u;
 final f.Vector2 moverInitAcc = f.Vector2(-0.001, 0.01);
 
 class _Mover {
-  static const size = 24.0;
+  static const radius = 24.0;
   static const topSpeed = 10.0;
 
   final f.Vector2 position;
@@ -67,12 +67,12 @@ class _Mover {
         canvasOps: [
           f.Circle(
             c: f.Offset.zero,
-            radius: size,
+            radius: radius,
             paint: f.Paint()..color = u.gray5,
           ),
           f.Circle(
             c: f.Offset.zero,
-            radius: size,
+            radius: radius,
             paint: f.Paint()
               ..color = u.black
               ..style = p.PaintingStyle.stroke

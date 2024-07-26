@@ -95,7 +95,7 @@ class _Attractor {
 final f.Vector2 moverInitVel = f.Vector2(1.0, 0.0);
 
 class _Mover {
-  static const double size = 8.0;
+  static const double radius = 8.0;
   static const double posFactor = 0.3;
   static const double mass = 1.0;
 
@@ -122,7 +122,7 @@ class _Mover {
         canvasOps: [
           f.Circle(
             c: f.Offset.zero,
-            radius: size,
+            radius: radius,
             paint: f.Paint()
               ..color = const p.HSLColor.fromAHSL(
                 1.0,
@@ -133,7 +133,7 @@ class _Mover {
           ),
           f.Circle(
             c: f.Offset.zero,
-            radius: size,
+            radius: radius,
             paint: f.Paint()
               ..color = u.black
               ..style = p.PaintingStyle.stroke

@@ -8,7 +8,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Mover {
-  static const size = 24.0;
+  static const radius = 24.0;
   static const topSpeed = 6.0;
   static const double accXRange = 1.0;
   static const double accYRange = 1.0;
@@ -73,12 +73,12 @@ class _Mover {
         canvasOps: [
           f.Circle(
             c: f.Offset.zero,
-            radius: size,
+            radius: radius,
             paint: f.Paint()..color = u.gray5,
           ),
           f.Circle(
             c: f.Offset.zero,
-            radius: size,
+            radius: radius,
             paint: f.Paint()
               ..color = u.black
               ..style = p.PaintingStyle.stroke

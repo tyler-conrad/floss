@@ -8,7 +8,7 @@ import '../utils.dart' as u;
 final f.Vector2 moverInitAcc = f.Vector2(-0.001, 0.01);
 
 class _Mover {
-  static const double size = 24.0;
+  static const double radius = 24.0;
   static const double mass = 1.0;
   static const double initPosOffset = 60.0;
 
@@ -54,12 +54,12 @@ class _Mover {
         canvasOps: [
           f.Circle(
             c: f.Offset.zero,
-            radius: size,
+            radius: radius,
             paint: f.Paint()..color = u.gray5,
           ),
           f.Circle(
             c: f.Offset.zero,
-            radius: size,
+            radius: radius,
             paint: f.Paint()
               ..color = u.black
               ..style = p.PaintingStyle.stroke

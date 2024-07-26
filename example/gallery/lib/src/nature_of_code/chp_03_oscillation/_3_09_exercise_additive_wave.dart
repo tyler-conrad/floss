@@ -91,7 +91,8 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
               (x, y) => f.Circle(
                 c: f.Offset(
                   x.toDouble() *
-                      (model.size.width / _AdditiveWaveModel.numCircles),
+                      model.size.width /
+                      _AdditiveWaveModel.numCircles,
                   y,
                 ),
                 radius: _AdditiveWaveModel.circleRadius,

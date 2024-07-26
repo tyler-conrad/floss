@@ -9,7 +9,7 @@ final f.Vector2 ballInitPos = f.Vector2(100.0, 100.0);
 final f.Vector2 ballInitVel = f.Vector2(2.5, 2.0);
 
 class _Ball {
-  static const double size = 8.0;
+  static const double radius = 8.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;
@@ -43,12 +43,12 @@ class _Ball {
       canvasOps: [
         f.Circle(
           c: f.Offset.zero,
-          radius: size,
+          radius: radius,
           paint: f.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset.zero,
-          radius: size,
+          radius: radius,
           paint: f.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke,

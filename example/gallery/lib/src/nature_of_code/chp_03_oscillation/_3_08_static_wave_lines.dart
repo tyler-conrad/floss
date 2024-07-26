@@ -23,8 +23,6 @@ class _StaticWaveLinesModel extends f.Model {
 
 class _StaticWaveLinesIud<M extends _StaticWaveLinesModel> extends f.IudBase<M>
     implements f.Iud<M> {
-  static const double ballRadius = 25.0;
-
   @override
   M update({
     required M model,
