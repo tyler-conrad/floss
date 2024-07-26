@@ -1,13 +1,9 @@
-import 'dart:math' as math;
-
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
-
-const double scaleFactor = 0.001;
 
 final f.Vector2 gravity = f.Vector2(0.0, 2.0);
 
@@ -57,7 +53,7 @@ class _Bob {
     final c = dragging
         ? u.gray5
         : const p.HSLColor.fromAHSL(1.0, 0.0, 0.0, 0.2).toColor();
-    final r = scaleFactor * math.sqrt(size.width * size.height) * mass;
+    final r = u.scale(size) * mass;
 
     return f.Translate(
       translation: position,
@@ -81,7 +77,7 @@ class _Bob {
 
   void click(f.Vector2 mouse, f.Size size) {
     final m = position - mouse;
-    if (m.length < scaleFactor * math.sqrt(size.width * size.height) * mass) {
+    if (m.length < u.scale(size) * mass) {
       dragging = true;
       dragOffset.setFrom(m);
     }
@@ -99,6 +95,7 @@ class _Bob {
 }
 
 class _Spring {
+  static const size = 10.0;
   static const double k = 0.2;
 
   final f.Vector2 anchor;
@@ -123,17 +120,17 @@ class _Spring {
       dir.normalize();
       dir.scale(minLen);
       bob.position.setFrom(anchor + dir);
-      bob.velocity.scale(0.0);
+      bob.velocity.setValues(0.0, 0.0);
     } else if (d > maxLen) {
       dir.normalize();
       dir.scale(maxLen);
       bob.position.setFrom(anchor + dir);
-      bob.velocity.scale(0.0);
+      bob.velocity.setValues(0.0, 0.0);
     }
   }
 
   f.Drawing draw(f.Size size) {
-    final s = scaleFactor * math.sqrt(size.width * size.height);
+    final s = u.scale(size);
 
     return f.Translate(
       translation: anchor,
@@ -141,16 +138,16 @@ class _Spring {
         f.Rectangle(
           rect: f.Rect.fromCenter(
             center: f.Offset.zero,
-            width: s,
-            height: s,
+            width: s * _Spring.size,
+            height: s * _Spring.size,
           ),
           paint: f.Paint()..color = u.gray5,
         ),
         f.Rectangle(
           rect: f.Rect.fromCenter(
             center: f.Offset.zero,
-            width: s,
-            height: s,
+            width: s * _Spring.size,
+            height: s * _Spring.size,
           ),
           paint: f.Paint()
             ..color = u.black
@@ -162,11 +159,11 @@ class _Spring {
   }
 
   f.Drawing drawLine(_Bob bob) => f.Translate(
-        translation: anchor,
+        translation: bob.position,
         canvasOps: [
           f.Line(
             p1: f.Offset.zero,
-            p2: f.Offset.fromVec(bob.position),
+            p2: f.Offset.fromVec(anchor - bob.position),
             paint: f.Paint()
               ..color = u.black
               ..strokeWidth = 2.0,
@@ -178,6 +175,7 @@ class _Spring {
 class _SpringModel extends f.Model {
   final _Bob bob;
   final _Spring spring;
+  f.Vector2? mouse;
 
   _SpringModel.init({required super.size})
       : bob = _Bob(
@@ -189,15 +187,17 @@ class _SpringModel extends f.Model {
         spring = _Spring(
           anchor: f.Vector2(
             size.width * 0.5,
-            scaleFactor * math.sqrt(size.width * size.height) * 0.5,
+            u.scale(size) * _Spring.size,
           ),
           length: size.height * 0.5,
-        );
+        ),
+        mouse = null;
 
   _SpringModel.update({
     required super.size,
     required this.bob,
     required this.spring,
+    required this.mouse,
   });
 }
 
@@ -210,16 +210,23 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    model.bob.applyForce(gravity);
-
-    model.spring.connect(model.bob);
-
-    model.spring.constrainLength(
-      bob: model.bob,
-      minLen: size.height * 0.25,
-      maxLen: size.height * 0.75,
+    final spring = _Spring(
+      anchor: f.Vector2(
+        size.width * 0.5,
+        u.scale(size) * _Spring.size,
+      ),
+      length: size.height * 0.5,
     );
 
+    model.bob.applyForce(gravity);
+
+    spring.connect(model.bob);
+
+    spring.constrainLength(
+      bob: model.bob,
+      minLen: size.height * 0.1,
+      maxLen: size.height * 0.9,
+    );
     final bob = model.bob.update();
 
     for (final ie in inputEvents) {
@@ -235,13 +242,12 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
           break;
         case f.PointerUp():
           bob.stopDragging();
+          model.mouse = null;
           break;
         case f.PointerMove(:final event):
-          bob.drag(
-            f.Vector2(
-              event.localPosition.dx,
-              event.localPosition.dy,
-            ),
+          model.mouse = f.Vector2(
+            event.localPosition.dx,
+            event.localPosition.dy,
           );
           break;
         default:
@@ -249,10 +255,15 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
       }
     }
 
+    if (model.mouse != null) {
+      bob.drag(model.mouse!);
+    }
+
     return _SpringModel.update(
       size: size,
       bob: bob,
-      spring: model.spring,
+      spring: spring,
+      mouse: model.mouse,
     ) as M;
   }
 
