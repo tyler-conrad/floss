@@ -69,10 +69,10 @@ class _Wave {
           (i) {
             final x = i * size.width * widthFactor / numCircles;
             final y = yValues[i];
-            final radius = widthFactor * size.width / numCircles * 2.0;
+            final r = widthFactor * size.width / numCircles * 2.0;
             return f.Circle(
               c: f.Offset(x, y),
-              radius: radius,
+              radius: r,
               paint: f.Paint()
                 ..color = const p.HSLColor.fromAHSL(
                   0.2,

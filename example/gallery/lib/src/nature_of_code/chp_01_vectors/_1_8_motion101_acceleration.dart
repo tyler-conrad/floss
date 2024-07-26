@@ -10,8 +10,8 @@ import '../utils.dart' as u;
 final f.Vector2 moverInitAcc = f.Vector2(-0.001, 0.01);
 
 class _Mover {
-  static const radius = 24.0;
-  static const topSpeed = 10.0;
+  static const double radius = 24.0;
+  static const double topSpeed = 10.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;

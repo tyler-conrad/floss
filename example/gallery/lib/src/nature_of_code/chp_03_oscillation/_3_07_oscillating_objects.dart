@@ -8,8 +8,8 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Oscillator {
-  static const lengthFactor = 0.4;
-  static const circleRadius = 16.0;
+  static const double lengthFactor = 0.4;
+  static const double circleRadius = 16.0;
 
   final f.Size size;
   final f.Vector2 angle;

@@ -10,8 +10,8 @@ import '../utils.dart' as u;
 class _Mover {
   static const double size = 12.0;
   static const double g = 0.4;
-  static const minMass = 0.1;
-  static const maxMass = 2.0;
+  static const double minMass = 0.1;
+  static const double maxMass = 2.0;
 
   final double mass;
   final f.Vector2 position;

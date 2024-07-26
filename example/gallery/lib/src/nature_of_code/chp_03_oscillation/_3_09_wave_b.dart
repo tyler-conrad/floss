@@ -11,9 +11,9 @@ import '../utils.dart' as u;
 
 class _WaveModel extends f.Model {
   static const int numCircles = 12;
-  static const amplitudeFactor = 0.35;
+  static const double amplitudeFactor = 0.35;
   static const double angleVel = 0.2;
-  static const startAngleDt = 0.015;
+  static const double startAngleDt = 0.015;
 
   final double startAngle;
 
@@ -52,19 +52,19 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
           final x = i * model.size.width / _WaveModel.numCircles;
           final y =
               _WaveModel.amplitudeFactor * model.size.height * math.sin(angle);
-          final radius = model.size.width / _WaveModel.numCircles;
+          final r = model.size.width / _WaveModel.numCircles;
           return f.Drawing(
             canvasOps: [
               f.Circle(
                 c: f.Offset(x, y),
-                radius: radius,
+                radius: r,
                 paint: f.Paint()
                   ..color = u.transparent5black
                   ..style = p.PaintingStyle.fill,
               ),
               f.Circle(
                 c: f.Offset(x, y),
-                radius: radius,
+                radius: r,
                 paint: f.Paint()
                   ..color = u.black
                   ..style = p.PaintingStyle.stroke

@@ -1,13 +1,9 @@
-import 'dart:math' as math;
-
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
-
-final rng = math.Random();
 
 class _Attractor {
   static const double g = 0.4;
@@ -49,9 +45,9 @@ class _Attractor {
 
 class _Mover {
   static const double size = 16.0;
-  static const double angVelFactor = 0.1;
-  static const double angVelMin = -0.1;
-  static const double angVelMax = 0.1;
+  static const double angularVelFactor = 0.1;
+  static const double angularVelMin = -0.1;
+  static const double angularVelMax = 0.1;
   static const double velHalfRange = 1.0;
   static const double massMin = 0.1;
   static const double massMax = 2.0;
@@ -68,8 +64,8 @@ class _Mover {
     required this.mass,
     required this.location,
   })  : velocity = f.Vector2(
-          rng.nextDouble() * 2.0 * velHalfRange - velHalfRange,
-          rng.nextDouble() * 2.0 * velHalfRange - velHalfRange,
+          u.randDoubleRange(-velHalfRange, velHalfRange),
+          u.randDoubleRange(-velHalfRange, velHalfRange),
         ),
         acceleration = f.Vector2.zero(),
         angle = 0.0,
@@ -93,8 +89,8 @@ class _Mover {
   _Mover update() {
     velocity.add(acceleration);
     location.add(velocity);
-    final aAcc = acceleration.x * angVelFactor;
-    final aVel = (aVelocity + aAcc).clamp(angVelMin, angVelMax);
+    final aAcc = acceleration.x * angularVelFactor;
+    final aVel = (aVelocity + aAcc).clamp(angularVelMin, angularVelMax);
     final a = angle + aVel;
     acceleration.setValues(0.0, 0.0);
 

@@ -6,7 +6,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _AngularMotionModel extends f.Model {
-  static const initAngAcc = -0.0001;
+  static const double initAngAcc = -0.0001;
 
   final double angle;
   final double angleVelocity;

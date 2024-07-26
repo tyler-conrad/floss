@@ -52,19 +52,19 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
           final x = i * model.size.width / _WaveModel.numCircles;
           final y =
               _WaveModel.amplitudeFactor * model.size.height * math.sin(angle);
-          final radius = model.size.width / _WaveModel.numCircles;
+          final r = model.size.width / _WaveModel.numCircles;
           return f.Drawing(
             canvasOps: [
               f.Circle(
                 c: f.Offset(x, y),
-                radius: radius,
+                radius: r,
                 paint: f.Paint()
                   ..color = u.transparent5black
                   ..style = p.PaintingStyle.fill,
               ),
               f.Circle(
                 c: f.Offset(x, y),
-                radius: radius,
+                radius: r,
                 paint: f.Paint()
                   ..color = u.black
                   ..style = p.PaintingStyle.stroke

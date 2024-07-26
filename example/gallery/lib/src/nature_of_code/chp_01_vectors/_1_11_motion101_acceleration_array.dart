@@ -6,8 +6,8 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Mover {
-  static const radius = 24.0;
-  static const topSpeed = 5.0;
+  static const double radius = 24.0;
+  static const double topSpeed = 5.0;
   static const double accFactor = 0.2;
 
   final f.Vector2 position;

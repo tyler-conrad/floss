@@ -11,8 +11,8 @@ class _Attractor {
   static const double g = 1.0;
   static const double mass = 10.0;
   static const double radius = mass * 3.0;
-  static const massMin = 5.0;
-  static const massMax = 25.0;
+  static const double massMin = 5.0;
+  static const double massMax = 25.0;
 
   final f.Vector2 position;
   final f.Vector2 dragOffset;

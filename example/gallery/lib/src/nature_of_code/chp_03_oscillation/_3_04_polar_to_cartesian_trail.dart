@@ -8,18 +8,18 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _PolarToCartesianTrailModel extends f.Model {
-  static const rFactor = 0.45;
+  static const radiusFactor = 0.45;
 
-  final double r;
+  final double radius;
   final double theta;
 
   _PolarToCartesianTrailModel.init({required super.size})
-      : r = size.height * rFactor,
+      : radius = size.height * radiusFactor,
         theta = 0.0;
 
   _PolarToCartesianTrailModel.update({
     required super.size,
-    required this.r,
+    required this.radius,
     required this.theta,
   });
 }
@@ -37,7 +37,7 @@ class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
   }) =>
       _PolarToCartesianTrailModel.update(
         size: size,
-        r: model.r,
+        radius: model.radius,
         theta: model.theta + 0.02,
       ) as M;
 
@@ -46,8 +46,8 @@ class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
     required M model,
     required bool isLightTheme,
   }) {
-    final x = model.r * math.cos(model.theta);
-    final y = model.r * math.sin(model.theta);
+    final x = model.radius * math.cos(model.theta);
+    final y = model.radius * math.sin(model.theta);
 
     return f.Translate(
       translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),

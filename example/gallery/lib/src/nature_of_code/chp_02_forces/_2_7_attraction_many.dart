@@ -94,8 +94,8 @@ class _Attractor {
 
 class _Mover {
   static const double size = 8.0;
-  static const massMin = 0.1;
-  static const massMax = 2.0;
+  static const double massMin = 0.1;
+  static const double massMax = 2.0;
 
   final double mass;
   final f.Vector2 position;

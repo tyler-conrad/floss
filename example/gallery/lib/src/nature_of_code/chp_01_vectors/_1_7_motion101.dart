@@ -6,7 +6,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Mover {
-  static const radius = 24.0;
+  static const double radius = 24.0;
   static const double velXHalfRange = 2.0;
   static const double velYHalfRange = 2.0;
 

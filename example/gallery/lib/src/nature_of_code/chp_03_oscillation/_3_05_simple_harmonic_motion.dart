@@ -24,7 +24,6 @@ class _SimpleHarmonicMotionIud<M extends _SimpleHarmonicMotionModel>
   static const double circleRadius = 25.0;
   static const double period = 0.2;
   static const double amplitudeFactor = 0.4;
-  static const double twoPi = 2.0 * math.pi;
 
   @override
   M update({
@@ -45,7 +44,7 @@ class _SimpleHarmonicMotionIud<M extends _SimpleHarmonicMotionModel>
   }) {
     final x = model.size.width *
         amplitudeFactor *
-        math.sin(twoPi * model.elapsed * period);
+        math.sin(2.0 * math.pi * model.elapsed * period);
 
     return f.Translate(
       translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
