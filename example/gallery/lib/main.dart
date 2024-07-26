@@ -65,6 +65,8 @@ import 'src/nature_of_code/chp_03_oscillation/_3_10_pendulum_example_simplified.
     as c3_10_pes;
 import 'src/nature_of_code/chp_03_oscillation/_3_10_pendulum_example.dart'
     as c3_10_pe;
+import 'src/nature_of_code/chp_03_oscillation/_3_11_exercise_additive_wave.dart'
+    as c3_11_eaw;
 import 'src/nature_of_code/chp_03_oscillation/_3_11_spring.dart' as c3_11;
 
 class Example {
@@ -114,6 +116,7 @@ final examples = <Example>[
   const Example(c3_10_pes.title, c3_10_pes.widget),
   const Example(c3_10_pe.title, c3_10_pe.widget),
   const Example(c3_11.title, c3_11.widget),
+  const Example(c3_11_eaw.title, c3_11_eaw.widget),
 ];
 
 class _ExampleGridTile extends m.StatefulWidget {

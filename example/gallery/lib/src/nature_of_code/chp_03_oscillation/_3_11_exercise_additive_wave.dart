@@ -16,7 +16,7 @@ class _AdditiveWaveModel extends f.Model {
   static const double maxAmplitude = 30.0;
   static const double minPeriod = 100.0;
   static const double maxPeriod = 300.0;
-  static const double radius = 12.0;
+  static const double radius = 24.0;
   static const double angularVel = 0.02;
 
   final double theta;
@@ -110,7 +110,7 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
       );
 }
 
-const String title = 'Additive Wave 1';
+const String title = 'Additive Wave 2';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
