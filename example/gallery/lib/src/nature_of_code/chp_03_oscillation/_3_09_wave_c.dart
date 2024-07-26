@@ -12,7 +12,7 @@ import '../utils.dart' as u;
 class _WaveModel extends f.Model {
   static const int numCircles = 26;
   static const amplitudeFactor = 0.35;
-  static const double angleVel = 0.05;
+  static const double startVel = 0.4;
   static const startAngleDt = 0.015;
 
   final double startAngle;
@@ -49,7 +49,7 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
       translation: f.Vector2(0.0, model.size.height * 0.5),
       canvasOps: List.generate(
         _WaveModel.numCircles + 1,
-        (i) => model.startAngle + i * _WaveModel.angleVel,
+            (i) => model.startAngle + i * _WaveModel.startVel,
       ).mapIndexed((i, angle) {
         final x = i * model.size.width / _WaveModel.numCircles;
         final y =
@@ -79,13 +79,13 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
   }
 }
 
-const String title = 'Wave A';
+const String title = 'Wave C';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _WaveModel.init,
-        iud: _WaveIud(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _WaveModel.init,
+    iud: _WaveIud(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);
