@@ -8,13 +8,13 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _PolarToCartesianModel extends f.Model {
-  static const radiusFactor = 1.4;
+  static const radiusFactor = 0.4;
 
   final double radius;
   final double theta;
 
   _PolarToCartesianModel.init({required super.size})
-      : radius = size.height * radiusFactor,
+      : radius = u.scale(size) * size.height * radiusFactor,
         theta = 0.0;
 
   _PolarToCartesianModel.update({

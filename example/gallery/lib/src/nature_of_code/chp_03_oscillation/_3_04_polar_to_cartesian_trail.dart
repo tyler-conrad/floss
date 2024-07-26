@@ -8,7 +8,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _PolarToCartesianTrailModel extends f.Model {
-  static const radiusFactor = 1.4;
+  static const radiusFactor = 0.4;
 
   final double radius;
   final double theta;
@@ -47,7 +47,6 @@ class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
     required bool isLightTheme,
   }) {
     final s = u.scale(model.size);
-
     final x = s * model.radius * math.cos(model.theta);
     final y = s * model.radius * math.sin(model.theta);
     final cr = s * circleRadius;

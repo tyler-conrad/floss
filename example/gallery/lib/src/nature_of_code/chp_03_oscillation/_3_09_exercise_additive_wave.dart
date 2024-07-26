@@ -11,7 +11,7 @@ import '../utils.dart' as u;
 
 class _AdditiveWaveModel extends f.Model {
   static const int maxWaves = 5;
-  static const int numCircles = 80;
+  static const int numCircles = 160;
   static const double minAmplitude = 20.0;
   static const double maxAmplitude = 30.0;
   static const double minPeriod = 100.0;

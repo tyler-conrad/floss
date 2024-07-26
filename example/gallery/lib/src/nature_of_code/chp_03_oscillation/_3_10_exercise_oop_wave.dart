@@ -18,7 +18,6 @@ class _Wave {
   final double widthFactor;
   final double period;
   final double amplitude;
-  //final double dx;
   final List<double> yValues;
 
   _Wave.init({
