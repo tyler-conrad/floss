@@ -48,24 +48,28 @@ class _Mover {
     );
   }
 
-  f.Drawing draw() => f.Translate(
-        translation: position,
-        canvasOps: [
-          f.Circle(
-            c: f.Offset.zero,
-            radius: radius,
-            paint: f.Paint()..color = u.gray5,
-          ),
-          f.Circle(
-            c: f.Offset.zero,
-            radius: radius,
-            paint: f.Paint()
-              ..color = u.transparent7Black
-              ..style = p.PaintingStyle.stroke
-              ..strokeWidth = 2.0,
-          ),
-        ],
-      );
+  f.Drawing draw(f.Size size) {
+    final r = u.scale(size) * radius;
+
+    return f.Translate(
+      translation: position,
+      canvasOps: [
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()..color = u.gray5,
+        ),
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()
+            ..color = u.transparent7Black
+            ..style = p.PaintingStyle.stroke
+            ..strokeWidth = 2.0,
+        ),
+      ],
+    );
+  }
 }
 
 class _AccArrayModel extends f.Model {
@@ -131,7 +135,8 @@ class _AccArrayIud<M extends _AccArrayModel> extends f.IudBase<M>
     required M model,
     required bool isLightTheme,
   }) =>
-      f.Drawing(canvasOps: model.movers.map((m) => m.draw()).toList());
+      f.Drawing(
+          canvasOps: model.movers.map((m) => m.draw(model.size)).toList());
 }
 
 const String title = 'Motion 101: Acceleration Array';

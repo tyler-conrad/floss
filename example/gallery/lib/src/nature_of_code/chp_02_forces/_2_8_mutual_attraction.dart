@@ -8,8 +8,8 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Mover {
-  static const double size = 12.0;
-  static const double g = 0.4;
+  static const double radius = 12.0;
+  static const double gravity = 0.4;
   static const double minMass = 0.1;
   static const double maxMass = 2.0;
 
@@ -39,28 +39,32 @@ class _Mover {
     double d = force.length;
     d = math.min(math.max(5.0, d), 25.0);
     force.normalize();
-    final strength = (g * mass * m.mass) / (d * d);
+    final strength = (gravity * mass * m.mass) / (d * d);
     return force * strength;
   }
 
-  f.Drawing draw() => f.Translate(
-        translation: position,
-        canvasOps: [
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass * size,
-            paint: f.Paint()..color = u.transparent5black,
-          ),
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass * size,
-            paint: f.Paint()
-              ..color = u.black
-              ..style = p.PaintingStyle.stroke
-              ..strokeWidth = 2.0,
-          ),
-        ],
-      );
+  f.Drawing draw(f.Size size) {
+    final r = u.scale(size) * mass * radius;
+
+    return f.Translate(
+      translation: position,
+      canvasOps: [
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()..color = u.transparent5black,
+        ),
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()
+            ..color = u.black
+            ..style = p.PaintingStyle.stroke
+            ..strokeWidth = 2.0,
+        ),
+      ],
+    );
+  }
 }
 
 class _MutualAttractionModel extends f.Model {
@@ -116,7 +120,7 @@ class _MutualAttractionIud<M extends _MutualAttractionModel>
   }) =>
       f.Drawing(
         canvasOps: [
-          for (final m in model.movers) m.draw(),
+          for (final m in model.movers) m.draw(model.size),
         ],
       );
 }

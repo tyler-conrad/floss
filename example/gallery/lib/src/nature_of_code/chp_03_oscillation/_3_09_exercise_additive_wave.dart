@@ -20,13 +20,13 @@ class _AdditiveWaveModel extends f.Model {
   static const double thetaTerm = 0.02;
 
   final double theta;
-  final List<double> amplitude;
+  final List<double> amplitudeFactors;
   final List<double> dx;
   final List<double> yValues;
 
   _AdditiveWaveModel.init({required super.size})
       : theta = 0.0,
-        amplitude = List.generate(
+        amplitudeFactors = List.generate(
             maxWaves, (_) => u.randDoubleRange(minAmplitude, maxAmplitude)),
         dx = List.generate(
           maxWaves,
@@ -41,7 +41,7 @@ class _AdditiveWaveModel extends f.Model {
   _AdditiveWaveModel.update({
     required super.size,
     required this.theta,
-    required this.amplitude,
+    required this.amplitudeFactors,
     required this.dx,
     required this.yValues,
   });
@@ -56,6 +56,7 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
+    final s = u.scale(size);
     final theta = model.theta + _AdditiveWaveModel.thetaTerm;
     model.yValues.fillRange(0, model.yValues.length, 0.0);
 
@@ -63,9 +64,9 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
       var x = theta;
       for (var i = 0; i < model.yValues.length; i++) {
         if (j % 2 == 0) {
-          model.yValues[i] += math.sin(x) * model.amplitude[j];
+          model.yValues[i] += s * math.sin(x) * model.amplitudeFactors[j];
         } else {
-          model.yValues[i] += math.cos(x) * model.amplitude[j];
+          model.yValues[i] += s * math.cos(x) * model.amplitudeFactors[j];
         }
         x += model.dx[j];
       }
@@ -73,7 +74,7 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
     return _AdditiveWaveModel.update(
       size: size,
       theta: theta,
-      amplitude: model.amplitude,
+      amplitudeFactors: model.amplitudeFactors,
       dx: model.dx,
       yValues: model.yValues,
     ) as M;
@@ -95,7 +96,7 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
                       _AdditiveWaveModel.numCircles,
                   y,
                 ),
-                radius: _AdditiveWaveModel.circleRadius,
+                radius: u.scale(model.size) * _AdditiveWaveModel.circleRadius,
                 paint: f.Paint()
                   ..color = const p.HSLColor.fromAHSL(
                     0.25,

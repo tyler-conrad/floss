@@ -6,7 +6,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Mover {
-  static const double size = 8.0;
+  static const double radius = 8.0;
   static const double massMin = 1.0;
   static const double massMax = 4.0;
 
@@ -47,24 +47,28 @@ class _Mover {
     }
   }
 
-  f.Drawing draw() => f.Translate(
-        translation: position,
-        canvasOps: [
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass * size,
-            paint: f.Paint()..color = u.transparent5black,
-          ),
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass * size,
-            paint: f.Paint()
-              ..color = u.black
-              ..style = p.PaintingStyle.stroke
-              ..strokeWidth = 2.0,
-          ),
-        ],
-      );
+  f.Drawing draw(f.Size size) {
+    final r = u.scale(size) * mass * _Mover.radius;
+
+    return f.Translate(
+      translation: position,
+      canvasOps: [
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()..color = u.transparent5black,
+        ),
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()
+            ..color = u.black
+            ..style = p.PaintingStyle.stroke
+            ..strokeWidth = 2.0,
+        ),
+      ],
+    );
+  }
 }
 
 class _FrictionModel extends f.Model {
@@ -139,7 +143,7 @@ class _FrictionIud<M extends _FrictionModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          for (final m in model.movers) m.draw(),
+          for (final m in model.movers) m.draw(model.size),
         ],
       );
 }

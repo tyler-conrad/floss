@@ -46,6 +46,10 @@ final _rand = math.Random();
 double randDoubleRange(double min, double max) =>
     min + _rand.nextDouble() * (max - min);
 
+const scaleFactor = 0.002;
+
+double scale(f.Size size) => scaleFactor * math.sqrt(size.width * size.height);
+
 class ExamplesWidget extends w.StatelessWidget {
   final String _title;
   final f.FlossWidget _child;

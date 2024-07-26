@@ -7,6 +7,8 @@ import 'package:collection/collection.dart' show IterableExtension;
 
 import 'package:floss/floss.dart' as f;
 
+import '../utils.dart' as u;
+
 class _Wave {
   static const double dt = 0.02;
 
@@ -47,7 +49,8 @@ class _Wave {
         amplitude: amplitude,
         yValues: yValues
             .mapIndexed((x, _) =>
-                math.sin(x *
+                math.sin(u.scale(size) *
+                        x *
                         2.0 *
                         math.pi /
                         period *
@@ -67,9 +70,10 @@ class _Wave {
         canvasOps: List.generate(
           numCircles,
           (i) {
-            final x = i * size.width * widthFactor / numCircles;
+            final s = u.scale(size);
+            final x = s * i * size.width * widthFactor / numCircles;
             final y = yValues[i];
-            final r = widthFactor * size.width / numCircles * 2.0;
+            final r = s * widthFactor * size.width / numCircles * 2.0;
             return f.Circle(
               c: f.Offset(x, y),
               radius: r,

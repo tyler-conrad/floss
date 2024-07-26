@@ -24,16 +24,16 @@ class _Attractor {
         dragging = false,
         rollover = false;
 
-  f.Vector2 attract(_Mover m) {
-    final force = position - m.position;
+  f.Vector2 attract({required _Mover mover, required f.Size size}) {
+    final force = position - mover.position;
     double d = force.length;
     d = math.min(math.max(massMin, d), massMax);
     force.normalize();
-    final strength = (g * mass * m.mass) / (d * d);
+    final strength = (g * mass * mover.mass) / (d * d);
     return force * strength;
   }
 
-  f.Drawing draw() {
+  f.Drawing draw(f.Size size) {
     double gray;
     if (dragging) {
       gray = 0.2;
@@ -48,7 +48,7 @@ class _Attractor {
       canvasOps: [
         f.Circle(
           c: f.Offset.zero,
-          radius: radius,
+          radius: u.scale(size) * radius,
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
               1.0,
@@ -61,8 +61,8 @@ class _Attractor {
     );
   }
 
-  void clicked(f.Vector2 mouse) {
-    if ((position - mouse).length < radius) {
+  void clicked({required f.Vector2 mouse, required f.Size size}) {
+    if ((position - mouse).length < u.scale(size) * radius) {
       dragging = true;
       dragOffset.setValues(
         position.x - mouse.x,
@@ -71,7 +71,8 @@ class _Attractor {
     }
   }
 
-  void over(f.Vector2 mouse) => rollover = (position - mouse).length < radius;
+  void over({required f.Vector2 mouse, required f.Size size}) =>
+      rollover = (position - mouse).length < u.scale(size) * radius;
 
   void stopDragging() => dragging = false;
 
@@ -112,12 +113,12 @@ class _Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  f.Drawing draw() => f.Translate(
+  f.Drawing draw(f.Size size) => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
             c: f.Offset.zero,
-            radius: mass,
+            radius: u.scale(size) * mass,
             paint: f.Paint()
               ..color = const p.HSLColor.fromAHSL(
                 0.5,
@@ -134,7 +135,7 @@ class _Mover {
     final double d = math.min(math.max(forceLenMin, force.length), forceLenMax);
     force.normalize();
     final strength = (_Attractor.g * mass * m.mass) / (d * d);
-    return force * (-1.0 * strength);
+    return force * -strength;
   }
 }
 
@@ -193,7 +194,8 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
             event.localPosition.dy,
           );
           model.attractor.clicked(
-            mouse,
+            mouse: mouse,
+            size: size,
           );
         case f.PointerHover(:final event):
           mouse = f.Vector2(
@@ -201,7 +203,8 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
             event.localPosition.dy,
           );
           model.attractor.over(
-            mouse,
+            mouse: mouse,
+            size: size,
           );
         case f.PointerMove(:final event):
           mouse = f.Vector2(
@@ -224,7 +227,7 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
           left.applyForce(right.repel(left));
         }
       }
-      left.applyForce(model.attractor.attract(left));
+      left.applyForce(model.attractor.attract(mover: left, size: size));
       left.update();
     }
 
@@ -243,8 +246,8 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.attractor.draw(),
-          for (final m in model.movers) m.draw(),
+          model.attractor.draw(model.size),
+          for (final m in model.movers) m.draw(model.size),
         ],
       );
 }

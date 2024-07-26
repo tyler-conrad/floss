@@ -35,7 +35,8 @@ import 'src/nature_of_code/chp_02_forces/_2_7_attraction_many.dart' as c2_7;
 import 'src/nature_of_code/chp_02_forces/_2_8_mutual_attraction.dart' as c2_8;
 import 'src/nature_of_code/chp_02_forces/_2_forces_many_mutual_boundaries.dart'
     as c2_fmmb;
-import 'src/nature_of_code/chp_02_forces/_2_10_attract_repel.dart' as c2_10;
+import 'src/nature_of_code/chp_02_forces/_2_10_exercise_attract_repel.dart'
+    as c2_10;
 import 'src/nature_of_code/chp_03_oscillation/_3_01_angular_motion.dart'
     as c3_1;
 import 'src/nature_of_code/chp_03_oscillation/_3_02_forces_angular_motion.dart'
@@ -64,6 +65,7 @@ import 'src/nature_of_code/chp_03_oscillation/_3_10_pendulum_example_simplified.
     as c3_10_pes;
 import 'src/nature_of_code/chp_03_oscillation/_3_10_pendulum_example.dart'
     as c3_10_pe;
+import 'src/nature_of_code/chp_03_oscillation/_3_11_spring.dart' as c3_11;
 
 class Example {
   final String title;
@@ -111,6 +113,7 @@ final examples = <Example>[
   const Example(c3_10_eow.title, c3_10_eow.widget),
   const Example(c3_10_pes.title, c3_10_pes.widget),
   const Example(c3_10_pe.title, c3_10_pe.widget),
+  const Example(c3_11.title, c3_11.widget),
 ];
 
 class _ExampleGridTile extends m.StatefulWidget {

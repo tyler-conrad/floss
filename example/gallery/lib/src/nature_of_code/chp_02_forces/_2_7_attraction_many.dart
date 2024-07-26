@@ -14,9 +14,10 @@ class _Attractor {
   static const double forceLenMax = 25.0;
 
   final f.Vector2 position;
+  final f.Vector2 dragOffset;
+
   bool dragging;
   bool rollover;
-  final f.Vector2 dragOffset;
 
   _Attractor({required this.position})
       : dragging = false,
@@ -32,7 +33,7 @@ class _Attractor {
     return force * strength;
   }
 
-  f.Drawing draw() {
+  f.Drawing draw(f.Size size) {
     double gray;
     if (dragging) {
       gray = 0.2;
@@ -42,12 +43,14 @@ class _Attractor {
       gray = 0.75;
     }
 
+    final r = u.scale(size) * mass;
+
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
           c: f.Offset.zero,
-          radius: mass,
+          radius: r,
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
               0.8,
@@ -58,7 +61,7 @@ class _Attractor {
         ),
         f.Circle(
           c: f.Offset.zero,
-          radius: mass,
+          radius: r,
           paint: f.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
@@ -93,7 +96,7 @@ class _Attractor {
 }
 
 class _Mover {
-  static const double size = 8.0;
+  static const double radius = 8.0;
   static const double massMin = 0.1;
   static const double massMax = 2.0;
 
@@ -118,24 +121,28 @@ class _Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  f.Drawing draw() => f.Translate(
-        translation: position,
-        canvasOps: [
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass * size,
-            paint: f.Paint()..color = u.transparent5black,
-          ),
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass * size,
-            paint: f.Paint()
-              ..color = u.black
-              ..style = p.PaintingStyle.stroke
-              ..strokeWidth = 2.0,
-          ),
-        ],
-      );
+  f.Drawing draw(f.Size size) {
+    final r = u.scale(size) * mass * radius;
+
+    return f.Translate(
+      translation: position,
+      canvasOps: [
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()..color = u.transparent5black,
+        ),
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()
+            ..color = u.black
+            ..style = p.PaintingStyle.stroke
+            ..strokeWidth = 2.0,
+        ),
+      ],
+    );
+  }
 }
 
 class _AttractionManyModel extends f.Model {
@@ -226,8 +233,8 @@ class _AttractionManyIud<M extends _AttractionManyModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.attractor.draw(),
-          for (final m in model.movers) m.draw(),
+          model.attractor.draw(model.size),
+          for (final m in model.movers) m.draw(model.size),
         ],
       );
 }

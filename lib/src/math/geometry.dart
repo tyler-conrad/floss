@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'vector2.dart';
+import 'vector2.dart' as v;
 
 class Offset {
   final ui.Offset offset;
@@ -9,7 +9,7 @@ class Offset {
 
   Offset.fromOffset(this.offset);
 
-  Offset.fromVec(Vector2 vec) : this.fromOffset(ui.Offset(vec.x, vec.y));
+  Offset.fromVec(v.Vector2 vec) : this.fromOffset(ui.Offset(vec.x, vec.y));
 
   factory Offset.fromDirection(
     double direction, [
@@ -22,6 +22,8 @@ class Offset {
       ),
     );
   }
+
+  v.Vector2 get asVec => v.Vector2(offset.dx, offset.dy);
 
   bool get isFinite => offset.isFinite;
 
@@ -61,14 +63,14 @@ class Offset {
 
   Rect operator &(Size other) => Rect.fromRect(offset & other.size);
 
-  Offset scale(Vector2 scale) => Offset.fromOffset(
+  Offset scale(v.Vector2 scale) => Offset.fromOffset(
         offset.scale(
           scale.x,
           scale.y,
         ),
       );
 
-  Offset translate(Vector2 translation) => Offset.fromOffset(
+  Offset translate(v.Vector2 translation) => Offset.fromOffset(
         offset.translate(
           translation.x,
           translation.y,
@@ -100,7 +102,7 @@ class Size {
 
   Size.fromSize(this.size);
 
-  Size.fromVec(Vector2 vec)
+  Size.fromVec(v.Vector2 vec)
       : this.fromSize(
           ui.Size(
             vec.x,
@@ -132,6 +134,8 @@ class Size {
       : this.fromSize(
           ui.Size.fromRadius(radius),
         );
+
+  v.Vector2 get asVec => v.Vector2(size.width, size.height);
 
   bool get isEmpty => size.isEmpty;
 
@@ -229,8 +233,8 @@ class Rect {
         );
 
   Rect.fromVecLTRB(
-    Vector2 lt,
-    Vector2 rb,
+    v.Vector2 lt,
+    v.Vector2 rb,
   ) : this.fromLTRB(
           lt.x,
           lt.y,
@@ -253,7 +257,7 @@ class Rect {
         );
 
   Rect.fromVecLTSizeWH(
-    Vector2 pos,
+    v.Vector2 pos,
     Size size,
   ) : this.fromLTWH(
           pos.x,
@@ -264,7 +268,7 @@ class Rect {
 
   Rect.fromOffsetLTVecWH(
     Offset offset,
-    Vector2 size,
+    v.Vector2 size,
   ) : this.fromLTWH(
           offset.dx,
           offset.dy,
@@ -273,8 +277,8 @@ class Rect {
         );
 
   Rect.fromVecLTWH(
-    Vector2 pos,
-    Vector2 size,
+    v.Vector2 pos,
+    v.Vector2 size,
   ) : this.fromLTWH(
           pos.x,
           pos.y,
@@ -293,7 +297,7 @@ class Rect {
         );
 
   Rect.fromVecCircle({
-    required Vector2 center,
+    required v.Vector2 center,
     required double radius,
   }) : this.fromCircle(
           center: Offset.fromVec(center),
@@ -324,7 +328,7 @@ class Rect {
         );
 
   Rect.fromVecCenterSize({
-    required Vector2 center,
+    required v.Vector2 center,
     required Size size,
   }) : this.fromCenter(
           center: Offset.fromVec(center),
@@ -334,7 +338,7 @@ class Rect {
 
   Rect.fromCenterVecSize({
     required Offset center,
-    required Vector2 size,
+    required v.Vector2 size,
   }) : this.fromCenter(
           center: center,
           width: size.x,
@@ -342,8 +346,8 @@ class Rect {
         );
 
   Rect.fromVecCenterVecSize({
-    required Vector2 center,
-    required Vector2 size,
+    required v.Vector2 center,
+    required v.Vector2 size,
   }) : this.fromCenter(
           center: Offset.fromVec(center),
           width: size.x,
@@ -358,19 +362,19 @@ class Rect {
           ),
         );
 
-  Rect.fromVecPointOffset(Vector2 a, Offset b)
+  Rect.fromVecPointOffset(v.Vector2 a, Offset b)
       : this.fromPoints(
           Offset.fromVec(a),
           b,
         );
 
-  Rect.fromOffsetVecPoint(Offset a, Vector2 b)
+  Rect.fromOffsetVecPoint(Offset a, v.Vector2 b)
       : this.fromPoints(
           a,
           Offset.fromVec(b),
         );
 
-  Rect.fromVecPoints(Vector2 a, Vector2 b)
+  Rect.fromVecPoints(v.Vector2 a, v.Vector2 b)
       : this.fromPoints(
           Offset.fromVec(a),
           Offset.fromVec(b),
@@ -387,7 +391,7 @@ class Rect {
         );
 
   Rect.fromVecOffsetSize(
-    Vector2 offset,
+    v.Vector2 offset,
     Size size,
   ) : this.fromOffsetSize(
           Offset.fromVec(offset),
@@ -396,7 +400,7 @@ class Rect {
 
   Rect.fromOffsetVecSize(
     Offset offset,
-    Vector2 size,
+    v.Vector2 size,
   ) : this.fromOffsetSize(
           offset,
           Size.fromVec(size),
@@ -413,7 +417,7 @@ class Rect {
         );
 
   Rect.fromVecOffsetOffset({
-    required Vector2 lt,
+    required v.Vector2 lt,
     required Offset rb,
   }) : this.fromOffsets(
           lt: Offset.fromVec(lt),
@@ -422,19 +426,21 @@ class Rect {
 
   Rect.fromOffsetVecOffset({
     required Offset lt,
-    required Vector2 rb,
+    required v.Vector2 rb,
   }) : this.fromOffsets(
           lt: lt,
           rb: Offset.fromVec(rb),
         );
 
   Rect.fromVecOffsets({
-    required Vector2 lt,
-    required Vector2 rb,
+    required v.Vector2 lt,
+    required v.Vector2 rb,
   }) : this.fromOffsets(
           lt: Offset.fromVec(lt),
           rb: Offset.fromVec(rb),
         );
+
+  v.Vector2 get asVec => v.Vector2(rect.width, rect.height);
 
   bool get hasNaN => rect.hasNaN;
 
@@ -482,7 +488,7 @@ class Rect {
 
   bool contains(Offset offset) => rect.contains(offset.offset);
 
-  bool containsVec(Vector2 vec) => rect.contains(ui.Offset(vec.x, vec.y));
+  bool containsVec(v.Vector2 vec) => rect.contains(ui.Offset(vec.x, vec.y));
 
   Rect inflate(double delta) => Rect.fromRect(rect.inflate(delta));
 
@@ -497,7 +503,7 @@ class Rect {
 
   Rect shift(Offset offset) => Rect.fromRect(rect.shift(offset.offset));
 
-  Rect translate(Vector2 translation) => Rect.fromRect(
+  Rect translate(v.Vector2 translation) => Rect.fromRect(
         rect.translate(
           translation.x,
           translation.y,
@@ -538,9 +544,9 @@ class RRect {
         );
 
   RRect.fromVecLTRBXY(
-    Vector2 lt,
-    Vector2 rb,
-    Vector2 xy,
+    v.Vector2 lt,
+    v.Vector2 rb,
+    v.Vector2 xy,
   ) : this.fromLTRBXY(
           lt.x,
           lt.y,
@@ -567,8 +573,8 @@ class RRect {
         );
 
   RRect.fromVecLTRBRadius(
-    Vector2 lt,
-    Vector2 rb,
+    v.Vector2 lt,
+    v.Vector2 rb,
     ui.Radius radius,
   ) : this.fromLTRBR(
           lt.x,
@@ -592,7 +598,7 @@ class RRect {
 
   RRect.fromRectVecXY(
     Rect rect,
-    Vector2 radius,
+    v.Vector2 radius,
   ) : this.fromRectXY(
           rect,
           radius.x,
@@ -632,8 +638,8 @@ class RRect {
         );
 
   RRect.fromVecLTRBAndCorners(
-    Vector2 lt,
-    Vector2 rb, {
+    v.Vector2 lt,
+    v.Vector2 rb, {
     ui.Radius topLeft = ui.Radius.zero,
     ui.Radius topRight = ui.Radius.zero,
     ui.Radius bottomRight = ui.Radius.zero,
@@ -680,7 +686,7 @@ class RRect {
         );
 
   RRect.fromVecOffsetSizeXY(
-    Vector2 pos,
+    v.Vector2 pos,
     Size size,
     double radiusX,
     double radiusY,
@@ -693,7 +699,7 @@ class RRect {
 
   RRect.fromOffsetVecSizeXY(
     Offset pos,
-    Vector2 size,
+    v.Vector2 size,
     double radiusX,
     double radiusY,
   ) : this.fromOffsetSizeXY(
@@ -706,7 +712,7 @@ class RRect {
   RRect.fromOffsetSizeVecXY(
     Offset pos,
     Size size,
-    Vector2 radius,
+    v.Vector2 radius,
   ) : this.fromRectXY(
           Rect.fromOffsetSize(
             pos,
@@ -717,9 +723,9 @@ class RRect {
         );
 
   RRect.fromVecOffsetSizeVecXY(
-    Vector2 pos,
+    v.Vector2 pos,
     Size size,
-    Vector2 radius,
+    v.Vector2 radius,
   ) : this.fromRectXY(
           Rect.fromOffsetSize(
             Offset.fromVec(pos),
@@ -731,8 +737,8 @@ class RRect {
 
   RRect.fromOffsetVecSizeVecXY(
     Offset pos,
-    Vector2 size,
-    Vector2 radius,
+    v.Vector2 size,
+    v.Vector2 radius,
   ) : this.fromRectXY(
           Rect.fromOffsetSize(
             pos,
@@ -743,9 +749,9 @@ class RRect {
         );
 
   RRect.fromVecOffsetVecSizeVecXY(
-    Vector2 pos,
-    Vector2 size,
-    Vector2 radius,
+    v.Vector2 pos,
+    v.Vector2 size,
+    v.Vector2 radius,
   ) : this.fromRectXY(
           Rect.fromOffsetSize(
             Offset.fromVec(pos),
@@ -768,7 +774,7 @@ class RRect {
         );
 
   RRect.fromVecOffsetSizeRadius(
-    Vector2 pos,
+    v.Vector2 pos,
     Size size,
     double radius,
   ) : this.fromRectAndRadius(
@@ -781,7 +787,7 @@ class RRect {
 
   RRect.fromOffsetVecSizeRadius(
     Offset pos,
-    Vector2 size,
+    v.Vector2 size,
     double radius,
   ) : this.fromRectAndRadius(
           Rect.fromOffsetSize(
@@ -792,8 +798,8 @@ class RRect {
         );
 
   RRect.fromVecOffsetVecSizeRadius(
-    Vector2 pos,
-    Vector2 size,
+    v.Vector2 pos,
+    v.Vector2 size,
     double radius,
   ) : this.fromRectAndRadius(
           Rect.fromOffsetSize(

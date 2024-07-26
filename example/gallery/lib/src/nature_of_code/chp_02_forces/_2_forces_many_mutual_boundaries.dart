@@ -8,7 +8,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Mover {
-  static const double size = 8.0;
+  static const double radius = 8.0;
   static const double g = 0.4;
   static const double padding = 50.0;
   static const double massMin = 1.0;
@@ -39,12 +39,12 @@ class _Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  f.Drawing draw() => f.Translate(
+  f.Drawing draw(f.Size size) => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
             c: f.Offset.zero,
-            radius: mass * size,
+            radius: u.scale(size) * mass * _Mover.radius,
             paint: f.Paint()
               ..color = const p.HSLColor.fromAHSL(
                 0.7,
@@ -148,7 +148,7 @@ class _ForcesManyMutualBoundariesIud<M extends _ForcesManyMutualBoundariesModel>
   }) =>
       f.Drawing(
         canvasOps: [
-          for (final m in model.movers) m.draw(),
+          for (final m in model.movers) m.draw(model.size),
         ],
       );
 }

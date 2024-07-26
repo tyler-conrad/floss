@@ -49,24 +49,28 @@ class _Mover {
     }
   }
 
-  f.Drawing draw() => f.Translate(
-        translation: position,
-        canvasOps: [
-          f.Circle(
-            c: f.Offset.zero,
-            radius: radius,
-            paint: f.Paint()..color = u.gray5,
-          ),
-          f.Circle(
-            c: f.Offset.zero,
-            radius: radius,
-            paint: f.Paint()
-              ..color = u.black
-              ..style = p.PaintingStyle.stroke
-              ..strokeWidth = 2.0,
-          ),
-        ],
-      );
+  f.Drawing draw(f.Size size) {
+    final r = u.scale(size) * mass * radius;
+
+    return f.Translate(
+      translation: position,
+      canvasOps: [
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()..color = u.gray5,
+        ),
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()
+            ..color = u.black
+            ..style = p.PaintingStyle.stroke
+            ..strokeWidth = 2.0,
+        ),
+      ],
+    );
+  }
 }
 
 class _ForcesModel extends f.Model {
@@ -119,7 +123,7 @@ class _ForcesIud<M extends _ForcesModel> extends f.IudBase<M>
     required M model,
     required bool isLightTheme,
   }) =>
-      model.mover.draw();
+      model.mover.draw(model.size);
 }
 
 const String title = 'Forces';

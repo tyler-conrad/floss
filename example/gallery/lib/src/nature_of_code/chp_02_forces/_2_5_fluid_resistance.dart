@@ -9,9 +9,18 @@ const int numMovers = 9;
 
 class _Liquid {
   static const double c = 0.1;
-  final f.Rect rect;
 
-  _Liquid({required this.rect});
+  f.Offset position;
+  f.Size size;
+
+  f.Rect get rect => f.Rect.fromOffsetSize(position, size);
+
+  _Liquid({required this.position, required this.size});
+
+  void update(f.Size size) {
+    position = f.Offset(0.0, size.height / 2);
+    this.size = f.Size(size.width, size.height / 2);
+  }
 
   bool contains(_Mover m) => rect.containsVec(m.position);
 
@@ -31,7 +40,7 @@ class _Liquid {
         rect: rect,
         paint: f.Paint()
           ..color = const p.HSLColor.fromAHSL(
-            1.0,
+            0.5,
             0.0,
             0.0,
             0.1,
@@ -40,7 +49,7 @@ class _Liquid {
 }
 
 class _Mover {
-  static const double size = 8.0;
+  static const double radius = 8.0;
   static const double massMin = 0.5;
   static const double massMax = 4.0;
 
@@ -82,24 +91,28 @@ class _Mover {
     }
   }
 
-  f.Drawing draw() => f.Translate(
-        translation: position,
-        canvasOps: [
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass * size,
-            paint: f.Paint()..color = u.transparent5black,
-          ),
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass * size,
-            paint: f.Paint()
-              ..color = u.black
-              ..style = p.PaintingStyle.stroke
-              ..strokeWidth = 2.0,
-          ),
-        ],
-      );
+  f.Drawing draw(f.Size size) {
+    final r = u.scale(size) * mass * radius;
+
+    return f.Translate(
+      translation: position,
+      canvasOps: [
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()..color = u.transparent5black,
+        ),
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()
+            ..color = u.black
+            ..style = p.PaintingStyle.stroke
+            ..strokeWidth = 2.0,
+        ),
+      ],
+    );
+  }
 }
 
 class _FluidModel extends f.Model {
@@ -114,12 +127,8 @@ class _FluidModel extends f.Model {
           ),
         ).toList(),
         liquid = _Liquid(
-          rect: f.Rect.fromLTWH(
-            0.0,
-            size.height / 2,
-            size.width,
-            size.height / 2,
-          ),
+          position: f.Offset(0.0, size.height / 2),
+          size: f.Size(size.width, size.height / 2),
         );
 
   _FluidModel.update({
@@ -157,6 +166,8 @@ class _FluidIud<M extends _FluidModel> extends f.IudBase<M>
       }
     }
 
+    model.liquid.update(size);
+
     for (final m in model.movers) {
       if (model.liquid.contains(m)) {
         final dragForce = model.liquid.drag(m);
@@ -190,7 +201,7 @@ class _FluidIud<M extends _FluidModel> extends f.IudBase<M>
       f.Drawing(
         canvasOps: [
           model.liquid.draw(),
-          for (final m in model.movers) m.draw(),
+          for (final m in model.movers) m.draw(model.size),
         ],
       );
 }

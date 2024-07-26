@@ -8,40 +8,50 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Oscillator {
-  static const double lengthFactor = 0.4;
+  static const double lengthFactor = 0.8;
   static const double circleRadius = 16.0;
+  static const double minVel = -0.05;
+  static const double maxVel = 0.05;
 
   final f.Size size;
   final f.Vector2 angle;
   final f.Vector2 velocity;
-  final f.Vector2 amplitude;
+  final f.Vector2 amplitudeFactors;
 
   _Oscillator({required this.size})
       : angle = f.Vector2.zero(),
         velocity = f.Vector2(
-            u.randDoubleRange(-0.05, 0.05), u.randDoubleRange(-0.05, 0.05)),
-        amplitude = f.Vector2(
-            u.randDoubleRange(20.0, lengthFactor * size.width),
-            u.randDoubleRange(20.0, lengthFactor * size.height));
+          u.randDoubleRange(minVel, maxVel),
+          u.randDoubleRange(minVel, maxVel),
+        ),
+        amplitudeFactors = f.Vector2(
+          u.randDoubleRange(20.0, size.width),
+          u.randDoubleRange(
+            20.0,
+            size.height,
+          ),
+        );
 
   void oscillate() {
     angle.add(velocity);
   }
 
-  f.Drawing draw() {
-    final x = amplitude.x * math.sin(angle.x);
-    final y = amplitude.y * math.sin(angle.y);
+  f.Drawing draw(f.Size size) {
+    final s = u.scale(size);
+    final x = s * lengthFactor * amplitudeFactors.x * math.sin(angle.x);
+    final y = s * lengthFactor * amplitudeFactors.y * math.sin(angle.y);
+    final r = s * circleRadius;
 
     return f.Drawing(
       canvasOps: [
         f.Circle(
           c: f.Offset(x, y),
-          radius: circleRadius,
+          radius: r,
           paint: f.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset(x, y),
-          radius: circleRadius,
+          radius: r,
           paint: f.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
@@ -95,8 +105,9 @@ class _OscillatingObjectsIud<M extends _OscillatingObjectsModel>
   }) =>
       f.Translate(
         translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
-        canvasOps:
-            model.oscillators.map((oscillator) => oscillator.draw()).toList(),
+        canvasOps: model.oscillators
+            .map((oscillator) => oscillator.draw(model.size))
+            .toList(),
       );
 }
 

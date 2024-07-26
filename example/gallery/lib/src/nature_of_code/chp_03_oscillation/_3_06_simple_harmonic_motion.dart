@@ -25,9 +25,7 @@ class _SimpleHarmonicMotionModel extends f.Model {
 class _SimpleHarmonicMotionIud<M extends _SimpleHarmonicMotionModel>
     extends f.IudBase<M> implements f.Iud<M> {
   static const double circleRadius = 25.0;
-  static const double period = 0.2;
   static const double amplitudeFactor = 0.4;
-  static const double twoPi = 2.0 * math.pi;
 
   @override
   M update({
@@ -48,9 +46,13 @@ class _SimpleHarmonicMotionIud<M extends _SimpleHarmonicMotionModel>
     required bool isLightTheme,
   }) {
     final x = model.size.width * amplitudeFactor * math.sin(model.angle);
+    final r = u.scale(model.size) * circleRadius;
 
     return f.Translate(
-      translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
+      translation: f.Vector2(
+        model.size.width * 0.5,
+        model.size.height * 0.5,
+      ),
       canvasOps: [
         f.Line(
           p1: f.Offset.zero,
@@ -61,7 +63,7 @@ class _SimpleHarmonicMotionIud<M extends _SimpleHarmonicMotionModel>
         ),
         f.Circle(
           c: f.Offset(x, 0.0),
-          radius: circleRadius,
+          radius: r,
           paint: f.Paint()
             ..color = const p.HSLColor.fromAHSL(
               1.0,
@@ -72,7 +74,7 @@ class _SimpleHarmonicMotionIud<M extends _SimpleHarmonicMotionModel>
         ),
         f.Circle(
           c: f.Offset(x, 0.0),
-          radius: circleRadius,
+          radius: r,
           paint: f.Paint()
             ..color = u.black
             ..paint

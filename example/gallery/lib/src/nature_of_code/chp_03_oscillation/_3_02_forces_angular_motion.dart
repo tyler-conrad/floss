@@ -23,24 +23,24 @@ class _Attractor {
     return force * strength;
   }
 
-  f.Drawing draw() => f.Translate(
-        translation: location,
-        canvasOps: [
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass,
-            paint: f.Paint()..color = u.gray5,
-          ),
-          f.Circle(
-            c: f.Offset.zero,
-            radius: mass,
-            paint: f.Paint()
-              ..color = u.black
-              ..style = p.PaintingStyle.stroke
-              ..strokeWidth = 2.0,
-          ),
-        ],
-      );
+  f.Drawing draw(f.Size size) {
+    final r = u.scale(size) * mass;
+    return f.Translate(
+      translation: location,
+      canvasOps: [
+        f.Circle(
+            c: f.Offset.zero, radius: r, paint: f.Paint()..color = u.gray5),
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()
+            ..color = u.black
+            ..style = p.PaintingStyle.stroke
+            ..strokeWidth = 2.0,
+        ),
+      ],
+    );
+  }
 }
 
 class _Mover {
@@ -105,8 +105,8 @@ class _Mover {
     );
   }
 
-  f.Drawing draw() {
-    final s = mass * size;
+  f.Drawing draw(f.Size size) {
+    final s = u.scale(size) * mass * _Mover.size;
     return f.Translate(
       translation: location,
       canvasOps: [
@@ -206,8 +206,8 @@ class _ForcesAngularMotionIud<M extends _ForcesAngularMotionModel>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.attractor.draw(),
-          for (final m in model.movers) m.draw(),
+          model.attractor.draw(model.size),
+          for (final m in model.movers) m.draw(model.size),
         ],
       );
 }

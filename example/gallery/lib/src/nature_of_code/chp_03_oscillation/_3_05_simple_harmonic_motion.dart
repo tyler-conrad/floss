@@ -46,6 +46,8 @@ class _SimpleHarmonicMotionIud<M extends _SimpleHarmonicMotionModel>
         amplitudeFactor *
         math.sin(2.0 * math.pi * model.elapsed * period);
 
+    final r = u.scale(model.size) * circleRadius;
+
     return f.Translate(
       translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
       canvasOps: [
@@ -58,12 +60,12 @@ class _SimpleHarmonicMotionIud<M extends _SimpleHarmonicMotionModel>
         ),
         f.Circle(
           c: f.Offset(x, 0.0),
-          radius: circleRadius,
+          radius: r,
           paint: f.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset(x, 0.0),
-          radius: circleRadius,
+          radius: r,
           paint: f.Paint()
             ..color = u.black
             ..paint

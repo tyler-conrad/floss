@@ -32,7 +32,7 @@ class _Attractor {
     return force * strength;
   }
 
-  f.Drawing draw() {
+  f.Drawing draw(f.Size size) {
     double gray;
     if (dragging) {
       gray = 0.2;
@@ -42,11 +42,13 @@ class _Attractor {
       gray = 0.75;
     }
 
+    final r = u.scale(size) * mass;
+
     return f.Drawing(
       canvasOps: [
         f.Circle(
           c: f.Offset.fromVec(position),
-          radius: mass,
+          radius: r,
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
               0.8,
@@ -57,7 +59,7 @@ class _Attractor {
         ),
         f.Circle(
           c: f.Offset.fromVec(position),
-          radius: mass,
+          radius: r,
           paint: f.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
@@ -117,30 +119,33 @@ class _Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  f.Drawing draw() => f.Translate(
-        translation: position,
-        canvasOps: [
-          f.Circle(
+  f.Drawing draw(f.Size size) {
+    final r = u.scale(size) * radius;
+
+    return f.Translate(
+      translation: position,
+      canvasOps: [
+        f.Circle(
             c: f.Offset.zero,
-            radius: radius,
+            radius: r,
             paint: f.Paint()
               ..color = const p.HSLColor.fromAHSL(
                 1.0,
                 0.0,
                 0.0,
                 0.3,
-              ).toColor(),
-          ),
-          f.Circle(
-            c: f.Offset.zero,
-            radius: radius,
-            paint: f.Paint()
-              ..color = u.black
-              ..style = p.PaintingStyle.stroke
-              ..strokeWidth = 2.0,
-          ),
-        ],
-      );
+              ).toColor()),
+        f.Circle(
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()
+            ..color = u.black
+            ..style = p.PaintingStyle.stroke
+            ..strokeWidth = 2.0,
+        ),
+      ],
+    );
+  }
 }
 
 class _AttractionModel extends f.Model {
@@ -224,8 +229,8 @@ class _AttractionIud<M extends _AttractionModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.mover.draw(),
-          model.attractor.draw(),
+          model.mover.draw(model.size),
+          model.attractor.draw(model.size),
         ],
       );
 }

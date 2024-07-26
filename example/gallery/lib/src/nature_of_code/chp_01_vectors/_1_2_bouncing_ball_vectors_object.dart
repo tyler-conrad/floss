@@ -37,18 +37,20 @@ class _Ball {
     );
   }
 
-  f.Drawing draw() {
+  f.Drawing draw(f.Size size) {
+    final r = u.scale(size) * radius;
+
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
           c: f.Offset.zero,
-          radius: radius,
+          radius: r,
           paint: f.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset.zero,
-          radius: radius,
+          radius: r,
           paint: f.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke,
@@ -84,7 +86,7 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
 
   @override
   f.Drawing draw({required M model, required bool isLightTheme}) =>
-      model.ball.draw();
+      model.ball.draw(model.size);
 }
 
 const String title = 'Bouncing Ball Vectors Object';

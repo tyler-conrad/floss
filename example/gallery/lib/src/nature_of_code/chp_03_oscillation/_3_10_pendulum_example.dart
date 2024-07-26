@@ -10,8 +10,8 @@ import '../utils.dart' as u;
 class _Pendulum {
   static const double gravity = 0.4;
   static const double damping = 0.995;
-  static const double lengthFactor = 0.4;
-  static const double radiusFactor = 0.05;
+  static const double length = 220.0;
+  static const double radius = 28.0;
 
   final f.Vector2 position;
   final f.Vector2 origin;
@@ -42,7 +42,7 @@ class _Pendulum {
     var aAcc = aAcceleration;
     var aVel = aVelocity;
     var a = angle;
-    final r = lengthFactor * math.sqrt(size.width * size.height);
+    final r = u.scale(size) * length;
 
     if (!dragging) {
       aAcc = -gravity / r * math.sin(angle);
@@ -68,7 +68,7 @@ class _Pendulum {
   f.Drawing draw(f.Size size) {
     final c = dragging ? u.black : u.gray5;
     final pos = f.Offset.fromVec(position);
-    final r = radiusFactor * math.sqrt(size.width * size.height);
+    final r = u.scale(size) * radius;
 
     return f.Translate(translation: origin, canvasOps: [
       f.Line(
@@ -89,8 +89,7 @@ class _Pendulum {
   }
 
   void clicked(f.Vector2 mouse, f.Size size) {
-    if ((mouse - (origin + position)).length <=
-        radiusFactor * math.sqrt(size.width * size.height)) {
+    if ((mouse - (origin + position)).length <= u.scale(size) * radius) {
       dragging = true;
     }
   }
