@@ -124,16 +124,21 @@ class _Spring {
 }
 
 class _SpringModel extends f.Model {
-  final _Bob b1;
-  final _Bob b2;
-  final _Bob b3;
   final _Spring s1;
   final _Spring s2;
   final _Spring s3;
+
+  final _Bob b1;
+  final _Bob b2;
+  final _Bob b3;
+
   f.Vector2? mouse;
 
   _SpringModel.init({required super.size})
-      : b1 = _Bob(
+      : s1 = _Spring(),
+        s2 = _Spring(),
+        s3 = _Spring(),
+        b1 = _Bob(
           position: f.Vector2(
             size.width * 0.5,
             size.height * 0.2,
@@ -151,19 +156,16 @@ class _SpringModel extends f.Model {
             size.height * 0.8,
           ),
         ),
-        s1 = _Spring(),
-        s2 = _Spring(),
-        s3 = _Spring(),
         mouse = null;
 
   _SpringModel.update({
     required super.size,
-    required this.b1,
-    required this.b2,
-    required this.b3,
     required this.s1,
     required this.s2,
     required this.s3,
+    required this.b1,
+    required this.b2,
+    required this.b3,
     required this.mouse,
   });
 }
@@ -200,40 +202,39 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
+          model.mouse = f.Vector2(
+            event.localPosition.dx,
+            event.localPosition.dy,
+          );
+
           b1.clicked(
-            f.Vector2(
-              event.localPosition.dx,
-              event.localPosition.dy,
-            ),
+            model.mouse!,
             size,
           );
           b2.clicked(
-            f.Vector2(
-              event.localPosition.dx,
-              event.localPosition.dy,
-            ),
+            model.mouse!,
             size,
           );
           b3.clicked(
-            f.Vector2(
-              event.localPosition.dx,
-              event.localPosition.dy,
-            ),
+            model.mouse!,
             size,
           );
           break;
+
         case f.PointerUp():
           b1.stopDragging();
           b2.stopDragging();
           b3.stopDragging();
           model.mouse = null;
           break;
+
         case f.PointerMove(:final event):
           model.mouse = f.Vector2(
             event.localPosition.dx,
             event.localPosition.dy,
           );
           break;
+
         default:
           break;
       }
@@ -247,12 +248,12 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
 
     return _SpringModel.update(
       size: size,
-      b1: b1,
-      b2: b2,
-      b3: b3,
       s1: model.s1,
       s2: model.s2,
       s3: model.s3,
+      b1: b1,
+      b2: b2,
+      b3: b3,
       mouse: model.mouse,
     ) as M;
   }
@@ -274,7 +275,7 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
       );
 }
 
-const String title = 'Springs';
+const String title = 'Springs Array';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,

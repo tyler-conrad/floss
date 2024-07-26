@@ -8,8 +8,8 @@ import '../utils.dart' as u;
 final f.Vector2 gravity = f.Vector2(0.0, 2.0);
 
 class _Bob {
-  static const double mass = 24.0;
-  static const double damping = 0.98;
+  static const double mass = 12.0;
+  static const double damping = 0.95;
 
   final f.Vector2 position;
   final f.Vector2 velocity;
@@ -52,7 +52,12 @@ class _Bob {
   f.Drawing draw(f.Size size) {
     final c = dragging
         ? u.gray5
-        : const p.HSLColor.fromAHSL(1.0, 0.0, 0.0, 0.2).toColor();
+        : const p.HSLColor.fromAHSL(
+            1.0,
+            0.0,
+            0.0,
+            0.2,
+          ).toColor();
     final r = u.scale(size) * mass;
 
     return f.Translate(
@@ -95,108 +100,63 @@ class _Bob {
 }
 
 class _Spring {
-  static const size = 10.0;
   static const double k = 0.2;
 
-  final f.Vector2 anchor;
-  final double length;
+  _Spring();
 
-  _Spring({required this.anchor, required this.length});
-
-  void connect(_Bob bob) {
-    final force = bob.position - anchor;
-    final stretch = force.length - length;
-    bob.applyForce(force.normalized() * -k * stretch);
-  }
-
-  void constrainLength({
-    required _Bob bob,
-    required double minLen,
-    required double maxLen,
+  void update({
+    required double length,
+    required List<_Bob> bobs,
+    required int index,
   }) {
-    final dir = bob.position - anchor;
-    final d = dir.length;
-    if (d < minLen) {
-      dir.normalize();
-      dir.scale(minLen);
-      bob.position.setFrom(anchor + dir);
-      bob.velocity.setValues(0.0, 0.0);
-    } else if (d > maxLen) {
-      dir.normalize();
-      dir.scale(maxLen);
-      bob.position.setFrom(anchor + dir);
-      bob.velocity.setValues(0.0, 0.0);
-    }
+    final force = bobs[index].position - bobs[index + 1].position;
+    final stretch = force.length - length;
+    force.normalize();
+    force.scale(-k * stretch);
+    bobs[index].applyForce(force);
+    force.scale(-1.0);
+    bobs[index + 1].applyForce(force);
   }
 
-  f.Drawing draw(f.Size size) {
-    final s = u.scale(size);
-
-    return f.Translate(
-      translation: anchor,
-      canvasOps: [
-        f.Rectangle(
-          rect: f.Rect.fromCenter(
-            center: f.Offset.zero,
-            width: s * _Spring.size,
-            height: s * _Spring.size,
-          ),
-          paint: f.Paint()..color = u.gray5,
-        ),
-        f.Rectangle(
-          rect: f.Rect.fromCenter(
-            center: f.Offset.zero,
-            width: s * _Spring.size,
-            height: s * _Spring.size,
-          ),
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
-
-  f.Drawing drawLine(_Bob bob) => f.Translate(
-        translation: bob.position,
-        canvasOps: [
-          f.Line(
-            p1: f.Offset.zero,
-            p2: f.Offset.fromVec(anchor - bob.position),
-            paint: f.Paint()
-              ..color = u.black
-              ..strokeWidth = 2.0,
-          ),
-        ],
+  f.CanvasOp draw(_Bob a, _Bob b) => f.Line(
+        p1: f.Offset.fromVec(a.position),
+        p2: f.Offset.fromVec(b.position),
+        paint: f.Paint()
+          ..color = u.black
+          ..strokeWidth = 2.0,
       );
 }
 
 class _SpringModel extends f.Model {
-  final _Bob bob;
-  final _Spring spring;
+  static const numBobs = 5;
+
+  final List<_Spring> springs;
+  final List<_Bob> bobs;
+
   f.Vector2? mouse;
 
   _SpringModel.init({required super.size})
-      : spring = _Spring(
-          anchor: f.Vector2(
-            size.width * 0.5,
-            u.scale(size) * _Spring.size,
-          ),
-          length: size.height * 0.5,
+      : springs = List.generate(
+          numBobs - 1,
+          (_) => _Spring(),
+          growable: false,
         ),
-        bob = _Bob(
-          position: f.Vector2(
-            size.width * 0.5,
-            size.height * 0.5,
+        bobs = List.generate(
+          numBobs,
+          (i) => _Bob(
+            position: f.Vector2(
+              size.width * 0.5,
+              size.height * 0.15 * i + size.height * 0.15,
+            ),
           ),
+          growable: false,
         ),
         mouse = null;
 
   _SpringModel.update({
     required super.size,
-    required this.spring,
-    required this.bob,
+    required this.bobs,
+    required this.springs,
     required this.mouse,
   });
 }
@@ -210,40 +170,35 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    final spring = _Spring(
-      anchor: f.Vector2(
-        size.width * 0.5,
-        u.scale(size) * _Spring.size,
-      ),
-      length: size.height * 0.5,
-    );
+    for (final s in model.springs) {
+      s.update(
+        length: size.height * 0.2,
+        bobs: model.bobs,
+        index: model.springs.indexOf(s),
+      );
+    }
 
-    model.bob.applyForce(gravity);
-
-    spring.connect(model.bob);
-
-    spring.constrainLength(
-      bob: model.bob,
-      minLen: size.height * 0.1,
-      maxLen: size.height * 0.9,
-    );
-    final bob = model.bob.update();
+    final bobs = model.bobs.map((b) => b.update()).toList();
 
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
-          model.mouse = f.Vector2(
-            event.localPosition.dx,
-            event.localPosition.dy,
-          );
-          bob.clicked(
-            model.mouse!,
-            size,
-          );
+          for (final b in bobs) {
+            model.mouse = f.Vector2(
+              event.localPosition.dx,
+              event.localPosition.dy,
+            );
+            b.clicked(
+              model.mouse!,
+              size,
+            );
+          }
           break;
 
         case f.PointerUp():
-          bob.stopDragging();
+          for (final b in bobs) {
+            b.stopDragging();
+          }
           model.mouse = null;
           break;
 
@@ -252,21 +207,23 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
             event.localPosition.dx,
             event.localPosition.dy,
           );
-          break;
 
+          break;
         default:
           break;
       }
     }
 
     if (model.mouse != null) {
-      bob.drag(model.mouse!);
+      for (final b in bobs) {
+        b.drag(model.mouse!);
+      }
     }
 
     return _SpringModel.update(
       size: size,
-      spring: spring,
-      bob: bob,
+      bobs: bobs,
+      springs: model.springs,
       mouse: model.mouse,
     ) as M;
   }
@@ -278,14 +235,17 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.spring.drawLine(model.bob),
-          model.spring.draw(model.size),
-          model.bob.draw(model.size),
+          for (final s in model.springs)
+            s.draw(
+              model.bobs[model.springs.indexOf(s)],
+              model.bobs[model.springs.indexOf(s) + 1],
+            ),
+          for (final b in model.bobs) b.draw(model.size),
         ],
       );
 }
 
-const String title = 'Spring';
+const String title = 'Springs';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
