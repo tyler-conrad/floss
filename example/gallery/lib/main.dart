@@ -67,6 +67,8 @@ import 'src/nature_of_code/chp_03_oscillation/_3_10_pendulum_example.dart'
     as c3_10_pe;
 import 'src/nature_of_code/chp_03_oscillation/_3_11_exercise_additive_wave.dart'
     as c3_11_eaw;
+import 'src/nature_of_code/chp_03_oscillation/_3_exercise_spring_sine.dart'
+    as c3_ess;
 import 'src/nature_of_code/chp_03_oscillation/_3_11_spring.dart' as c3_11;
 import 'src/nature_of_code/chp_03_oscillation/_3_16_exercise_springs.dart'
     as c3_16_es;
@@ -119,6 +121,7 @@ final examples = <Example>[
   const Example(c3_10_eow.title, c3_10_eow.widget),
   const Example(c3_10_pes.title, c3_10_pes.widget),
   const Example(c3_10_pe.title, c3_10_pe.widget),
+  const Example(c3_ess.title, c3_ess.widget),
   const Example(c3_11.title, c3_11.widget),
   const Example(c3_11_eaw.title, c3_11_eaw.widget),
   const Example(c3_16_es.title, c3_16_es.widget),

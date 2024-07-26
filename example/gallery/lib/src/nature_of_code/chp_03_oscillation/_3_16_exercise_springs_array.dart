@@ -127,7 +127,7 @@ class _Spring {
       );
 }
 
-class _SpringModel extends f.Model {
+class _SpringsArrayModel extends f.Model {
   static const numBobs = 5;
 
   final List<_Spring> springs;
@@ -135,7 +135,7 @@ class _SpringModel extends f.Model {
 
   f.Vector2? mouse;
 
-  _SpringModel.init({required super.size})
+  _SpringsArrayModel.init({required super.size})
       : springs = List.generate(
           numBobs - 1,
           (_) => _Spring(),
@@ -153,7 +153,7 @@ class _SpringModel extends f.Model {
         ),
         mouse = null;
 
-  _SpringModel.update({
+  _SpringsArrayModel.update({
     required super.size,
     required this.bobs,
     required this.springs,
@@ -161,7 +161,7 @@ class _SpringModel extends f.Model {
   });
 }
 
-class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
+class _SpringsArrayIud<M extends _SpringsArrayModel> extends f.IudBase<M>
     implements f.Iud<M> {
   @override
   M update({
@@ -220,7 +220,7 @@ class _SpringIud<M extends _SpringModel> extends f.IudBase<M>
       }
     }
 
-    return _SpringModel.update(
+    return _SpringsArrayModel.update(
       size: size,
       bobs: bobs,
       springs: model.springs,
@@ -250,8 +250,8 @@ const String title = 'Springs';
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
-        modelCtor: _SpringModel.init,
-        iud: _SpringIud(),
+        modelCtor: _SpringsArrayModel.init,
+        iud: _SpringsArrayIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );
