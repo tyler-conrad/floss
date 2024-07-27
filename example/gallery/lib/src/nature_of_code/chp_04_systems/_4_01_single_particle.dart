@@ -14,7 +14,7 @@ class _Particle {
   final f.Vector2 velocity;
   final f.Vector2 acceleration;
 
-  double lifespan;
+  int lifespan;
 
   _Particle({required this.position})
       : velocity = f.Vector2(
@@ -22,18 +22,19 @@ class _Particle {
           u.randDoubleRange(1.0, 0.0),
         ),
         acceleration = f.Vector2(0.0, 0.05),
-        lifespan = 255.0;
+        lifespan = 256;
 
   void update() {
     velocity.add(acceleration);
     position.add(velocity);
-    lifespan -= 2.0;
+    lifespan -= 2;
   }
 
   bool get isDead => lifespan < 0.0;
 
   f.Drawing draw(f.Size size) {
     final r = u.scale(size) * radius;
+    final a = lifespan / 256.0;
     return f.Translate(
       translation: position,
       canvasOps: [
@@ -42,7 +43,7 @@ class _Particle {
           radius: r,
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
-              lifespan / 255.0,
+              a,
               0.0,
               0.0,
               0.5,
@@ -53,7 +54,7 @@ class _Particle {
           radius: r,
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
-              lifespan / 255.0,
+              a,
               0.0,
               0.0,
               0.0,

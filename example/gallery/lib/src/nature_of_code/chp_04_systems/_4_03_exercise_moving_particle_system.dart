@@ -22,7 +22,7 @@ class _Particle {
           u.randDoubleRange(1.0, 0.0),
         ),
         acceleration = f.Vector2(0.0, 0.05),
-        lifespan = 255;
+        lifespan = 256;
 
   void update() {
     velocity.add(acceleration);
@@ -30,7 +30,7 @@ class _Particle {
     lifespan -= 2;
   }
 
-  bool get isDead => lifespan < 0.0;
+  bool get isDead => lifespan == 0;
 
   f.Drawing draw(f.Size size) {
     final r = u.scale(size) * radius;
@@ -67,25 +67,60 @@ class _Particle {
   }
 }
 
-class _SingleParticleModel extends f.Model {
-  static const topOffset = 20.0;
+class _ParticleSystem {
+  final List<_Particle> particles;
+  f.Vector2 origin;
 
-  _Particle particle;
-  bool mouseDown = false;
+  _ParticleSystem.init({required this.origin}) : particles = [];
 
-  _SingleParticleModel.init({required super.size})
-      : particle = _Particle(
-          position: f.Vector2(size.width * 0.5, topOffset),
+  _ParticleSystem.update({
+    required this.origin,
+    required this.particles,
+  });
+
+  void addParticle() => particles.add(_Particle(position: origin));
+
+  _ParticleSystem update() {
+    final ps = particles.where((p) => !p.isDead);
+
+    for (final p in ps) {
+      p.update();
+    }
+    return _ParticleSystem.update(
+      origin: origin,
+      particles: particles.toList(),
+    );
+  }
+
+  f.Drawing draw(f.Size size) {
+    return f.Drawing(
+      canvasOps: [
+        for (final p in particles) p.draw(size),
+      ],
+    );
+  }
+}
+
+class _VectorParticleModel extends f.Model {
+  static const topOffset = 50.0;
+
+  final _ParticleSystem ps;
+
+  _VectorParticleModel.init({required super.size})
+      : ps = _ParticleSystem.init(
+          origin: f.Vector2(
+            size.width * 0.5,
+            topOffset,
+          ),
         );
 
-  _SingleParticleModel.update({
+  _VectorParticleModel.update({
     required super.size,
-    required this.particle,
-    required this.mouseDown,
+    required this.ps,
   });
 }
 
-class _SingleParticleIud<M extends _SingleParticleModel> extends f.IudBase<M>
+class _VectorParticleIud<M extends _VectorParticleModel> extends f.IudBase<M>
     implements f.Iud<M> {
   @override
   M update({
@@ -94,14 +129,14 @@ class _SingleParticleIud<M extends _SingleParticleModel> extends f.IudBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
+    f.Vector2 origin = model.ps.origin;
     for (final ie in inputEvents) {
       switch (ie) {
-        case f.PointerDown():
-          model.mouseDown = true;
-          break;
-
-        case f.PointerUp():
-          model.mouseDown = false;
+        case f.PointerHover(:final event):
+          origin = f.Vector2(
+            event.localPosition.dx,
+            event.localPosition.dy,
+          );
           break;
 
         default:
@@ -109,22 +144,15 @@ class _SingleParticleIud<M extends _SingleParticleModel> extends f.IudBase<M>
       }
     }
 
-    if (model.mouseDown) {
-      model.particle.update();
-      if (model.particle.isDead) {
-        model.particle = _Particle(
-          position: f.Vector2(
-            size.width * 0.5,
-            _SingleParticleModel.topOffset,
-          ),
-        );
-      }
-    }
-    return _SingleParticleModel.update(
-      size: size,
-      particle: model.particle,
-      mouseDown: model.mouseDown,
-    ) as M;
+    model.ps.addParticle();
+    model.ps.update();
+
+    return _VectorParticleModel.update(
+        size: size,
+        ps: _ParticleSystem.update(
+          origin: origin,
+          particles: model.ps.particles,
+        )) as M;
   }
 
   @override
@@ -132,23 +160,21 @@ class _SingleParticleIud<M extends _SingleParticleModel> extends f.IudBase<M>
     required M model,
     required bool isLightTheme,
   }) {
-    return model.mouseDown
-        ? model.particle.draw(model.size)
-        : const f.Drawing(canvasOps: []);
+    return f.Drawing(
+      canvasOps: [
+        model.ps.draw(model.size),
+      ],
+    );
   }
 }
 
-const String title = 'Single Particle Trail';
+const String title = 'Moving Particle System';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
-        modelCtor: _SingleParticleModel.init,
-        iud: _SingleParticleIud(),
-        clearCanvas: f.NoClearCanvas(
-          paint: f.Paint()
-            ..color = u.transparentWhite
-            ..blendMode = p.BlendMode.srcOver,
-        ),
+        modelCtor: _VectorParticleModel.init,
+        iud: _VectorParticleIud(),
+        clearCanvas: const f.ClearCanvas(),
       ),
     );
