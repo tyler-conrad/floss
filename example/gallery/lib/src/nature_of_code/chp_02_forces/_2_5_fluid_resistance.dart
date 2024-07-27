@@ -4,8 +4,7 @@ import 'package:flutter/widgets.dart' as w;
 import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
-
-const int numMovers = 9;
+import 'common.dart' as c;
 
 class _Liquid {
   static const double c = 0.1;
@@ -48,74 +47,36 @@ class _Liquid {
       );
 }
 
-class _Mover {
-  static const double radius = 8.0;
+class _Mover extends c.Mover {
   static const double massMin = 0.5;
   static const double massMax = 4.0;
 
-  final double mass;
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
-
   _Mover({
-    required double m,
-    required this.position,
-  })  : mass = m,
-        velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
+    required super.mass,
+    required super.position,
+  });
 
   _Mover.newRandom({required double right})
       : this(
-          m: u.randDoubleRange(massMin, massMax),
+          mass: u.randDoubleRange(massMin, massMax),
           position: f.Vector2(
             u.randDoubleRange(0.0, right),
             0.0,
           ),
         );
 
-  void applyForce(f.Vector2 force) {
-    acceleration.add(force / mass);
-  }
-
-  void update() {
-    velocity.add(acceleration);
-    position.add(velocity);
-    acceleration.setValues(0.0, 0.0);
-  }
-
+  @override
   void checkEdges(f.Rect rect) {
     if (position.y > rect.bottom) {
       position.y = rect.bottom;
       velocity.y *= -0.9;
     }
   }
-
-  f.Drawing draw(f.Size size) {
-    final r = u.scale(size) * mass * radius;
-
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()..color = u.transparent5black,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
 }
 
 class _FluidModel extends f.Model {
+  static const int numMovers = 9;
+
   final List<_Mover> movers;
   final _Liquid liquid;
 
@@ -155,7 +116,7 @@ class _FluidIud<M extends _FluidModel> extends f.IudBase<M>
           model.movers.clear();
           model.movers.addAll(
             List.generate(
-              numMovers,
+              _FluidModel.numMovers,
               (_) => _Mover.newRandom(
                 right: size.width,
               ),

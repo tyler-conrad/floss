@@ -34,7 +34,8 @@ class _AdditiveWaveModel extends f.Model {
               2.0 *
               math.pi /
               u.randDoubleRange(minPeriod, maxPeriod) *
-              (size.width / numCircles),
+              size.width /
+              numCircles,
         ),
         yValues = List.filled(numCircles, 0.0);
 

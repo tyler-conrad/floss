@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart' as w;
 import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
+import 'common.dart' as c;
 
 class _Attractor {
   static const double gravity = 1.0;
@@ -30,7 +31,7 @@ class _Attractor {
     double d = force.length;
     d = math.min(math.max(forceLenMin, d), forceLenMax);
     force.normalize();
-    return force * (gravity * mass * _Mover.mass) / (d * d);
+    return force * (gravity * mass * _Mover.m) / (d * d);
   }
 
   double computedRadius(f.Size size) => u.scale(size) * mass * radius;
@@ -98,51 +99,16 @@ class _Attractor {
   }
 }
 
-class _Mover {
-  static const double radius = 24.0;
+class _Mover extends c.Mover {
   static const double posFactor = 0.3;
-  static const double mass = 1.0;
+  static const double m = 1.0;
 
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
-
-  _Mover({required this.position})
-      : velocity = f.Vector2(1.0, 0.0),
-        acceleration = f.Vector2.zero();
-
-  void applyForce(f.Vector2 force) {
-    acceleration.add(force / mass);
-  }
-
-  void update() {
-    velocity.add(acceleration);
-    position.add(velocity);
-    acceleration.setValues(0.0, 0.0);
-  }
-
-  f.Drawing draw(f.Size size) {
-    final r = u.scale(size) * mass * radius;
-
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()..color = u.gray5,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
+  _Mover({required super.position})
+      : super.update(
+          mass: m,
+          velocity: f.Vector2(1.0, 0.0),
+          acceleration: f.Vector2.zero(),
+        );
 }
 
 class _AttractionModel extends f.Model {

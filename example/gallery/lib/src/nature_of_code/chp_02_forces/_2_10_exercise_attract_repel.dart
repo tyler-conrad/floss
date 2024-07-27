@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart' as w;
 import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
+import 'common.dart' as c;
 
 class _Attractor {
   static const double gravity = 1.0;
@@ -87,34 +88,19 @@ class _Attractor {
   }
 }
 
-class _Mover {
+class _Mover extends c.Mover {
   static const double radius = 2.0;
   static const double forceLenMin = 1.0;
   static const double forceLenMax = 10000.0;
   static const double massMin = 4.0;
   static const double massMax = 12.0;
 
-  final double mass;
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
-
   _Mover({
-    required this.mass,
-    required this.position,
-  })  : velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
+    required super.mass,
+    required super.position,
+  });
 
-  void applyForce(f.Vector2 force) {
-    acceleration.add(force / mass);
-  }
-
-  void update() {
-    velocity.add(acceleration);
-    position.add(velocity);
-    acceleration.setValues(0.0, 0.0);
-  }
-
+  @override
   f.Drawing draw(f.Size size) => f.Translate(
         translation: position,
         canvasOps: [

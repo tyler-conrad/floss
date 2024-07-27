@@ -6,8 +6,9 @@ import 'package:flutter/widgets.dart' as w;
 import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
+import 'common.dart' as c;
 
-class _Mover {
+class _Mover extends c.Mover {
   static const double radius = 16.0;
   static const double gravity = 0.4;
   static const double padding = 50.0;
@@ -17,28 +18,13 @@ class _Mover {
   static const double forceLenMax = 25.0;
 
   final f.Vector2 forceFactor = f.Vector2(0.1, 0.1);
-  final double mass;
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
 
   _Mover({
-    required double m,
-    required this.position,
-  })  : mass = m,
-        velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
+    required super.mass,
+    required super.position,
+  });
 
-  void applyForce(f.Vector2 force) {
-    acceleration.add(force / mass);
-  }
-
-  void update() {
-    velocity.add(acceleration);
-    position.add(velocity);
-    acceleration.setValues(0.0, 0.0);
-  }
-
+  @override
   f.Drawing draw(f.Size size) => f.Translate(
         translation: position,
         canvasOps: [
@@ -97,7 +83,7 @@ class _ForcesManyMutualBoundariesModel extends f.Model {
       : movers = List.generate(
           numMovers,
           (_) => _Mover(
-            m: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
+            mass: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
             position: f.Vector2(
               u.randDoubleRange(0.0, size.width),
               u.randDoubleRange(0.0, size.height),

@@ -1,38 +1,21 @@
 import 'dart:math' as math;
 
-import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
+import 'common.dart' as c;
 
-class _Mover {
-  static const double radius = 12.0;
+class _Mover extends c.Mover {
   static const double gravity = 0.4;
   static const double minMass = 0.1;
   static const double maxMass = 2.0;
 
-  final double mass;
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
-
   _Mover({
-    required this.mass,
-    required this.position,
-  })  : velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
-
-  void applyForce(f.Vector2 force) {
-    acceleration.add(force / mass);
-  }
-
-  void update() {
-    velocity.add(acceleration);
-    position.add(velocity);
-    acceleration.setValues(0.0, 0.0);
-  }
+    required super.mass,
+    required super.position,
+  });
 
   f.Vector2 attract(_Mover m) {
     final force = position - m.position;
@@ -40,29 +23,6 @@ class _Mover {
     d = math.min(math.max(5.0, d), 25.0);
     force.normalize();
     return force * (gravity * mass * m.mass) / (d * d);
-  }
-
-  f.Drawing draw(f.Size size) {
-    final r = u.scale(size) * mass * radius;
-
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()..color = u.transparent5black,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
   }
 }
 

@@ -1,86 +1,20 @@
-import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
-
-class _Mover {
-  static const double radius = 8.0;
-  static const double massMin = 1.0;
-  static const double massMax = 4.0;
-
-  final double mass;
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
-
-  _Mover({
-    required double m,
-    required this.position,
-  })  : mass = m,
-        velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
-
-  void applyForce(f.Vector2 force) {
-    acceleration.add(force / mass);
-  }
-
-  void update() {
-    velocity.add(acceleration);
-    position.add(velocity);
-    acceleration.setValues(0.0, 0.0);
-  }
-
-  void checkEdges(f.Rect rect) {
-    if (position.x > rect.right) {
-      position.x = rect.right;
-      velocity.x *= -1.0;
-    } else if (position.x < rect.left) {
-      position.x = rect.left;
-      velocity.x *= -1.0;
-    }
-
-    if (position.y > rect.bottom) {
-      position.y = rect.bottom;
-      velocity.y *= -1.0;
-    }
-  }
-
-  f.Drawing draw(f.Size size) {
-    final r = u.scale(size) * mass * radius;
-
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()..color = u.transparent5black,
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
-}
+import 'common.dart' as c;
 
 class _RealGravityModel extends f.Model {
   static const int numMovers = 20;
 
-  final List<_Mover> movers;
+  final List<c.Mover> movers;
 
   _RealGravityModel.init({required super.size})
       : movers = List.generate(
           numMovers,
-          (_) => _Mover(
-            m: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
+          (_) => c.Mover(
+            mass: u.randDoubleRange(c.Mover.massMin, c.Mover.massMax),
             position: f.Vector2.zero(),
           ),
         ).toList();
