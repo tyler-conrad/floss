@@ -98,8 +98,6 @@ class _Attractor {
   }
 }
 
-final f.Vector2 moverInitVel = f.Vector2(1.0, 0.0);
-
 class _Mover {
   static const double radius = 24.0;
   static const double posFactor = 0.3;
@@ -110,7 +108,7 @@ class _Mover {
   final f.Vector2 acceleration;
 
   _Mover({required this.position})
-      : velocity = moverInitVel,
+      : velocity = f.Vector2(1.0, 0.0),
         acceleration = f.Vector2.zero();
 
   void applyForce(f.Vector2 force) {
@@ -235,8 +233,8 @@ class _AttractionIud<M extends _AttractionModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.mover.draw(model.size),
           model.attractor.draw(model.size),
+          model.mover.draw(model.size),
         ],
       );
 }

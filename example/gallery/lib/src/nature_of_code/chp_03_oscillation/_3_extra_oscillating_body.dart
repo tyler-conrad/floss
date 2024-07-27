@@ -20,8 +20,9 @@ class _Attractor {
   bool dragging;
   bool rollover;
 
-  _Attractor({required this.position})
-      : dragging = false,
+  _Attractor({required f.Size size})
+      : position = f.Vector2(size.width * 0.5, size.height * 0.5),
+        dragging = false,
         rollover = false,
         dragOffset = f.Vector2.zero();
 
@@ -105,19 +106,18 @@ class _Attractor {
   }
 }
 
-final f.Vector2 moverInitVel = f.Vector2(1.0, 0.0);
-
 class _Mover {
-  static const double radius = 8.0;
-  static const double posFactor = 0.3;
+  static const double radius = 24.0;
+  static const double rectSize = 20.0;
   static const double mass = 1.0;
 
   final f.Vector2 position;
   final f.Vector2 velocity;
   final f.Vector2 acceleration;
 
-  _Mover({required this.position})
-      : velocity = moverInitVel,
+  _Mover()
+      : position = f.Vector2(80.0, 130.0),
+        velocity = f.Vector2(1.0, 0.0),
         acceleration = f.Vector2.zero();
 
   void applyForce(f.Vector2 force) {
@@ -137,15 +137,10 @@ class _Mover {
       translation: position,
       canvasOps: [
         f.Circle(
-            c: f.Offset.zero,
-            radius: r,
-            paint: f.Paint()
-              ..color = const p.HSLColor.fromAHSL(
-                1.0,
-                0.0,
-                0.0,
-                0.3,
-              ).toColor()),
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()..color = u.gray5,
+        ),
         f.Circle(
           c: f.Offset.zero,
           radius: r,
@@ -153,6 +148,35 @@ class _Mover {
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,
+        ),
+        f.Translate(
+          translation: f.Vector2(40.0, 0.0),
+          canvasOps: [
+            f.Rotate(
+              radians: math.atan2(velocity.y.toDouble(), velocity.x.toDouble()),
+              canvasOps: [
+                f.Rectangle(
+                  rect: f.Rect.fromCenter(
+                    center: f.Offset.zero,
+                    width: rectSize,
+                    height: rectSize,
+                  ),
+                  paint: f.Paint()..color = u.gray5,
+                ),
+                f.Rectangle(
+                  rect: f.Rect.fromCenter(
+                    center: f.Offset.zero,
+                    width: rectSize,
+                    height: rectSize,
+                  ),
+                  paint: f.Paint()
+                    ..color = u.black
+                    ..style = p.PaintingStyle.stroke
+                    ..strokeWidth = 2.0,
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );
@@ -164,18 +188,8 @@ class _OscillatingBodyModel extends f.Model {
   final _Attractor attractor;
 
   _OscillatingBodyModel.init({required super.size})
-      : mover = _Mover(
-          position: f.Vector2(
-            size.width * _Mover.posFactor,
-            size.height * _Mover.posFactor,
-          ),
-        ),
-        attractor = _Attractor(
-          position: f.Vector2(
-            size.width * 0.5,
-            size.height * 0.5,
-          ),
-        );
+      : mover = _Mover(),
+        attractor = _Attractor(size: size);
 
   _OscillatingBodyModel.update({
     required super.size,
@@ -193,6 +207,9 @@ class _OscillatingBodyIud<M extends _OscillatingBodyModel> extends f.IudBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
+    model.mover.applyForce(model.attractor.attract(model.mover));
+    model.mover.update();
+
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
@@ -225,9 +242,6 @@ class _OscillatingBodyIud<M extends _OscillatingBodyModel> extends f.IudBase<M>
       }
     }
 
-    model.mover.applyForce(model.attractor.attract(model.mover));
-    model.mover.update();
-
     return _OscillatingBodyModel.update(
       size: size,
       mover: model.mover,
@@ -242,8 +256,8 @@ class _OscillatingBodyIud<M extends _OscillatingBodyModel> extends f.IudBase<M>
   }) =>
       f.Drawing(
         canvasOps: [
-          model.mover.draw(model.size),
           model.attractor.draw(model.size),
+          model.mover.draw(model.size),
         ],
       );
 }
