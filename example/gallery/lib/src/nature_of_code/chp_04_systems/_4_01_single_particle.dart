@@ -1,79 +1,16 @@
-import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
-import '../utils.dart' as u;
-
-class _Particle {
-  static const double radius = 24.0;
-  static const double minVel = -1.0;
-  static const double maxVel = 1.0;
-
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
-
-  int lifespan;
-
-  _Particle({required this.position})
-      : velocity = f.Vector2(
-          u.randDoubleRange(minVel, maxVel),
-          u.randDoubleRange(1.0, 0.0),
-        ),
-        acceleration = f.Vector2(0.0, 0.05),
-        lifespan = 256;
-
-  void update() {
-    velocity.add(acceleration);
-    position.add(velocity);
-    lifespan -= 2;
-  }
-
-  bool get isDead => lifespan < 0.0;
-
-  f.Drawing draw(f.Size size) {
-    final r = u.scale(size) * radius;
-    final a = lifespan / 256.0;
-    return f.Translate(
-      translation: position,
-      canvasOps: [
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()
-            ..color = p.HSLColor.fromAHSL(
-              a,
-              0.0,
-              0.0,
-              0.5,
-            ).toColor(),
-        ),
-        f.Circle(
-          c: f.Offset.zero,
-          radius: r,
-          paint: f.Paint()
-            ..color = p.HSLColor.fromAHSL(
-              a,
-              0.0,
-              0.0,
-              0.0,
-            ).toColor()
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
-        ),
-      ],
-    );
-  }
-}
+import 'common.dart' as c;
 
 class _SingleParticleModel extends f.Model {
   static const topOffset = 20.0;
 
-  _Particle particle;
+  c.Particle particle;
 
   _SingleParticleModel.init({required super.size})
-      : particle = _Particle(
+      : particle = c.Particle(
           position: f.Vector2(size.width * 0.5, topOffset),
         );
 
@@ -94,7 +31,7 @@ class _SingleParticleIud<M extends _SingleParticleModel> extends f.IudBase<M>
   }) {
     model.particle.update();
     if (model.particle.isDead) {
-      model.particle = _Particle(
+      model.particle = c.Particle(
         position: f.Vector2(
           size.width * 0.5,
           _SingleParticleModel.topOffset,

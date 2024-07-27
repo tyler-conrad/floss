@@ -97,23 +97,23 @@ class _AccIud<M extends _AccModel> extends f.IudBase<M> implements f.Iud<M> {
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2? mousePos;
+    f.Vector2? mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
-          mousePos = f.Vector2(event.localPosition.dx, event.localPosition.dy);
+          mouse = f.Vector2(event.localPosition.dx, event.localPosition.dy);
         default:
           break;
       }
     }
-    final mouse = mousePos ?? model.mouse;
+    final m = mouse ?? model.mouse;
 
-    final m = model.mover.update(mouse);
+    final mover = model.mover.update(m);
 
     return _AccModel.update(
       size: size,
-      mouse: mouse,
-      mover: m,
+      mouse: m,
+      mover: mover,
     ) as M;
   }
 
