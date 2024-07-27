@@ -50,7 +50,7 @@ class _Attractor {
     return f.Drawing(
       canvasOps: [
         f.Circle(
-          c: f.Offset.fromVec(position),
+          c: position.toOffset,
           radius: r,
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
@@ -61,7 +61,7 @@ class _Attractor {
             ).toColor(),
         ),
         f.Circle(
-          c: f.Offset.fromVec(position),
+          c: position.toOffset,
           radius: r,
           paint: f.Paint()
             ..color = u.black

@@ -69,7 +69,7 @@ class _VecMagIud<M extends _VecMagModel> extends f.IudBase<M>
             paint: f.Paint()..color = u.black),
         f.Line(
           p1: f.Offset.zero,
-          p2: f.Offset.fromVec(mouse),
+          p2: mouse.toOffset,
           paint: f.Paint()
             ..color = u.black
             ..strokeWidth = 2.0,

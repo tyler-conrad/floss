@@ -62,7 +62,7 @@ class _VecNormIud<M extends _VecNormModel> extends f.IudBase<M>
       canvasOps: [
         f.Line(
           p1: f.Offset.zero,
-          p2: f.Offset.fromVec(mouse),
+          p2: mouse.toOffset,
           paint: f.Paint()
             ..color = u.black
             ..strokeWidth = 2.0,

@@ -55,7 +55,7 @@ class _Pendulum {
   }
 
   f.Drawing draw(f.Size size) {
-    final pos = f.Offset.fromVec(position);
+    final pos = position.toOffset;
     final r = u.scale(size) * radius;
 
     return f.Translate(translation: origin, canvasOps: [
@@ -68,7 +68,7 @@ class _Pendulum {
       ),
       f.Circle(c: pos, radius: r, paint: f.Paint()..color = u.gray5),
       f.Circle(
-        c: f.Offset.fromVec(position),
+        c: position.toOffset,
         radius: r,
         paint: f.Paint()
           ..color = u.black

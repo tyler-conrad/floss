@@ -23,7 +23,7 @@ class Offset {
     );
   }
 
-  v.Vector2 get asVec => v.Vector2(offset.dx, offset.dy);
+  v.Vector2 get toVec => v.Vector2(offset.dx, offset.dy);
 
   bool get isFinite => offset.isFinite;
 
@@ -135,7 +135,7 @@ class Size {
           ui.Size.fromRadius(radius),
         );
 
-  v.Vector2 get asVec => v.Vector2(size.width, size.height);
+  v.Vector2 get toVec => v.Vector2(size.width, size.height);
 
   bool get isEmpty => size.isEmpty;
 
@@ -440,7 +440,7 @@ class Rect {
           rb: Offset.fromVec(rb),
         );
 
-  v.Vector2 get asVec => v.Vector2(rect.width, rect.height);
+  v.Vector2 get toVec => v.Vector2(rect.width, rect.height);
 
   bool get hasNaN => rect.hasNaN;
 

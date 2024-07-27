@@ -10,6 +10,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Wave {
+  static const double radius = 2.0;
   static const double angularVel = 0.02;
 
   final int numCircles;
@@ -51,8 +52,7 @@ class _Wave {
               (x, _) =>
                   amplitude *
                   math.sin(
-                    u.scale(size) *
-                            x *
+                    x *
                             2.0 *
                             math.pi /
                             period *
@@ -74,8 +74,9 @@ class _Wave {
           numCircles,
           (i) {
             final x = i * size.width * widthFactor / numCircles;
-            final y = yValues[i];
-            final r = widthFactor * size.width / numCircles;
+            final y = u.scale(size) * yValues[i];
+            final r =
+                u.scale(size) * radius * widthFactor * size.width / numCircles;
             return f.Circle(
               c: f.Offset(x, y),
               radius: r,
@@ -98,18 +99,18 @@ class _OopWaveModel extends f.Model {
 
   _OopWaveModel.init({required super.size})
       : waveOne = _Wave.init(
-          numCircles: 9,
+          numCircles: 15,
           originFactor: f.Vector2(0.1, 0.4),
           widthFactor: 0.3,
-          period: 500.0,
-          amplitude: 20.0,
+          period: 400.0,
+          amplitude: 30.0,
         ),
         waveTwo = _Wave.init(
-          numCircles: 25,
+          numCircles: 40,
           originFactor: f.Vector2(0.5, 0.5),
           widthFactor: 0.4,
-          period: 220.0,
-          amplitude: 40.0,
+          period: 600.0,
+          amplitude: 70.0,
         );
 
   _OopWaveModel.update({

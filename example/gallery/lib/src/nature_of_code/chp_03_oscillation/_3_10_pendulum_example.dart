@@ -67,7 +67,7 @@ class _Pendulum {
 
   f.Drawing draw(f.Size size) {
     final c = dragging ? u.black : u.gray5;
-    final pos = f.Offset.fromVec(position);
+    final pos = position.toOffset;
     final r = u.scale(size) * radius;
 
     return f.Translate(translation: origin, canvasOps: [

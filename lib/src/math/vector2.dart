@@ -60,6 +60,10 @@ class Vector2 {
           magnitude * m.sin(radians),
         );
 
+  geom.Offset get toOffset => geom.Offset(_v.x, _v.y);
+
+  geom.Size get toSize => geom.Size(_v.x, _v.y);
+
   bool get isInfinite => _v.isInfinite;
 
   bool get isNaN => _v.isNaN;
