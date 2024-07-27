@@ -64,13 +64,7 @@ class _SimpleHarmonicMotionIud<M extends _SimpleHarmonicMotionModel>
         f.Circle(
           c: f.Offset(x, 0.0),
           radius: r,
-          paint: f.Paint()
-            ..color = const p.HSLColor.fromAHSL(
-              1.0,
-              0.0,
-              0.0,
-              0.68,
-            ).toColor(),
+          paint: f.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset(x, 0.0),

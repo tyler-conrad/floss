@@ -128,15 +128,10 @@ class _Mover {
       translation: position,
       canvasOps: [
         f.Circle(
-            c: f.Offset.zero,
-            radius: r,
-            paint: f.Paint()
-              ..color = const p.HSLColor.fromAHSL(
-                1.0,
-                0.0,
-                0.0,
-                0.3,
-              ).toColor()),
+          c: f.Offset.zero,
+          radius: r,
+          paint: f.Paint()..color = u.gray5,
+        ),
         f.Circle(
           c: f.Offset.zero,
           radius: r,

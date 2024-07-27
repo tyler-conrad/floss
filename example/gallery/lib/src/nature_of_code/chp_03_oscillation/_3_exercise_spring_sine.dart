@@ -59,12 +59,7 @@ class _SpringSineIud<M extends _SpringSineModel> extends f.IudBase<M>
           ),
           radius: r,
           paint: f.Paint()
-            ..color = const p.HSLColor.fromAHSL(
-              1.0,
-              0.0,
-              0.0,
-              0.7,
-            ).toColor()
+            ..color = u.gray5
             ..style = p.PaintingStyle.fill,
         ),
         f.Circle(
