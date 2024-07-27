@@ -82,6 +82,7 @@ import 'src/nature_of_code/chp_03_oscillation/_3_multiple_oscillations.dart'
     as c3_mo;
 import 'src/nature_of_code/chp_03_oscillation/_3_oop_wave_particles.dart'
     as c3_owp;
+import 'src/nature_of_code/chp_04_systems/_4_01_single_particle.dart' as c4_1;
 
 class Example {
   final String title;
@@ -138,6 +139,7 @@ final examples = <Example>[
   const Example(c3_oud.title, c3_oud.widget),
   const Example(c3_mo.title, c3_mo.widget),
   const Example(c3_owp.title, c3_owp.widget),
+  const Example(c4_1.title, c4_1.widget),
 ];
 
 class _ExampleGridTile extends m.StatefulWidget {

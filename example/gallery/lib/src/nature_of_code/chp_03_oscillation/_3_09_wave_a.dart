@@ -11,9 +11,9 @@ import '../utils.dart' as u;
 
 class _WaveModel extends f.Model {
   static const int numCircles = 12;
-  static const amplitudeFactor = 0.35;
+  static const double amplitudeFactor = 0.35;
   static const double angleVel = 0.05;
-  static const startAngleDt = 0.015;
+  static const double startAngleDt = 0.015;
 
   final double startAngle;
 
