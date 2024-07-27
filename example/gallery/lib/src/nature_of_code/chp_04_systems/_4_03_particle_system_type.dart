@@ -2,15 +2,16 @@ import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
 
+import '../utils.dart' as u;
 import 'common.dart' as c;
 
 class _ParticleSystemTypeModel extends f.Model {
   static const topOffset = 50.0;
 
-  final c.ParticleSystem ps;
+  final c.ParticleSystem system;
 
   _ParticleSystemTypeModel.init({required super.size})
-      : ps = c.ParticleSystem(
+      : system = c.ParticleSystem(
           origin: f.Vector2(
             size.width * 0.5,
             topOffset,
@@ -19,7 +20,7 @@ class _ParticleSystemTypeModel extends f.Model {
 
   _ParticleSystemTypeModel.update({
     required super.size,
-    required this.ps,
+    required this.system,
   });
 }
 
@@ -32,12 +33,16 @@ class _ParticleSystemTypeIud<M extends _ParticleSystemTypeModel>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    model.ps.addParticle();
-    final ps = model.ps.update(model.ps.origin);
+    model.system.addParticle();
 
     return _ParticleSystemTypeModel.update(
       size: size,
-      ps: ps,
+      system: model.system.update(
+        f.Vector2(
+          size.width * 0.5,
+          u.scale(size) * _ParticleSystemTypeModel.topOffset,
+        ),
+      ),
     ) as M;
   }
 
@@ -48,7 +53,7 @@ class _ParticleSystemTypeIud<M extends _ParticleSystemTypeModel>
   }) {
     return f.Drawing(
       canvasOps: [
-        model.ps.draw(model.size),
+        model.system.draw(model.size),
       ],
     );
   }

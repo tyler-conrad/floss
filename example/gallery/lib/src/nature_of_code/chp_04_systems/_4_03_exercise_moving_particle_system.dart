@@ -43,13 +43,13 @@ class _MovingParticleSystemIud<M extends _MovingParticleSystemModel>
             event.localPosition.dx,
             event.localPosition.dy,
           );
+
         default:
           break;
       }
     }
 
     c.ParticleSystem ps = model.system;
-
     if (mouse != null) {
       model.system.addParticle();
       ps = ps.update(mouse);

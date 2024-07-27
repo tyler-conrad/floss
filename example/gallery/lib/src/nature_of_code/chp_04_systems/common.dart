@@ -1,4 +1,4 @@
-import 'package:collection/collection.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/painting.dart' as p;
 
 import 'package:floss/floss.dart' as f;
@@ -70,8 +70,8 @@ class Particle {
   }
 }
 
-class ParticleSystem {
-  final List<Particle> particles;
+class ParticleSystem<P extends Particle> {
+  final List<P> particles;
   f.Vector2 origin;
 
   ParticleSystem({required this.origin}) : particles = [];
@@ -88,7 +88,7 @@ class ParticleSystem {
           origin.x,
           origin.y,
         ),
-      ),
+      ) as P,
     );
   }
 

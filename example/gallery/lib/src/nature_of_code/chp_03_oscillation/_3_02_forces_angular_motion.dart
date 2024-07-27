@@ -44,7 +44,7 @@ class _Attractor {
 }
 
 class _Mover {
-  static const double size = 32.0;
+  static const double sideLen = 32.0;
   static const double angularVelFactor = 0.1;
   static const double angularVelMin = -0.1;
   static const double angularVelMax = 0.1;
@@ -106,7 +106,7 @@ class _Mover {
   }
 
   f.Drawing draw(f.Size size) {
-    final s = u.scale(size) * mass * _Mover.size;
+    final s = u.scale(size) * mass * sideLen;
     return f.Translate(
       translation: position,
       canvasOps: [

@@ -92,6 +92,8 @@ import 'src/nature_of_code/chp_04_systems/_4_03_particle_system_type.dart'
 import 'src/nature_of_code/chp_04_systems/_4_03_exercise_moving_particle_system.dart'
     as c4_3_emps;
 import 'src/nature_of_code/chp_04_systems/_4_04_system_of_systems.dart' as c4_4;
+import 'src/nature_of_code/chp_04_systems/_4_05_particle_system_inheritance_polymorphism.dart'
+    as c4_5;
 
 class Example {
   final String title;
@@ -154,6 +156,7 @@ final examples = <Example>[
   const Example(c4_3_pst.title, c4_3_pst.widget),
   const Example(c4_3_emps.title, c4_3_emps.widget),
   const Example(c4_4.title, c4_4.widget),
+  const Example(c4_5.title, c4_5.widget),
 ];
 
 class _ExampleGridTile extends m.StatefulWidget {
