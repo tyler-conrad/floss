@@ -56,12 +56,9 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
           return f.Drawing(
             canvasOps: [
               f.Circle(
-                c: f.Offset(x, y),
-                radius: r,
-                paint: f.Paint()
-                  ..color = u.transparent5black
-                  ..style = p.PaintingStyle.fill,
-              ),
+                  c: f.Offset(x, y),
+                  radius: r,
+                  paint: f.Paint()..color = u.transparent5black),
               f.Circle(
                 c: f.Offset(x, y),
                 radius: r,

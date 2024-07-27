@@ -1,4 +1,3 @@
-import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
@@ -66,7 +65,6 @@ class _VecNormIud<M extends _VecNormModel> extends f.IudBase<M>
           p2: f.Offset.fromVec(mouse),
           paint: f.Paint()
             ..color = u.black
-            ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,
         ),
       ],

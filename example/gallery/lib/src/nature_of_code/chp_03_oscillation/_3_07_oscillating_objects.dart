@@ -8,7 +8,8 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Oscillator {
-  static const double lengthFactor = 0.1;
+  static const double lengthFactor = 0.4;
+  static const double minLength = 20.0;
   static const double circleRadius = 16.0;
   static const double minVel = -0.05;
   static const double maxVel = 0.05;
@@ -25,25 +26,17 @@ class _Oscillator {
           u.randDoubleRange(minVel, maxVel),
         ),
         amplitudeFactors = f.Vector2(
-          u.randDoubleRange(20.0, size.width),
-          u.randDoubleRange(20.0, size.height),
+          u.randDoubleRange(minLength, size.width * lengthFactor),
+          u.randDoubleRange(minLength, size.height * lengthFactor),
         );
 
   void oscillate() {
     angle.add(velocity);
   }
 
-  f.Drawing draw(f.Size size) {
-    final x = lengthFactor *
-        size.height /
-        amplitudeFactors.y *
-        amplitudeFactors.x *
-        math.sin(angle.x);
-    final y = lengthFactor *
-        size.height /
-        amplitudeFactors.y *
-        amplitudeFactors.y *
-        math.sin(angle.y);
+  f.Drawing draw(f.Size s) {
+    final x = s.width / size.width * amplitudeFactors.x * math.sin(angle.x);
+    final y = s.height / size.height * amplitudeFactors.y * math.sin(angle.y);
     final r = u.scale(size) * circleRadius;
 
     return f.Drawing(

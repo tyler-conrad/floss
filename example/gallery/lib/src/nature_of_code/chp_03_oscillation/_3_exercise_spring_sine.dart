@@ -53,15 +53,12 @@ class _SpringSineIud<M extends _SpringSineModel> extends f.IudBase<M>
             ..strokeWidth = 2.0,
         ),
         f.Circle(
-          c: f.Offset(
-            0.0,
-            y,
-          ),
-          radius: r,
-          paint: f.Paint()
-            ..color = u.gray5
-            ..style = p.PaintingStyle.fill,
-        ),
+            c: f.Offset(
+              0.0,
+              y,
+            ),
+            radius: r,
+            paint: f.Paint()..color = u.gray5),
         f.Circle(
           c: f.Offset(
             0.0,
