@@ -8,7 +8,9 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _PolarToCartesianTrailModel extends f.Model {
-  static const radiusFactor = 0.4;
+  static const double circleRadius = 24.0;
+  static const double radiusFactor = 0.4;
+  static const double angularVel = 0.02;
 
   final double radius;
   final double theta;
@@ -26,8 +28,6 @@ class _PolarToCartesianTrailModel extends f.Model {
 
 class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
     extends f.IudBase<M> implements f.Iud<M> {
-  static const double circleRadius = 24.0;
-
   @override
   M update({
     required M model,
@@ -38,7 +38,7 @@ class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
       _PolarToCartesianTrailModel.update(
         size: size,
         radius: _PolarToCartesianTrailModel.radiusFactor * size.height,
-        theta: model.theta + 0.02,
+        theta: model.theta + _PolarToCartesianTrailModel.angularVel,
       ) as M;
 
   @override
@@ -48,7 +48,7 @@ class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
   }) {
     final x = model.radius * math.cos(model.theta);
     final y = model.radius * math.sin(model.theta);
-    final cr = u.scale(model.size) * circleRadius;
+    final r = u.scale(model.size) * _PolarToCartesianTrailModel.circleRadius;
 
     return f.Translate(
       translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
@@ -62,12 +62,12 @@ class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
         ),
         f.Circle(
           c: f.Offset(x, y),
-          radius: cr,
+          radius: r,
           paint: f.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset(x, y),
-          radius: cr,
+          radius: r,
           paint: f.Paint()
             ..color = u.black
             ..paint

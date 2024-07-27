@@ -8,7 +8,9 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _PolarToCartesianModel extends f.Model {
-  static const radiusFactor = 0.4;
+  static const double circleRadius = 24.0;
+  static const double radiusFactor = 0.4;
+  static const double angularVel = 0.02;
 
   final double radius;
   final double theta;
@@ -26,8 +28,6 @@ class _PolarToCartesianModel extends f.Model {
 
 class _PolarToCartesianIud<M extends _PolarToCartesianModel>
     extends f.IudBase<M> implements f.Iud<M> {
-  static const double circleRadius = 24.0;
-
   @override
   M update({
     required M model,
@@ -38,7 +38,7 @@ class _PolarToCartesianIud<M extends _PolarToCartesianModel>
       _PolarToCartesianModel.update(
         size: size,
         radius: _PolarToCartesianModel.radiusFactor * size.height,
-        theta: model.theta + 0.02,
+        theta: model.theta + _PolarToCartesianModel.angularVel,
       ) as M;
 
   @override
@@ -48,7 +48,7 @@ class _PolarToCartesianIud<M extends _PolarToCartesianModel>
   }) {
     final x = model.radius * math.cos(model.theta);
     final y = model.radius * math.sin(model.theta);
-    final r = u.scale(model.size) * circleRadius;
+    final r = u.scale(model.size) * _PolarToCartesianModel.circleRadius;
 
     return f.Translate(
       translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),

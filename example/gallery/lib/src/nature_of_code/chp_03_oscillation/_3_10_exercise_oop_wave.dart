@@ -10,7 +10,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Wave {
-  static const double dt = 0.02;
+  static const double angularVel = 0.02;
 
   final int numCircles;
   final f.Vector2 originFactor;
@@ -42,7 +42,7 @@ class _Wave {
   _Wave calculate(f.Size size) => _Wave.update(
         numCircles: numCircles,
         originFactor: originFactor,
-        theta: theta + dt,
+        theta: theta + angularVel,
         widthFactor: widthFactor,
         period: period,
         amplitude: amplitude,
