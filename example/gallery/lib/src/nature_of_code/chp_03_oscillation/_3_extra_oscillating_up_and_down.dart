@@ -77,7 +77,7 @@ class _OscillatingUpDownIud<M extends _OscillatingUpDownModel>
   }
 }
 
-const String title = 'Bouncing Ball No Vectors';
+const String title = 'Oscillating Up Down';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
