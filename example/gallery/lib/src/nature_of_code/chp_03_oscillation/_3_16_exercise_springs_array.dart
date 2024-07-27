@@ -58,7 +58,7 @@ class _Bob {
             0.0,
             0.2,
           ).toColor();
-    final r = u.scale(size) * mass;
+    final r = computedRadius(size);
 
     return f.Translate(
       translation: position,
@@ -80,9 +80,11 @@ class _Bob {
     );
   }
 
+  double computedRadius(f.Size size) => u.scale(size) * mass;
+
   void clicked(f.Vector2 mouse, f.Size size) {
     final m = position - mouse;
-    if (m.length < u.scale(size) * mass) {
+    if (m.length < computedRadius(size)) {
       dragging = true;
       dragOffset.setFrom(m);
     }

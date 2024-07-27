@@ -8,7 +8,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Mover {
-  static const double radius = 32.0;
+  static const double radius = 16.0;
   static const double gravity = 0.4;
   static const double padding = 50.0;
   static const double massMin = 1.0;

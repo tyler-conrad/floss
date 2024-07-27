@@ -37,7 +37,7 @@ class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
   }) =>
       _PolarToCartesianTrailModel.update(
         size: size,
-        radius: model.radius,
+        radius: _PolarToCartesianTrailModel.radiusFactor * size.height,
         theta: model.theta + 0.02,
       ) as M;
 
@@ -46,10 +46,9 @@ class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
     required M model,
     required bool isLightTheme,
   }) {
-    final s = u.scale(model.size);
-    final x = s * model.radius * math.cos(model.theta);
-    final y = s * model.radius * math.sin(model.theta);
-    final cr = s * circleRadius;
+    final x = model.radius * math.cos(model.theta);
+    final y = model.radius * math.sin(model.theta);
+    final cr = u.scale(model.size) * circleRadius;
 
     return f.Translate(
       translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),

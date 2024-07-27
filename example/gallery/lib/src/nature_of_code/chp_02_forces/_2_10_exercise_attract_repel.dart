@@ -10,7 +10,7 @@ import '../utils.dart' as u;
 class _Attractor {
   static const double gravity = 1.0;
   static const double mass = 10.0;
-  static const double radius = mass * 6.0;
+  static const double radius = mass * 0.65;
   static const double massMin = 5.0;
   static const double massMax = 25.0;
 
@@ -32,6 +32,8 @@ class _Attractor {
     return force * (gravity * mass * mover.mass) / (d * d);
   }
 
+  double computeRadius(f.Size size) => u.scale(size) * mass * radius;
+
   f.Drawing draw(f.Size size) {
     double gray;
     if (dragging) {
@@ -47,7 +49,7 @@ class _Attractor {
       canvasOps: [
         f.Circle(
           c: f.Offset.zero,
-          radius: u.scale(size) * radius,
+          radius: computeRadius(size),
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
               1.0,
@@ -61,7 +63,7 @@ class _Attractor {
   }
 
   void clicked({required f.Vector2 mouse, required f.Size size}) {
-    if ((position - mouse).length < u.scale(size) * radius) {
+    if ((position - mouse).length < computeRadius(size)) {
       dragging = true;
       dragOffset.setValues(
         position.x - mouse.x,
@@ -71,7 +73,7 @@ class _Attractor {
   }
 
   void over({required f.Vector2 mouse, required f.Size size}) =>
-      rollover = (position - mouse).length < u.scale(size) * radius;
+      rollover = (position - mouse).length < computeRadius(size);
 
   void stopDragging() => dragging = false;
 
@@ -86,7 +88,7 @@ class _Attractor {
 }
 
 class _Mover {
-  static const double radius = 4.0;
+  static const double radius = 2.0;
   static const double forceLenMin = 1.0;
   static const double forceLenMax = 10000.0;
   static const double massMin = 4.0;

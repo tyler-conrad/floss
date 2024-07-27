@@ -14,7 +14,7 @@ class _PolarToCartesianModel extends f.Model {
   final double theta;
 
   _PolarToCartesianModel.init({required super.size})
-      : radius = u.scale(size) * size.height * radiusFactor,
+      : radius = radiusFactor * size.height,
         theta = 0.0;
 
   _PolarToCartesianModel.update({
@@ -37,7 +37,7 @@ class _PolarToCartesianIud<M extends _PolarToCartesianModel>
   }) =>
       _PolarToCartesianModel.update(
         size: size,
-        radius: model.radius,
+        radius: _PolarToCartesianModel.radiusFactor * size.height,
         theta: model.theta + 0.02,
       ) as M;
 
@@ -46,10 +46,9 @@ class _PolarToCartesianIud<M extends _PolarToCartesianModel>
     required M model,
     required bool isLightTheme,
   }) {
-    final s = u.scale(model.size);
-    final x = s * model.radius * math.cos(model.theta);
-    final y = s * model.radius * math.sin(model.theta);
-    final r = s * circleRadius;
+    final x = model.radius * math.cos(model.theta);
+    final y = model.radius * math.sin(model.theta);
+    final r = u.scale(model.size) * circleRadius;
 
     return f.Translate(
       translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),

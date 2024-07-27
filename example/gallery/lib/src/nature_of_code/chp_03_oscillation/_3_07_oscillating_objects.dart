@@ -8,7 +8,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _Oscillator {
-  static const double lengthFactor = 0.4;
+  static const double lengthFactor = 0.1;
   static const double circleRadius = 16.0;
   static const double minVel = -0.05;
   static const double maxVel = 0.05;
@@ -26,10 +26,7 @@ class _Oscillator {
         ),
         amplitudeFactors = f.Vector2(
           u.randDoubleRange(20.0, size.width),
-          u.randDoubleRange(
-            20.0,
-            size.height,
-          ),
+          u.randDoubleRange(20.0, size.height),
         );
 
   void oscillate() {
@@ -37,10 +34,17 @@ class _Oscillator {
   }
 
   f.Drawing draw(f.Size size) {
-    final s = u.scale(size);
-    final x = s * lengthFactor * amplitudeFactors.x * math.sin(angle.x);
-    final y = s * lengthFactor * amplitudeFactors.y * math.sin(angle.y);
-    final r = s * circleRadius;
+    final x = lengthFactor *
+        size.height /
+        amplitudeFactors.y *
+        amplitudeFactors.x *
+        math.sin(angle.x);
+    final y = lengthFactor *
+        size.height /
+        amplitudeFactors.y *
+        amplitudeFactors.y *
+        math.sin(angle.y);
+    final r = u.scale(size) * circleRadius;
 
     return f.Drawing(
       canvasOps: [
@@ -104,7 +108,10 @@ class _OscillatingObjectsIud<M extends _OscillatingObjectsModel>
     required bool isLightTheme,
   }) =>
       f.Translate(
-        translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
+        translation: f.Vector2(
+          model.size.width * 0.5,
+          model.size.height * 0.5,
+        ),
         canvasOps: model.oscillators
             .map((oscillator) => oscillator.draw(model.size))
             .toList(),

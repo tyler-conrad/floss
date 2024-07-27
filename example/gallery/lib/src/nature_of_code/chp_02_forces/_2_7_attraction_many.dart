@@ -10,7 +10,7 @@ import '../utils.dart' as u;
 class _Attractor {
   static const double gravity = 1.0;
   static const double mass = 20.0;
-  static const double radius = 3.0;
+  static const double radius = 2.0;
   static const double forceLenMin = 5.0;
   static const double forceLenMax = 25.0;
 
@@ -33,6 +33,8 @@ class _Attractor {
     return force * (gravity * mass * m.mass) / (d * d);
   }
 
+  double computeRadius(f.Size size) => u.scale(size) * mass * radius;
+
   f.Drawing draw(f.Size size) {
     double gray;
     if (dragging) {
@@ -43,7 +45,7 @@ class _Attractor {
       gray = 0.75;
     }
 
-    final r = u.scale(size) * radius * mass;
+    final r = computeRadius(size);
 
     return f.Translate(
       translation: position,
@@ -72,7 +74,7 @@ class _Attractor {
   }
 
   void clicked({required f.Vector2 mouse, required f.Size size}) {
-    if ((position - mouse).length < u.scale(size) * mass) {
+    if ((position - mouse).length < computeRadius(size)) {
       dragging = true;
       dragOffset.setValues(
         position.x - mouse.x,
@@ -82,7 +84,7 @@ class _Attractor {
   }
 
   void hover({required f.Vector2 mouse, required f.Size size}) =>
-      rollover = (position - mouse).length < u.scale(size) * mass;
+      rollover = (position - mouse).length < computeRadius(size);
 
   void stopDragging() => dragging = false;
 

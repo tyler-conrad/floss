@@ -49,11 +49,13 @@ class _Bob {
     acceleration.add(force / mass);
   }
 
+  double computeRadius(f.Size size) => u.scale(size) * mass;
+
   f.Drawing draw(f.Size size) {
     final c = dragging
         ? u.gray5
         : const p.HSLColor.fromAHSL(1.0, 0.0, 0.0, 0.2).toColor();
-    final r = u.scale(size) * mass;
+    final r = computeRadius(size);
 
     return f.Translate(
       translation: position,
@@ -77,7 +79,7 @@ class _Bob {
 
   void clicked(f.Vector2 mouse, f.Size size) {
     final m = position - mouse;
-    if (m.length < u.scale(size) * mass) {
+    if (m.length < computeRadius(size)) {
       dragging = true;
       dragOffset.setFrom(m);
     }

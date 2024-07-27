@@ -10,6 +10,7 @@ import '../utils.dart' as u;
 class _Attractor {
   static const double gravity = 1.0;
   static const double mass = 20.0;
+  static const double radius = 3.0;
   static const double forceLenMin = 5.0;
   static const double forceLenMax = 25.0;
 
@@ -32,6 +33,8 @@ class _Attractor {
     return force * (gravity * mass * _Mover.mass) / (d * d);
   }
 
+  double computedRadius(f.Size size) => u.scale(size) * mass * radius;
+
   f.Drawing draw(f.Size size) {
     double gray;
     double alpha = 1.0;
@@ -44,7 +47,7 @@ class _Attractor {
       gray = 0.7;
     }
 
-    final r = u.scale(size) * mass;
+    final r = computedRadius(size);
 
     return f.Translate(
       translation: position,
@@ -76,13 +79,11 @@ class _Attractor {
     required f.Vector2 mouse,
     required f.Size size,
   }) {
-    final d = (position - mouse).length;
-    if (d < u.scale(size) * mass) {
+    final offset = position - mouse;
+    final d = offset.length;
+    if (d < computedRadius(size)) {
       dragging = true;
-      dragOffset.setValues(
-        position.x - mouse.x,
-        position.y - mouse.y,
-      );
+      dragOffset.setFrom(offset);
     }
   }
 
@@ -90,7 +91,7 @@ class _Attractor {
     required f.Vector2 mouse,
     required f.Size size,
   }) =>
-      rollover = (position - mouse).length < u.scale(size) * mass;
+      rollover = (position - mouse).length < computedRadius(size);
 
   void stopDragging() => dragging = false;
 
@@ -130,7 +131,7 @@ class _Mover {
   }
 
   f.Drawing draw(f.Size size) {
-    final r = u.scale(size) * radius;
+    final r = u.scale(size) * mass * radius;
 
     return f.Translate(
       translation: position,
@@ -158,11 +159,11 @@ class _Mover {
   }
 }
 
-class _AttractionModel extends f.Model {
+class _OscillatingBodyModel extends f.Model {
   final _Mover mover;
   final _Attractor attractor;
 
-  _AttractionModel.init({required super.size})
+  _OscillatingBodyModel.init({required super.size})
       : mover = _Mover(
           position: f.Vector2(
             size.width * _Mover.posFactor,
@@ -176,14 +177,14 @@ class _AttractionModel extends f.Model {
           ),
         );
 
-  _AttractionModel.update({
+  _OscillatingBodyModel.update({
     required super.size,
     required this.mover,
     required this.attractor,
   });
 }
 
-class _AttractionIud<M extends _AttractionModel> extends f.IudBase<M>
+class _OscillatingBodyIud<M extends _OscillatingBodyModel> extends f.IudBase<M>
     implements f.Iud<M> {
   @override
   M update({
@@ -227,7 +228,7 @@ class _AttractionIud<M extends _AttractionModel> extends f.IudBase<M>
     model.mover.applyForce(model.attractor.attract(model.mover));
     model.mover.update();
 
-    return _AttractionModel.update(
+    return _OscillatingBodyModel.update(
       size: size,
       mover: model.mover,
       attractor: model.attractor,
@@ -247,13 +248,13 @@ class _AttractionIud<M extends _AttractionModel> extends f.IudBase<M>
       );
 }
 
-const String title = 'Attraction';
+const String title = 'Oscillating Body';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
-        modelCtor: _AttractionModel.init,
-        iud: _AttractionIud(),
+        modelCtor: _OscillatingBodyModel.init,
+        iud: _OscillatingBodyIud(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );
