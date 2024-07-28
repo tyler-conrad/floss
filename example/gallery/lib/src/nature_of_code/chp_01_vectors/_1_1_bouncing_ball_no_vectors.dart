@@ -85,7 +85,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _BallModel.init,
-        iud: _BallIud(),
+        iud: _BallIud<_BallModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

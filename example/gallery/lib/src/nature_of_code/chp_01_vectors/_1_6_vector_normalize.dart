@@ -78,7 +78,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _VecNormModel.init,
-        iud: _VecNormIud(),
+        iud: _VecNormIud<_VecNormModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

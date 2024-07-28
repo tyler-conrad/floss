@@ -116,7 +116,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AngularMotionModel.init,
-        iud: _AngularMotionIud(),
+        iud: _AngularMotionIud<_AngularMotionModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

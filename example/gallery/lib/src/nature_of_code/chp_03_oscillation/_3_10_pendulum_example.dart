@@ -167,7 +167,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _PendulumModel.init,
-        iud: _PendulumIud(),
+        iud: _PendulumIud<_PendulumModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

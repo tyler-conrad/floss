@@ -77,7 +77,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _NoFrictionModel.init,
-        iud: _NoFrictionIud(),
+        iud: _NoFrictionIud<_NoFrictionModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

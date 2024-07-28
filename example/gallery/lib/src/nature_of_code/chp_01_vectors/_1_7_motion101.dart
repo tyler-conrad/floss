@@ -124,7 +124,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _MotionModel.init,
-        iud: _MotionIud(),
+        iud: _MotionIud<_MotionModel>(),
         clearCanvas: f.NoClearCanvas(
           paint: f.Paint()
             ..color = u.transparentWhite

@@ -76,7 +76,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _SystemOfSystemsModel.init,
-        iud: _SystemOfSystemsIud(),
+        iud: _SystemOfSystemsIud<_SystemOfSystemsModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

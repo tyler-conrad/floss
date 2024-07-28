@@ -117,7 +117,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AdditiveWaveModel.init,
-        iud: _AdditiveWaveIud(),
+        iud: _AdditiveWaveIud<_AdditiveWaveModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

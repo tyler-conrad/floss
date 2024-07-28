@@ -90,7 +90,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _MutualAttractionModel.init,
-        iud: _MutualAttractionIud(),
+        iud: _MutualAttractionIud<_MutualAttractionModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

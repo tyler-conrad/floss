@@ -75,7 +75,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _RealGravityModel.init,
-        iud: _RealGravityIud(),
+        iud: _RealGravityIud<_RealGravityModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

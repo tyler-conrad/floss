@@ -106,7 +106,7 @@ class Confetti extends ParticleType {
   }
 }
 
-class ParticleSystem extends c.ParticleSystem<ParticleType> {
+class ParticleSystem<P extends c.Particle> extends c.ParticleSystem<P> {
   ParticleSystem({required super.origin});
 
   ParticleSystem.update({
@@ -115,14 +115,14 @@ class ParticleSystem extends c.ParticleSystem<ParticleType> {
   }) : super.update();
 
   @override
-  ParticleSystem update(f.Vector2 origin) {
+  ParticleSystem<P> update(f.Vector2 origin) {
     final ps = particles.whereNot((p) => p.isDead);
 
     for (final p in ps) {
       p.update();
     }
 
-    return ParticleSystem.update(
+    return ParticleSystem<P>.update(
       origin: origin,
       particles: ps.toList(),
     );
@@ -137,13 +137,13 @@ class ParticleSystem extends c.ParticleSystem<ParticleType> {
                 origin.x,
                 origin.y,
               ),
-            )
+            ) as P
           : Confetti(
               position: f.Vector2(
                 origin.x,
                 origin.y,
               ),
-            ),
+            ) as P,
     );
   }
 
@@ -157,10 +157,10 @@ class ParticleSystem extends c.ParticleSystem<ParticleType> {
 class _ParticleSystemInheritancePolymorphismModel extends f.Model {
   static const topOffset = 50.0;
 
-  final c.ParticleSystem system;
+  final ParticleSystem<ParticleType> system;
 
   _ParticleSystemInheritancePolymorphismModel.init({required super.size})
-      : system = ParticleSystem(
+      : system = ParticleSystem<ParticleType>(
           origin: f.Vector2(
             size.width * 0.5,
             topOffset,
@@ -200,13 +200,8 @@ class _ParticleSystemInheritancePolymorphismIud<
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Drawing(
-      canvasOps: [
-        model.system.draw(model.size),
-      ],
-    );
-  }
+  }) =>
+      model.system.draw(model.size);
 }
 
 const String title = 'Particle System Polymorphism Inheritance';
@@ -215,7 +210,8 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _ParticleSystemInheritancePolymorphismModel.init,
-        iud: _ParticleSystemInheritancePolymorphismIud(),
+        iud: _ParticleSystemInheritancePolymorphismIud<
+            _ParticleSystemInheritancePolymorphismModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

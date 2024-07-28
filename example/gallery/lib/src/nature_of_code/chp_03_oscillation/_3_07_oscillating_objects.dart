@@ -117,7 +117,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _OscillatingObjectsModel.init,
-        iud: _OscillatingObjectsIud(),
+        iud: _OscillatingObjectsIud<_OscillatingObjectsModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

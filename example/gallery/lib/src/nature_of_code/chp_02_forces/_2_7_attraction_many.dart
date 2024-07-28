@@ -214,7 +214,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AttractionManyModel.init,
-        iud: _AttractionManyIud(),
+        iud: _AttractionManyIud<_AttractionManyModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

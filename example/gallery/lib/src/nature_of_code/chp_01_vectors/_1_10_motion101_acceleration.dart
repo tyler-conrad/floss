@@ -131,7 +131,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AccModel.init,
-        iud: _AccIud(),
+        iud: _AccIud<_AccModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

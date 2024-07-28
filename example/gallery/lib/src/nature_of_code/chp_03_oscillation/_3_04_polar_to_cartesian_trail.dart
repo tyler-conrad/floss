@@ -84,7 +84,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _PolarToCartesianTrailModel.init,
-        iud: _PolarToCartesianTrailIud(),
+        iud: _PolarToCartesianTrailIud<_PolarToCartesianTrailModel>(),
         clearCanvas: f.NoClearCanvas(
             paint: f.Paint()
               ..color = u.transparentWhite

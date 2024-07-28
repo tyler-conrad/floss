@@ -218,7 +218,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _ForcesAngularMotionModel.init,
-        iud: _ForcesAngularMotionIud(),
+        iud: _ForcesAngularMotionIud<_ForcesAngularMotionModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

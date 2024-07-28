@@ -69,7 +69,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _StaticWaveLinesModel.init,
-        iud: _StaticWaveLinesIud(),
+        iud: _StaticWaveLinesIud<_StaticWaveLinesModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

@@ -283,7 +283,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _SpringsModel.init,
-        iud: _SpringsIud(),
+        iud: _SpringsIud<_SpringsModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

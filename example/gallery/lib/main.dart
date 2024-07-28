@@ -94,7 +94,10 @@ import 'src/nature_of_code/chp_04_systems/_4_03_exercise_moving_particle_system.
 import 'src/nature_of_code/chp_04_systems/_4_04_system_of_systems.dart' as c4_4;
 import 'src/nature_of_code/chp_04_systems/_4_05_particle_system_inheritance_polymorphism.dart'
     as c4_5;
-import 'src/nature_of_code/chp_04_systems/_4_06_exercise_shatter.dart' as c4_6;
+import 'src/nature_of_code/chp_04_systems/_4_06_exercise_shatter.dart'
+    as c4_6_es;
+import 'src/nature_of_code/chp_04_systems/_4_06_particle_system_forces.dart'
+    as c4_6_psf;
 
 class Example {
   final String title;
@@ -158,7 +161,8 @@ final examples = <Example>[
   const Example(c4_3_emps.title, c4_3_emps.widget),
   const Example(c4_4.title, c4_4.widget),
   const Example(c4_5.title, c4_5.widget),
-  const Example(c4_6.title, c4_6.widget),
+  const Example(c4_6_es.title, c4_6_es.widget),
+  const Example(c4_6_psf.title, c4_6_psf.widget),
 ];
 
 class _ExampleGridTile extends m.StatefulWidget {

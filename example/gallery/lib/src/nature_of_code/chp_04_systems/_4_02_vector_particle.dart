@@ -62,7 +62,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _VectorParticleModel.init,
-        iud: _VectorParticleIud(),
+        iud: _VectorParticleIud<_VectorParticleModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

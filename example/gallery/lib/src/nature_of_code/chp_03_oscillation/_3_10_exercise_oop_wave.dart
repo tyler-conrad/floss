@@ -154,7 +154,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _OopWaveModel.init,
-        iud: _OopWaveIud(),
+        iud: _OopWaveIud<_OopWaveModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

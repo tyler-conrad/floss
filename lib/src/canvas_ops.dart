@@ -637,6 +637,9 @@ class Drawing extends CanvasOp implements ICanvasOp {
   @override
   Iterable<PictureType> draw({required ui.Canvas canvas}) {
     switch (this) {
+      case Noop():
+        return const [];
+
       case Translate(:final _translation):
         canvas.save();
         canvas.translate(_translation.x, _translation.y);
@@ -733,6 +736,10 @@ class Drawing extends CanvasOp implements ICanvasOp {
         return _draw(canvas: canvas).toList();
     }
   }
+}
+
+class Noop extends Drawing {
+  const Noop() : super(canvasOps: const []);
 }
 
 class _BackgroundDrawing extends Drawing {

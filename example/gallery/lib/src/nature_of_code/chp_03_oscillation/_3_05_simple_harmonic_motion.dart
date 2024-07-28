@@ -82,7 +82,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _SimpleHarmonicMotionModel.init,
-        iud: _SimpleHarmonicMotionIud(),
+        iud: _SimpleHarmonicMotionIud<_SimpleHarmonicMotionModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

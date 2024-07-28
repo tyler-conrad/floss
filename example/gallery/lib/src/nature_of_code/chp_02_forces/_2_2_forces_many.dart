@@ -73,7 +73,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _ForcesManyModel.init,
-        iud: _ForcesManyIud(),
+        iud: _ForcesManyIud<_ForcesManyModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

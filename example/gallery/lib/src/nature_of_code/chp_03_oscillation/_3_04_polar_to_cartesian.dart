@@ -84,7 +84,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _PolarToCartesianModel.init,
-        iud: _PolarToCartesianIud(),
+        iud: _PolarToCartesianIud<_PolarToCartesianModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

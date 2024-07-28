@@ -50,13 +50,8 @@ class _ParticleSystemTypeIud<M extends _ParticleSystemTypeModel>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return f.Drawing(
-      canvasOps: [
-        model.system.draw(model.size),
-      ],
-    );
-  }
+  }) =>
+      model.system.draw(model.size);
 }
 
 const String title = 'Particle System Type';
@@ -65,7 +60,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _ParticleSystemTypeModel.init,
-        iud: _ParticleSystemTypeIud(),
+        iud: _ParticleSystemTypeIud<_ParticleSystemTypeModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

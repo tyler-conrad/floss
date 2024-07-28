@@ -92,14 +92,14 @@ class ParticleSystem<P extends Particle> {
     );
   }
 
-  ParticleSystem update(f.Vector2 origin) {
+  ParticleSystem<P> update(f.Vector2 origin) {
     final ps = particles.whereNot((p) => p.isDead);
 
     for (final p in ps) {
       p.update();
     }
 
-    return ParticleSystem.update(
+    return ParticleSystem<P>.update(
       origin: origin,
       particles: ps.toList(),
     );

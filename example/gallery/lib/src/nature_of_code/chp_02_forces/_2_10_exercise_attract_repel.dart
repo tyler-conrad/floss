@@ -246,7 +246,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _AttractRepelModel.init,
-        iud: _AttractRepelIud(),
+        iud: _AttractRepelIud<_AttractRepelModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

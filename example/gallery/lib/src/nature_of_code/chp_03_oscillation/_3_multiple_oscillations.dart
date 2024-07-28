@@ -90,7 +90,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _MultipleOscillationsModel.init,
-        iud: _MultipleOscillationsIud(),
+        iud: _MultipleOscillationsIud<_MultipleOscillationsModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

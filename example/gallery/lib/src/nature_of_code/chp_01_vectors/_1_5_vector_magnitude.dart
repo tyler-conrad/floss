@@ -85,7 +85,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _VecMagModel.init,
-        iud: _VecMagIud(),
+        iud: _VecMagIud<_VecMagModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

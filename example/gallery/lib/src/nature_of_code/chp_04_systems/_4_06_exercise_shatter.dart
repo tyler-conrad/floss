@@ -39,7 +39,7 @@ class Particle extends c.Particle {
   }
 }
 
-class ParticleSystem extends c.ParticleSystem<Particle> {
+class ParticleSystem<P extends c.Particle> extends c.ParticleSystem<P> {
   static const int rows = 20;
   static const int cols = 20;
 
@@ -57,7 +57,7 @@ class ParticleSystem extends c.ParticleSystem<Particle> {
               offset(rows, x),
               offset(cols, y),
             ),
-          ),
+          ) as P,
         );
       }
     }
@@ -76,8 +76,13 @@ class ParticleSystem extends c.ParticleSystem<Particle> {
     intact = false;
   }
 
+  ParticleSystem._update({
+    required super.origin,
+    List<P> particles = const [],
+  });
+
   @override
-  ParticleSystem update(f.Vector2 origin) {
+  ParticleSystem<P> update(f.Vector2 origin) {
     final ps = particles.whereNot((p) => p.isDead).toList();
 
     if (!intact) {
@@ -86,9 +91,9 @@ class ParticleSystem extends c.ParticleSystem<Particle> {
       }
     }
 
-    return ParticleSystem.update(
+    return ParticleSystem<P>.update(
       origin: origin,
-      particles: ps,
+      particles: particles,
       intact: intact,
     );
   }
@@ -138,9 +143,8 @@ class _ShatterIud<M extends _ShatterModel> extends f.IudBase<M>
   f.Drawing draw({
     required M model,
     required bool isLightTheme,
-  }) {
-    return model.system.draw(model.size);
-  }
+  }) =>
+      model.system.draw(model.size);
 }
 
 const String title = 'Shatter';
@@ -149,7 +153,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _ShatterModel.init,
-        iud: _ShatterIud(),
+        iud: _ShatterIud<_ShatterModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );

@@ -144,7 +144,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
       focusNode: focusNode,
       config: f.Config(
         modelCtor: _ForcesManyMutualBoundariesModel.init,
-        iud: _ForcesManyMutualBoundariesIud(),
+        iud: _ForcesManyMutualBoundariesIud<_ForcesManyMutualBoundariesModel>(),
         clearCanvas: const f.ClearCanvas(),
       ),
     );
