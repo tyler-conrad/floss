@@ -70,6 +70,22 @@ class Particle {
   }
 }
 
+class ForceParticle extends Particle {
+  static const mass = 1.0;
+
+  ForceParticle({required super.position});
+
+  void applyForce(f.Vector2 force) {
+    acceleration.add(force / mass);
+  }
+
+  @override
+  void update() {
+    super.update();
+    acceleration.setValues(0.0, 0.0);
+  }
+}
+
 class ParticleSystem<P extends Particle> {
   final List<P> particles;
   f.Vector2 origin;

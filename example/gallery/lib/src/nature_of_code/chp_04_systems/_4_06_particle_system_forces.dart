@@ -7,23 +7,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 import 'common.dart' as c;
 
-class Particle extends c.Particle {
-  static const mass = 1.0;
-
-  Particle({required super.position});
-
-  void applyForce(f.Vector2 force) {
-    acceleration.add(force / mass);
-  }
-
-  @override
-  void update() {
-    super.update();
-    acceleration.setValues(0.0, 0.0);
-  }
-}
-
-class ParticleSystem<P extends Particle> extends c.ParticleSystem<P> {
+class ParticleSystem<P extends c.ForceParticle> extends c.ParticleSystem<P> {
   ParticleSystem({
     required super.origin,
   });
@@ -41,7 +25,7 @@ class ParticleSystem<P extends Particle> extends c.ParticleSystem<P> {
 
   @override
   void addParticle() {
-    particles.add(Particle(position: origin) as P);
+    particles.add(c.ForceParticle(position: origin) as P);
   }
 
   @override
@@ -62,11 +46,11 @@ class ParticleSystem<P extends Particle> extends c.ParticleSystem<P> {
 class _ParticleSystemForcesModel extends f.Model {
   static const double topOffset = 50.0;
 
-  final ParticleSystem<Particle> system;
+  final ParticleSystem<c.ForceParticle> system;
 
   _ParticleSystemForcesModel.init({
     required super.size,
-  }) : system = ParticleSystem<Particle>(
+  }) : system = ParticleSystem<c.ForceParticle>(
           origin: f.Vector2(
             size.width * 0.5,
             u.scale(size) * topOffset,

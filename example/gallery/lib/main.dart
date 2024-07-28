@@ -98,6 +98,8 @@ import 'src/nature_of_code/chp_04_systems/_4_06_exercise_shatter.dart'
     as c4_6_es;
 import 'src/nature_of_code/chp_04_systems/_4_06_particle_system_forces.dart'
     as c4_6_psf;
+import 'src/nature_of_code/chp_04_systems/_4_07_particle_system_forces_repeller.dart'
+    as c4_7;
 
 class Example {
   final String title;
@@ -163,6 +165,7 @@ final examples = <Example>[
   const Example(c4_5.title, c4_5.widget),
   const Example(c4_6_es.title, c4_6_es.widget),
   const Example(c4_6_psf.title, c4_6_psf.widget),
+  const Example(c4_7.title, c4_7.widget),
 ];
 
 class _ExampleGridTile extends m.StatefulWidget {
