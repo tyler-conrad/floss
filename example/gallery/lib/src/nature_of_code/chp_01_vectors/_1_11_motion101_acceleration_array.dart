@@ -109,7 +109,7 @@ class _AccArrayIud<M extends _AccArrayModel> extends f.IudBase<M>
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2? mouse;
+    f.Vector2 mouse = model.mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
@@ -121,12 +121,11 @@ class _AccArrayIud<M extends _AccArrayModel> extends f.IudBase<M>
           break;
       }
     }
-    final m = mouse ?? model.mouse;
 
     return _AccArrayModel.update(
       size: size,
-      mouse: m,
-      movers: model.movers.map((mover) => mover.update(m)).toList(),
+      mouse: mouse,
+      movers: model.movers.map((mover) => mover.update(mouse)).toList(),
     ) as M;
   }
 

@@ -9,9 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  collection: '>=1.18.0 <2.0.0'
-  vector_math: '>=2.1.4 <3.0.0'
-  logger: '>=2.3.0 <3.0.0'
+  collection: ^1.18.0
+  vector_math: ^2.1.4
+  logger: ^2.3.0
 
 
 dev_dependencies:

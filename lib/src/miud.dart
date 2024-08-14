@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'math/geometry.dart' as g;
 import 'canvas_ops.dart' as co;
 import 'input_event.dart' as ie;
@@ -27,6 +29,8 @@ abstract interface class Iud<M> {
     required M model,
     required bool isLightTheme,
   });
+
+  Future<ui.AppExitResponse> onExitRequested({required M model});
 }
 
 class IudBase<M extends Model> implements Iud<M> {
@@ -55,4 +59,8 @@ class IudBase<M extends Model> implements Iud<M> {
   }) {
     return const co.Drawing(canvasOps: []);
   }
+
+  @override
+  Future<ui.AppExitResponse> onExitRequested({required M model}) async =>
+      ui.AppExitResponse.exit;
 }

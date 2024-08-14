@@ -23,15 +23,13 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
 
   _FlossPainter({
     required w.Listenable super.repaint,
+    required this.model,
     required this.size,
     required this.elapsed,
     required this.inputEvents,
     required this.config,
     required this.brightness,
-  }) : model = config.iud.init(
-          modelCtor: config.modelCtor,
-          size: g.Size.fromSize(size),
-        );
+  });
 
   void _tick(Duration elapsed_) {
     elapsed.value = elapsed_;
@@ -104,6 +102,7 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
         case go.BackgroundPictureType(:final picture):
           picture.toImage(size.width.round(), size.height.round()).then(
             (i) {
+              background?.dispose();
               background = i;
             },
           );
@@ -153,14 +152,34 @@ class _CanvasTicker<IUD> extends w.StatefulWidget {
 
 class _CanvasTickerState<M> extends w.State<_CanvasTicker>
     with w.SingleTickerProviderStateMixin {
+  late final miud.Model model;
+  late final m.AppLifecycleListener listener;
   late final s.Ticker ticker;
   late final _FlossPainter painter;
 
   @override
   void initState() {
     super.initState();
+
+    listener = m.AppLifecycleListener(
+      onExitRequested: () async {
+        final exitResponse =
+            await widget.config.iud.onExitRequested(model: model);
+        if (exitResponse == ui.AppExitResponse.exit) {
+          ticker.stop(canceled: true);
+        }
+        return exitResponse;
+      },
+    );
+
+    model = widget.config.iud.init(
+      modelCtor: widget.config.modelCtor,
+      size: g.Size.fromSize(widget.size),
+    );
+
     painter = _FlossPainter(
       repaint: widget.time,
+      model: model,
       config: widget.config,
       size: widget.size,
       elapsed: widget.time,
@@ -176,13 +195,14 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
   void dispose() {
     widget.time.dispose();
     ticker.dispose();
+    listener.dispose();
     super.dispose();
   }
 
   @override
   w.Widget build(w.BuildContext context) {
-    return w.RepaintBoundary(
-      child: w.ClipRect(
+    return w.ClipRect(
+      child: w.RepaintBoundary(
         child: w.CustomPaint(
           size: widget.size,
           isComplex: true,

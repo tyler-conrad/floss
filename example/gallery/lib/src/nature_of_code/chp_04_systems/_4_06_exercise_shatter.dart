@@ -28,7 +28,7 @@ class Particle extends c.Particle {
           ),
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
-              lifespan / 256.0,
+              lifespan / c.Particle.ls,
               0.0,
               0.0,
               0.0,
@@ -75,11 +75,6 @@ class ParticleSystem<P extends c.Particle> extends c.ParticleSystem<P> {
   void shatter() {
     intact = false;
   }
-
-  ParticleSystem._update({
-    required super.origin,
-    List<P> particles = const [],
-  });
 
   @override
   ParticleSystem<P> update(f.Vector2 origin) {

@@ -97,7 +97,7 @@ class _AccIud<M extends _AccModel> extends f.IudBase<M> implements f.Iud<M> {
     required f.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2? mouse;
+    f.Vector2 mouse = model.mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
@@ -106,14 +106,11 @@ class _AccIud<M extends _AccModel> extends f.IudBase<M> implements f.Iud<M> {
           break;
       }
     }
-    final m = mouse ?? model.mouse;
-
-    final mover = model.mover.update(m);
 
     return _AccModel.update(
       size: size,
-      mouse: m,
-      mover: mover,
+      mouse: mouse,
+      mover: model.mover.update(mouse),
     ) as M;
   }
 

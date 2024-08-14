@@ -100,76 +100,79 @@ import 'src/nature_of_code/chp_04_systems/_4_06_particle_system_forces.dart'
     as c4_6_psf;
 import 'src/nature_of_code/chp_04_systems/_4_07_particle_system_forces_repeller.dart'
     as c4_7;
+import 'src/nature_of_code/chp_04_systems/_4_10_exercise_particle_intersection.dart'
+    as c4_10;
 
-class Example {
+class _Example {
   final String title;
   final f.FlossWidget Function(m.FocusNode) widget;
 
-  const Example(this.title, this.widget);
+  const _Example(this.title, this.widget);
 }
 
-final examples = <Example>[
-  const Example(c1_1.title, c1_1.widget),
-  const Example(c1_2.title, c1_2.widget),
-  const Example(c1_3.title, c1_3.widget),
-  const Example(c1_4.title, c1_4.widget),
-  const Example(c1_5.title, c1_5.widget),
-  const Example(c1_6.title, c1_6.widget),
-  const Example(c1_7.title, c1_7.widget),
-  const Example(c1_8.title, c1_8.widget),
-  const Example(c1_9.title, c1_9.widget),
-  const Example(c1_10.title, c1_10.widget),
-  const Example(c1_11.title, c1_11.widget),
-  const Example(c2_1.title, c2_1.widget),
-  const Example(c2_2.title, c2_2.widget),
-  const Example(c2_3.title, c2_3.widget),
-  const Example(c2_4_1.title, c2_4_1.widget),
-  const Example(c2_4_2.title, c2_4_2.widget),
-  const Example(c2_5.title, c2_5.widget),
-  const Example(c2_6.title, c2_6.widget),
-  const Example(c2_7.title, c2_7.widget),
-  const Example(c2_8.title, c2_8.widget),
-  const Example(c2_fmmb.title, c2_fmmb.widget),
-  const Example(c2_10.title, c2_10.widget),
-  const Example(c3_1.title, c3_1.widget),
-  const Example(c3_2.title, c3_2.widget),
-  const Example(c3_4_ptc.title, c3_4_ptc.widget),
-  const Example(c3_4_ptct.title, c3_4_ptct.widget),
-  const Example(c3_5.title, c3_5.widget),
-  const Example(c3_6.title, c3_6.widget),
-  const Example(c3_7.title, c3_7.widget),
-  const Example(c3_8.title, c3_8.widget),
-  const Example(c3_9_eaw.title, c3_9_eaw.widget),
-  const Example(c3_9.title, c3_9.widget),
-  const Example(c3_9_wa.title, c3_9_wa.widget),
-  const Example(c3_9_wb.title, c3_9_wb.widget),
-  const Example(c3_9_wc.title, c3_9_wc.widget),
-  const Example(c3_10_eow.title, c3_10_eow.widget),
-  const Example(c3_10_pes.title, c3_10_pes.widget),
-  const Example(c3_10_pe.title, c3_10_pe.widget),
-  const Example(c3_ess.title, c3_ess.widget),
-  const Example(c3_11.title, c3_11.widget),
-  const Example(c3_11_eaw.title, c3_11_eaw.widget),
-  const Example(c3_16_es.title, c3_16_es.widget),
-  const Example(c3_16_esa.title, c3_16_esa.widget),
-  const Example(c3_eob.title, c3_eob.widget),
-  const Example(c3_oud.title, c3_oud.widget),
-  const Example(c3_mo.title, c3_mo.widget),
-  const Example(c3_owp.title, c3_owp.widget),
-  const Example(c4_1_sp.title, c4_1_sp.widget),
-  const Example(c4_1_spt.title, c4_1_spt.widget),
-  const Example(c4_2.title, c4_2.widget),
-  const Example(c4_3_pst.title, c4_3_pst.widget),
-  const Example(c4_3_emps.title, c4_3_emps.widget),
-  const Example(c4_4.title, c4_4.widget),
-  const Example(c4_5.title, c4_5.widget),
-  const Example(c4_6_es.title, c4_6_es.widget),
-  const Example(c4_6_psf.title, c4_6_psf.widget),
-  const Example(c4_7.title, c4_7.widget),
+final examples = <_Example>[
+  const _Example(c1_1.title, c1_1.widget),
+  const _Example(c1_2.title, c1_2.widget),
+  const _Example(c1_3.title, c1_3.widget),
+  const _Example(c1_4.title, c1_4.widget),
+  const _Example(c1_5.title, c1_5.widget),
+  const _Example(c1_6.title, c1_6.widget),
+  const _Example(c1_7.title, c1_7.widget),
+  const _Example(c1_8.title, c1_8.widget),
+  const _Example(c1_9.title, c1_9.widget),
+  const _Example(c1_10.title, c1_10.widget),
+  const _Example(c1_11.title, c1_11.widget),
+  const _Example(c2_1.title, c2_1.widget),
+  const _Example(c2_2.title, c2_2.widget),
+  const _Example(c2_3.title, c2_3.widget),
+  const _Example(c2_4_1.title, c2_4_1.widget),
+  const _Example(c2_4_2.title, c2_4_2.widget),
+  const _Example(c2_5.title, c2_5.widget),
+  const _Example(c2_6.title, c2_6.widget),
+  const _Example(c2_7.title, c2_7.widget),
+  const _Example(c2_8.title, c2_8.widget),
+  const _Example(c2_fmmb.title, c2_fmmb.widget),
+  const _Example(c2_10.title, c2_10.widget),
+  const _Example(c3_1.title, c3_1.widget),
+  const _Example(c3_2.title, c3_2.widget),
+  const _Example(c3_4_ptc.title, c3_4_ptc.widget),
+  const _Example(c3_4_ptct.title, c3_4_ptct.widget),
+  const _Example(c3_5.title, c3_5.widget),
+  const _Example(c3_6.title, c3_6.widget),
+  const _Example(c3_7.title, c3_7.widget),
+  const _Example(c3_8.title, c3_8.widget),
+  const _Example(c3_9_eaw.title, c3_9_eaw.widget),
+  const _Example(c3_9.title, c3_9.widget),
+  const _Example(c3_9_wa.title, c3_9_wa.widget),
+  const _Example(c3_9_wb.title, c3_9_wb.widget),
+  const _Example(c3_9_wc.title, c3_9_wc.widget),
+  const _Example(c3_10_eow.title, c3_10_eow.widget),
+  const _Example(c3_10_pes.title, c3_10_pes.widget),
+  const _Example(c3_10_pe.title, c3_10_pe.widget),
+  const _Example(c3_ess.title, c3_ess.widget),
+  const _Example(c3_11.title, c3_11.widget),
+  const _Example(c3_11_eaw.title, c3_11_eaw.widget),
+  const _Example(c3_16_es.title, c3_16_es.widget),
+  const _Example(c3_16_esa.title, c3_16_esa.widget),
+  const _Example(c3_eob.title, c3_eob.widget),
+  const _Example(c3_oud.title, c3_oud.widget),
+  const _Example(c3_mo.title, c3_mo.widget),
+  const _Example(c3_owp.title, c3_owp.widget),
+  const _Example(c4_1_sp.title, c4_1_sp.widget),
+  const _Example(c4_1_spt.title, c4_1_spt.widget),
+  const _Example(c4_2.title, c4_2.widget),
+  const _Example(c4_3_pst.title, c4_3_pst.widget),
+  const _Example(c4_3_emps.title, c4_3_emps.widget),
+  const _Example(c4_4.title, c4_4.widget),
+  const _Example(c4_5.title, c4_5.widget),
+  const _Example(c4_6_es.title, c4_6_es.widget),
+  const _Example(c4_6_psf.title, c4_6_psf.widget),
+  const _Example(c4_7.title, c4_7.widget),
+  const _Example(c4_10.title, c4_10.widget),
 ];
 
 class _ExampleGridTile extends m.StatefulWidget {
-  final Example example;
+  final _Example example;
   final m.FocusNode focusNode;
   final Map<String, bool> activeButtons;
   final void Function() onPressed;
@@ -339,7 +342,7 @@ class _FlossGalleryState extends m.State<_FlossGallery> {
     children = examples.mapIndexed<m.Widget>(
       (i, example) {
         switch (example) {
-          case Example():
+          case _Example():
             return _ExampleGridTile(
               key: globalKeys[example.title],
               example: example,
@@ -404,79 +407,59 @@ class _FlossGalleryState extends m.State<_FlossGallery> {
           seedColor: m.Colors.blueGrey,
         ),
       ),
-      home: m.DefaultTabController(
-        initialIndex: 0,
-        length: _FlossGallery._tabTitles.length,
-        child: m.Scaffold(
-          appBar: m.AppBar(
-            title: const m.Text('Floss Gallery'),
-            bottom: m.TabBar(
-              tabs: _FlossGallery._tabTitles
-                  .map((title) => m.Tab(text: title))
-                  .toList(),
-            ),
-          ),
-          body: m.LayoutBuilder(
-            builder: (m.BuildContext context, m.BoxConstraints constraints) {
-              final scrollController =
-                  m.ScrollController(initialScrollOffset: scrollOffset);
-              return m.SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-                child: m.Stack(
-                  children: [
-                    m.TabBarView(
-                      children: [
-                        m.GridView.count(
-                          key: m.ValueKey(children.toString()),
-                          controller: scrollController
-                            ..addListener(() {
-                              setState(() {
-                                scrollOffset = scrollController.offset;
-                              });
-                            }),
-                          crossAxisCount: crossAxisCount,
-                          addAutomaticKeepAlives: true,
-                          addRepaintBoundaries: true,
-                          childAspectRatio:
-                              constraints.maxWidth / constraints.maxHeight,
-                          shrinkWrap: true,
-                          children: children,
-                        ),
-                        const m.Text('Generative Design'),
-                      ],
-                    ),
-                    if (maximizeSelection != null)
-                      m.AnimatedPositioned(
-                        duration: const Duration(seconds: 1),
-                        curve: m.Curves.fastOutSlowIn,
-                        left: left(constraints),
-                        top: top(constraints),
-                        width: width(constraints),
-                        height: height(constraints),
-                        onEnd: () {
-                          setState(
-                            () {
-                              if (!(maximize ?? true)) {
-                                maximize = false;
-                                activeButtons.updateAll((k, v) => true);
-                                children.removeAt(removedIndex!);
-                                children.insert(
-                                    removedIndex!, maximizeSelection!);
-                                maximizeSelection = null;
-                                removedIndex = null;
-                              }
-                            },
-                          );
-                        },
-                        child: maximizeSelection!,
-                      ),
-                  ],
+      home: m.LayoutBuilder(
+        builder: (m.BuildContext context, m.BoxConstraints constraints) {
+          final scrollController =
+              m.ScrollController(initialScrollOffset: scrollOffset);
+          return m.SizedBox(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight,
+            child: m.Stack(
+              children: [
+                m.GridView.count(
+                  key: m.ValueKey(children.toString()),
+                  controller: scrollController
+                    ..addListener(() {
+                      setState(() {
+                        scrollOffset = scrollController.offset;
+                      });
+                    }),
+                  crossAxisCount: crossAxisCount,
+                  addAutomaticKeepAlives: true,
+                  addRepaintBoundaries: true,
+                  childAspectRatio:
+                      constraints.maxWidth / constraints.maxHeight,
+                  shrinkWrap: true,
+                  children: children,
                 ),
-              );
-            },
-          ),
-        ),
+                if (maximizeSelection != null)
+                  m.AnimatedPositioned(
+                    duration: const Duration(seconds: 1),
+                    curve: m.Curves.fastOutSlowIn,
+                    left: left(constraints),
+                    top: top(constraints),
+                    width: width(constraints),
+                    height: height(constraints),
+                    onEnd: () {
+                      setState(
+                        () {
+                          if (!(maximize ?? true)) {
+                            maximize = false;
+                            activeButtons.updateAll((k, v) => true);
+                            children.removeAt(removedIndex!);
+                            children.insert(removedIndex!, maximizeSelection!);
+                            maximizeSelection = null;
+                            removedIndex = null;
+                          }
+                        },
+                      );
+                    },
+                    child: maximizeSelection!,
+                  ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

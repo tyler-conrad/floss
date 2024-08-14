@@ -30,7 +30,7 @@ class Circle extends ParticleType {
           radius: r,
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
-              lifespan / 256.0,
+              lifespan / c.Particle.ls,
               0.0,
               0.0,
               0.5,
@@ -41,7 +41,7 @@ class Circle extends ParticleType {
           radius: r,
           paint: f.Paint()
             ..color = p.HSLColor.fromAHSL(
-              lifespan / 256.0,
+              lifespan / c.Particle.ls,
               0.0,
               0.0,
               0.0,
@@ -63,6 +63,7 @@ class Confetti extends ParticleType {
   f.Drawing draw(f.Size size) {
     final s = u.scale(size) * sideLen;
     final theta = position.x / size.width * math.pi * 2.0;
+    final a = lifespan / c.Particle.ls;
     return f.Translate(
       translation: position,
       canvasOps: [
@@ -77,7 +78,7 @@ class Confetti extends ParticleType {
               ),
               paint: f.Paint()
                 ..color = p.HSLColor.fromAHSL(
-                  lifespan / 256.0,
+                  a,
                   0.0,
                   0.0,
                   0.5,
@@ -91,7 +92,7 @@ class Confetti extends ParticleType {
               ),
               paint: f.Paint()
                 ..color = p.HSLColor.fromAHSL(
-                  lifespan / 256.0,
+                  a,
                   0.0,
                   0.0,
                   0.0,
