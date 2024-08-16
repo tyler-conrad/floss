@@ -1,17 +1,26 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart' as m;
-import 'package:flutter/widgets.dart' as w;
 import 'package:flutter/scheduler.dart' as s;
+import 'package:flutter/widgets.dart' as w;
+import 'package:flutter/material.dart' as m;
 
-import 'logger.dart';
+import 'logger.dart' show l;
 import 'math/geometry.dart' as g;
 import 'input_event.dart' as ie;
-import 'paint.dart' as pt;
+import 'paint.dart' as p;
 import 'canvas_ops.dart' as go;
 import 'config.dart' as c;
 import 'miud.dart' as miud;
 
+/// A custom painter that paints the canvas based on the [go.Drawing] data tree
+/// data structure.
+///
+/// Provides functionality to clear the canvas or paint a background image.  The
+/// default behavior of [w.CustomPainter] is to clear the canvas. In order to
+/// emulate not clearing the canvas, the [config] parameter is used to determine
+/// if the canvas should be cleared or not.  This allows for a "ghosting" effect
+/// used in some of the examples when a semi-transparent [p.Paint] is used as
+/// the parameter to [c.NoClearCanvas].
 class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   final c.Config config;
   final w.ValueNotifier<Duration> elapsed;
@@ -31,7 +40,13 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
     required this.brightness,
   });
 
-  void _tick(Duration elapsed_) {
+  /// The tick method that updates the model based on the elapsed time and input
+  /// events.
+  ///
+  /// The [elapsed_] parameter is the time that has elapsed since the start of
+  /// the application.  The [ie.InputEventList] is cleared after calling
+  /// [miud.Iud.update].
+  void tick(Duration elapsed_) {
     elapsed.value = elapsed_;
     model = config.iud.update(
       model: model,
@@ -42,6 +57,8 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
     inputEvents.clear();
   }
 
+  /// The default paint method that clears the canvas before painting the
+  /// drawing.
   void _paint(w.Canvas canvas, w.Size s) {
     size = s;
     config.iud
@@ -53,10 +70,16 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
         .toList();
   }
 
+  /// Paints the drawing with a background image.
+  ///
+  /// This method is used when the [config] parameter contains a [c.NoClearCanvas]
+  /// object.  This allows for a background image to be painted on the canvas
+  /// before the drawing is painted providing a "ghosting" effect when used with
+  /// a semi-transparent [p.Paint].
   void _paintWithBackground(
     w.Canvas canvas,
     w.Size s,
-    pt.Paint paint,
+    p.Paint paint,
   ) {
     size = s;
 
@@ -127,18 +150,38 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant w.CustomPainter oldDelegate) =>
-      this != oldDelegate;
+  bool shouldRepaint(_FlossPainter<M, IUD> oldDelegate) => this != oldDelegate;
+
+  @override
+  bool operator ==(
+    covariant _FlossPainter<M, IUD> other,
+  ) =>
+      model == other.model &&
+      size == other.size &&
+      elapsed == other.elapsed &&
+      inputEvents == other.inputEvents &&
+      config == other.config &&
+      brightness == other.brightness;
+
+  @override
+  int get hashCode => Object.hash(
+        model,
+        size,
+        elapsed,
+        inputEvents,
+        config,
+        brightness,
+      );
 }
 
+/// A ticker widget that renders a canvas at vsync intervals.
 class _CanvasTicker<IUD> extends w.StatefulWidget {
   final c.Config config;
   final w.Size size;
   final ie.InputEventList inputEvents;
   final ui.Brightness brightness;
-  final time = w.ValueNotifier(Duration.zero);
 
-  _CanvasTicker({
+  const _CanvasTicker({
     super.key,
     required this.config,
     required this.size,
@@ -152,8 +195,10 @@ class _CanvasTicker<IUD> extends w.StatefulWidget {
 
 class _CanvasTickerState<M> extends w.State<_CanvasTicker>
     with w.SingleTickerProviderStateMixin {
+  final time = w.ValueNotifier(Duration.zero);
+
   late final miud.Model model;
-  late final m.AppLifecycleListener listener;
+  late final w.AppLifecycleListener listener;
   late final s.Ticker ticker;
   late final _FlossPainter painter;
 
@@ -161,7 +206,7 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
   void initState() {
     super.initState();
 
-    listener = m.AppLifecycleListener(
+    listener = w.AppLifecycleListener(
       onExitRequested: () async {
         final exitResponse =
             await widget.config.iud.onExitRequested(model: model);
@@ -178,22 +223,22 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
     );
 
     painter = _FlossPainter(
-      repaint: widget.time,
+      repaint: time,
       model: model,
       config: widget.config,
       size: widget.size,
-      elapsed: widget.time,
+      elapsed: time,
       inputEvents: widget.inputEvents,
       brightness: widget.brightness,
     );
 
-    ticker = createTicker(painter._tick);
+    ticker = createTicker(painter.tick);
     ticker.start();
   }
 
   @override
   void dispose() {
-    widget.time.dispose();
+    time.dispose();
     ticker.dispose();
     listener.dispose();
     super.dispose();
@@ -215,10 +260,20 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
   }
 }
 
+/// A widget that provides a canvas for drawing.
+///
+/// The [FlossWidget] is a wrapper around the [_CanvasTicker] widget that draws
+/// the actual [w.CustomPaint] widget.  The [FlossWidget] widget listens for
+/// input events and passes them to the [_CanvasTicker] widget.
 class FlossWidget extends w.StatefulWidget {
   final w.FocusNode _focusNode;
   final c.Config _config;
 
+  /// Creates a new [FlossWidget] instance.
+  ///
+  /// The [focusNode] parameter is required and is used to listen for keyboard
+  /// events. The [config] parameter is required and contains the configuration
+  /// for the application.
   const FlossWidget({
     super.key,
     required w.FocusNode focusNode,

@@ -1,16 +1,9 @@
 # gallery
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A sample Flutter application that demonstrates the usage of the Floss library.
+The application displays a gallery of interactive example that can be
+manipulated using various pointer events. It includes examples of basic shapes,
+transformations, and animations. The examples are adapted from
+[nannou](https://github.com/nannou-org/nannou/tree/master/nature_of_code) which
+implements the examples from the book [Nature of
+Code](https://natureofcode.com/).

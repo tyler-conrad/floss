@@ -1,7 +1,9 @@
 name: floss
 description: 'Floss is a vector graphics abstraction layer for Flutter.'
 version: 0.1.0
-homepage:
+homepage: https://github.com/tyler-conrad/floss
+repository: https://github.com/tyler-conrad/floss.git
+publish_to: none
 
 environment:
   sdk: '>=3.4.4 <4.0.0'
@@ -17,7 +19,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: '>=4.0.0 <5.0.0'
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

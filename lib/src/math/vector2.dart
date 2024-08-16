@@ -5,6 +5,11 @@ import 'package:vector_math/vector_math.dart' as vm;
 
 import 'geometry.dart' as geom;
 
+/// Represents a 2-dimensional vector.
+///
+/// Wraps a [vm.Vector2] and provides the same interface.  The primary use case
+/// for wrapping this type is to support additional named constructors to allow
+/// for easier interfacing with the `lib/src/math/geometry.dart` classes.
 class Vector2 {
   final vm.Vector2 _v;
 

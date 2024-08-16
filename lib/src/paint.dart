@@ -2,6 +2,12 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart' as p;
 
+/// A wrapper class for the [p.Paint] class in the Flutter framework.
+///
+/// It encapsulates the [p.Paint] object and exposes its properties through
+/// getters and setters. The primary reason for wrapping [p.Paint] is to support
+/// deep object equality checks in the [floss] library (yet to be implemented).
+/// This will potentially allow for more efficient rendering of the UI.
 class Paint {
   final p.Paint paint;
 

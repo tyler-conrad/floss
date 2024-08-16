@@ -2,6 +2,10 @@ import 'dart:ui' as ui;
 
 import 'vector2.dart' as v;
 
+/// Represents a 2D offset in a Cartesian coordinate system.
+///
+/// Wraps the [ui.Offset] class to provide easier interoperability with the
+/// [v.Vector2] class.
 class Offset {
   final ui.Offset offset;
 
@@ -87,6 +91,10 @@ class Offset {
   }
 }
 
+/// Represents a size in 2D space.
+///
+/// Wraps the [ui.Size] class in order to provide easier interoperability with
+/// the [v.Vector2] class.
 class Size {
   final ui.Size size;
 
@@ -213,11 +221,16 @@ class Size {
   }
 }
 
+/// Represents a rectangle in a 2D space.
+///
+/// Wraps the [ui.Rect] class to provide easier interoperability with the
+/// [v.Vector2] class.
 class Rect {
   final ui.Rect rect;
 
   Rect.fromRect(this.rect);
 
+  /// Creates a rectangle from the [left], [top], [right], and [bottom].
   Rect.fromLTRB(
     double left,
     double top,
@@ -232,6 +245,7 @@ class Rect {
           ),
         );
 
+  /// Creates a [Rect] from the [lt] ad [rb].
   Rect.fromVecLTRB(
     v.Vector2 lt,
     v.Vector2 rb,
@@ -242,6 +256,7 @@ class Rect {
           rb.y,
         );
 
+  /// Creates a [Rect] from a [left], [top], [width], and [height].
   Rect.fromLTWH(
     double left,
     double top,
@@ -256,6 +271,7 @@ class Rect {
           ),
         );
 
+  /// Creates a [Rect] from a [pos] and [size].
   Rect.fromVecLTSizeWH(
     v.Vector2 pos,
     Size size,
@@ -266,6 +282,7 @@ class Rect {
           size.height,
         );
 
+  /// Creates a [Rect] from a [offset] and [size].
   Rect.fromOffsetLTVecWH(
     Offset offset,
     v.Vector2 size,
@@ -276,6 +293,7 @@ class Rect {
           size.y,
         );
 
+  /// Creates a [Rect] from a [pos] and [size].
   Rect.fromVecLTWH(
     v.Vector2 pos,
     v.Vector2 size,
@@ -286,6 +304,7 @@ class Rect {
           size.y,
         );
 
+  /// Creates a [Rect] from a [center] and [radius].
   Rect.fromCircle({
     required Offset center,
     required double radius,
@@ -296,6 +315,7 @@ class Rect {
           ),
         );
 
+  /// Creates a [Rect] from a [center] and [radius].
   Rect.fromVecCircle({
     required v.Vector2 center,
     required double radius,
@@ -304,6 +324,7 @@ class Rect {
           radius: radius,
         );
 
+  /// Creates a [Rect] with the [center], [width] and [height].
   Rect.fromCenter({
     required Offset center,
     required double width,
@@ -316,6 +337,7 @@ class Rect {
           ),
         );
 
+  /// Creates a [Rect] from the [center] and [size].
   Rect.fromCenterSize({
     required Offset center,
     required Size size,
@@ -327,6 +349,7 @@ class Rect {
           ),
         );
 
+  /// Creates a [Rect] from a [center] and [size].
   Rect.fromVecCenterSize({
     required v.Vector2 center,
     required Size size,
@@ -336,6 +359,7 @@ class Rect {
           height: size.height,
         );
 
+  /// Creates a [Rect] from the [center] and [size].
   Rect.fromCenterVecSize({
     required Offset center,
     required v.Vector2 size,
@@ -345,6 +369,7 @@ class Rect {
           height: size.y,
         );
 
+  /// Creates a [Rect] from a [center] and [size].
   Rect.fromVecCenterVecSize({
     required v.Vector2 center,
     required v.Vector2 size,
@@ -354,32 +379,38 @@ class Rect {
           height: size.y,
         );
 
-  Rect.fromPoints(Offset a, Offset b)
+  /// Creates a [Rect] from the [tl] and [br].
+  Rect.fromPoints(Offset tl, Offset br)
       : this.fromRect(
           ui.Rect.fromPoints(
-            a.offset,
-            b.offset,
+            tl.offset,
+            br.offset,
           ),
         );
 
-  Rect.fromVecPointOffset(v.Vector2 a, Offset b)
+  /// Creates a [Rect] from a [tl] and a [br].
+  Rect.fromVecPointOffset(v.Vector2 tl, Offset br)
       : this.fromPoints(
-          Offset.fromVec(a),
-          b,
+          Offset.fromVec(tl),
+          br,
         );
 
-  Rect.fromOffsetVecPoint(Offset a, v.Vector2 b)
+  /// Creates a [Rect] from a [tl] offset and a [br] vector.
+  Rect.fromOffsetVecPoint(Offset tl, v.Vector2 br)
       : this.fromPoints(
-          a,
-          Offset.fromVec(b),
+          tl,
+          Offset.fromVec(br),
         );
 
-  Rect.fromVecPoints(v.Vector2 a, v.Vector2 b)
+  /// Creates a [Rect] from two [Vector2] points representing the top-left and
+  /// bottom-right.
+  Rect.fromVecPoints(v.Vector2 tl, v.Vector2 br)
       : this.fromPoints(
-          Offset.fromVec(a),
-          Offset.fromVec(b),
+          Offset.fromVec(tl),
+          Offset.fromVec(br),
         );
 
+  /// Creates a [Rect] from an [Offset] and a [Size].
   Rect.fromOffsetSize(
     Offset offset,
     Size size,
@@ -390,6 +421,7 @@ class Rect {
           size.height,
         );
 
+  /// Creates a [Rect] from a [offset] and a [size].
   Rect.fromVecOffsetSize(
     v.Vector2 offset,
     Size size,
@@ -398,6 +430,7 @@ class Rect {
           size,
         );
 
+  /// Creates a [Rect] from an [offset] and [size].
   Rect.fromOffsetVecSize(
     Offset offset,
     v.Vector2 size,
@@ -406,6 +439,7 @@ class Rect {
           Size.fromVec(size),
         );
 
+  /// Creates a [Rect] from the [tl] and [br] offsets.
   Rect.fromOffsets({
     required Offset lt,
     required Offset rb,
@@ -416,6 +450,7 @@ class Rect {
           rb.dy,
         );
 
+  /// Creates a [Rect] from a [lt] offset and a [rb] vector.
   Rect.fromVecOffsetOffset({
     required v.Vector2 lt,
     required Offset rb,
@@ -424,6 +459,7 @@ class Rect {
           rb: rb,
         );
 
+  /// Creates a [Rect] from the given offset [lt] and vector [rb].
   Rect.fromOffsetVecOffset({
     required Offset lt,
     required v.Vector2 rb,
@@ -432,6 +468,7 @@ class Rect {
           rb: Offset.fromVec(rb),
         );
 
+  /// Creates a [Rect] from [lt] and [br] vector offsets.
   Rect.fromVecOffsets({
     required v.Vector2 lt,
     required v.Vector2 rb,
@@ -520,11 +557,16 @@ class Rect {
   }
 }
 
+/// Represents a rounded rectangle.
+///
+/// Wraps a [ui.RRect] to provide easier interoperability with the [v.Vector2].
 class RRect {
   final ui.RRect rrect;
 
   RRect.fromRRect(this.rrect);
 
+  /// Creates a rounded rectangle with the [left], [top], [right], [bottom], and
+  /// [radiusX], [radiusY].
   RRect.fromLTRBXY(
     double left,
     double top,
@@ -543,6 +585,7 @@ class RRect {
           ),
         );
 
+  /// Creates a rounded rectangle from the [lt], [rb] and [xy] parameters.
   RRect.fromVecLTRBXY(
     v.Vector2 lt,
     v.Vector2 rb,
@@ -556,6 +599,8 @@ class RRect {
           xy.y,
         );
 
+  /// Creates a rounded rectangle from the [left], [top], [right],
+  /// [bottom], and [radius].
   RRect.fromLTRBR(
     double left,
     double top,
@@ -572,6 +617,7 @@ class RRect {
           ),
         );
 
+  /// Creates a rounded rectangle from the [lt], [rb] and [radius].
   RRect.fromVecLTRBRadius(
     v.Vector2 lt,
     v.Vector2 rb,
@@ -584,6 +630,7 @@ class RRect {
           radius,
         );
 
+  /// Creates a rounded rectangle from the [rect], [radiusX] and [radiusY].
   RRect.fromRectXY(
     Rect rect,
     double radiusX,
@@ -596,6 +643,7 @@ class RRect {
           ),
         );
 
+  /// Creates a rounded rectangle from the [rect] and [radius].
   RRect.fromRectVecXY(
     Rect rect,
     v.Vector2 radius,
@@ -605,6 +653,7 @@ class RRect {
           radius.y,
         );
 
+  /// Creates a rounded rectangle from the given [rect] and [radius].
   RRect.fromRectAndRadius(
     Rect rect,
     ui.Radius radius,
@@ -615,6 +664,9 @@ class RRect {
           ),
         );
 
+  /// Creates a rounded rectangle from the [left], [top], [right], [bottom], and
+  /// the [topLeft], [topRight], [bottomRight], and [bottomLeft] radius
+  /// parameters.
   RRect.fromLTRBAndCorners(
     double left,
     double top,
@@ -637,6 +689,8 @@ class RRect {
           ),
         );
 
+  /// Creates a rounded rectangle from the [lt], [rb], and [topLeft],
+  /// [topRight], [bottomRight], and [bottomLeft] radius parameters.
   RRect.fromVecLTRBAndCorners(
     v.Vector2 lt,
     v.Vector2 rb, {
@@ -655,6 +709,8 @@ class RRect {
           bottomLeft: bottomLeft,
         );
 
+  /// Creates a rounded rectangle from a [rect] and a [topLeft], [topRight],
+  /// [bottomRight], and [bottomLeft] radius parameters.
   RRect.fromRectAndCorners(
     Rect rect, {
     ui.Radius topLeft = ui.Radius.zero,
@@ -671,6 +727,8 @@ class RRect {
           ),
         );
 
+  /// Creates a rounded rectangle from the [pos], [size] and [radiusX],
+  /// [radiusY] parameters.
   RRect.fromOffsetSizeXY(
     Offset pos,
     Size size,
@@ -685,6 +743,8 @@ class RRect {
           radiusY,
         );
 
+  //// Creates a rounded rectangle from the [pos], [size], and [radiusX],
+  ///[radiusY] parameters.
   RRect.fromVecOffsetSizeXY(
     v.Vector2 pos,
     Size size,
@@ -697,6 +757,8 @@ class RRect {
           radiusY,
         );
 
+  /// Creates a rounded rectangle from the [pos], [size], and [radiusX],
+  /// [radiusY] parameters.
   RRect.fromOffsetVecSizeXY(
     Offset pos,
     v.Vector2 size,
@@ -709,6 +771,7 @@ class RRect {
           radiusY,
         );
 
+  /// Creates a rounded rectangle from the [pos], [size], and [radius],
   RRect.fromOffsetSizeVecXY(
     Offset pos,
     Size size,
@@ -722,6 +785,7 @@ class RRect {
           radius.y,
         );
 
+  /// Creates a rounded rectangle from the [pos], [size], and [radius],
   RRect.fromVecOffsetSizeVecXY(
     v.Vector2 pos,
     Size size,
@@ -735,6 +799,7 @@ class RRect {
           radius.y,
         );
 
+  /// Creates a rounded rectangle from the [pos], [size], and [radius],
   RRect.fromOffsetVecSizeVecXY(
     Offset pos,
     v.Vector2 size,
@@ -748,6 +813,7 @@ class RRect {
           radius.y,
         );
 
+  /// Creates a rounded rectangle from the [pos], [size], and [radius],
   RRect.fromVecOffsetVecSizeVecXY(
     v.Vector2 pos,
     v.Vector2 size,
@@ -761,6 +827,7 @@ class RRect {
           radius.y,
         );
 
+  /// Creates a rounded rectangle from the [pos], [size], and [radius],
   RRect.fromOffsetSizeRadius(
     Offset pos,
     Size size,
@@ -773,6 +840,7 @@ class RRect {
           ui.Radius.circular(radius),
         );
 
+  /// Creates a rounded rectangle from the [pos], [size], and [radius],
   RRect.fromVecOffsetSizeRadius(
     v.Vector2 pos,
     Size size,
@@ -785,6 +853,7 @@ class RRect {
           ui.Radius.circular(radius),
         );
 
+  /// Creates a rounded rectangle from the [pos], [size], and [radius],
   RRect.fromOffsetVecSizeRadius(
     Offset pos,
     v.Vector2 size,
@@ -797,6 +866,7 @@ class RRect {
           ui.Radius.circular(radius),
         );
 
+  /// Creates a rounded rectangle from the [pos], [size], and [radius],
   RRect.fromVecOffsetVecSizeRadius(
     v.Vector2 pos,
     v.Vector2 size,

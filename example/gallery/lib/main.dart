@@ -309,11 +309,6 @@ class _ExampleGridTileState extends m.State<_ExampleGridTile>
 }
 
 class _FlossGallery extends m.StatefulWidget {
-  static const List<String> _tabTitles = [
-    'Nature of Code',
-    'Generative Design'
-  ];
-
   const _FlossGallery();
 
   @override
