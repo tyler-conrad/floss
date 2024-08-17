@@ -339,7 +339,7 @@ class PointerSignal extends InputEvent {
   PointerSignal({required this.event});
 }
 
-////////////////////////////////////////////////////////////////////////////////
+//##############################################################################
 
 /// Represents an input event when a pointer enters a target.
 class PointerEnter extends InputEvent {
