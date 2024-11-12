@@ -17,7 +17,7 @@ class _Mover extends c.Mover {
     required super.position,
   });
 
-  f.Vector2 attract(_Mover m) {
+  ui.Offset attract(_Mover m) {
     final force = position - m.position;
     double d = force.length;
     d = math.min(math.max(5.0, d), 25.0);
@@ -36,7 +36,7 @@ class _MutualAttractionModel extends f.Model {
           numMovers,
           (_) => _Mover(
               mass: u.randDoubleRange(_Mover.minMass, _Mover.maxMass),
-              position: f.Vector2(
+              position: ui.Offset(
                 u.randDoubleRange(0.0, size.width),
                 u.randDoubleRange(0.0, size.height),
               )),
@@ -53,8 +53,8 @@ class _MutualAttractionIud<M extends _MutualAttractionModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final left in model.movers) {

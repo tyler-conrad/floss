@@ -14,18 +14,18 @@ class _Oscillator {
   static const double minVel = -0.05;
   static const double maxVel = 0.05;
 
-  final f.Size size;
-  final f.Vector2 angle;
-  final f.Vector2 velocity;
-  final f.Vector2 amplitudeFactors;
+  final ui.Size size;
+  final ui.Offset angle;
+  final ui.Offset velocity;
+  final ui.Offset amplitudeFactors;
 
   _Oscillator({required this.size})
-      : angle = f.Vector2.zero(),
-        velocity = f.Vector2(
+      : angle = ui.Offset.zero(),
+        velocity = ui.Offset(
           u.randDoubleRange(minVel, maxVel),
           u.randDoubleRange(minVel, maxVel),
         ),
-        amplitudeFactors = f.Vector2(
+        amplitudeFactors = ui.Offset(
           u.randDoubleRange(minLength, size.width * lengthFactor),
           u.randDoubleRange(minLength, size.height * lengthFactor),
         );
@@ -34,7 +34,7 @@ class _Oscillator {
     angle.add(velocity);
   }
 
-  f.Drawing draw(f.Size s) {
+  f.Drawing draw(ui.Size s) {
     final x = s.width / size.width * amplitudeFactors.x * math.sin(angle.x);
     final y = s.height / size.height * amplitudeFactors.y * math.sin(angle.y);
     final r = u.scale(size) * circleRadius;
@@ -44,20 +44,20 @@ class _Oscillator {
         f.Circle(
           c: f.Offset(x, y),
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset(x, y),
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,
         ),
         f.Line(
-          p1: f.Offset.zero,
+          p1: ui.Offset.zero,
           p2: f.Offset(x, y),
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..strokeWidth = 2.0,
         ),
@@ -82,8 +82,8 @@ class _OscillatingObjectsIud<M extends _OscillatingObjectsModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final oscillator in model.oscillators) {
@@ -101,7 +101,7 @@ class _OscillatingObjectsIud<M extends _OscillatingObjectsModel>
     required bool isLightTheme,
   }) =>
       f.Translate(
-        translation: f.Vector2(
+        translation: ui.Offset(
           model.size.width * 0.5,
           model.size.height * 0.5,
         ),

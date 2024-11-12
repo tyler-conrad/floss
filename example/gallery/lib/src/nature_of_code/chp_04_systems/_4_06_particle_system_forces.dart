@@ -17,7 +17,7 @@ class ParticleSystem<P extends c.ForceParticle> extends c.ParticleSystem<P> {
     required super.particles,
   }) : super.update();
 
-  void applyForce(f.Vector2 force) {
+  void applyForce(ui.Offset force) {
     for (final particle in particles) {
       particle.applyForce(force);
     }
@@ -29,7 +29,7 @@ class ParticleSystem<P extends c.ForceParticle> extends c.ParticleSystem<P> {
   }
 
   @override
-  ParticleSystem<P> update(f.Vector2 origin) {
+  ParticleSystem<P> update(ui.Offset origin) {
     final ps = particles.whereNot((p) => p.isDead);
 
     for (final p in ps) {
@@ -51,7 +51,7 @@ class _ParticleSystemForcesModel extends f.Model {
   _ParticleSystemForcesModel.init({
     required super.size,
   }) : system = ParticleSystem<c.ForceParticle>(
-          origin: f.Vector2(
+          origin: ui.Offset(
             size.width * 0.5,
             u.scale(size) * topOffset,
           ),
@@ -70,17 +70,17 @@ class _ParticleSystemForcesIud<M extends _ParticleSystemForcesModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    model.system.applyForce(f.Vector2(0.0, gravity));
+    model.system.applyForce(ui.Offset(0.0, gravity));
     model.system.addParticle();
 
     return _ParticleSystemForcesModel.update(
       size: size,
       system: model.system.update(
-        f.Vector2(
+        ui.Offset(
           size.width * 0.5,
           u.scale(size) * _ParticleSystemForcesModel.topOffset,
         ),

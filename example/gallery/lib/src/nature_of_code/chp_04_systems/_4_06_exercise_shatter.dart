@@ -12,21 +12,21 @@ class Particle extends c.Particle {
   Particle({required super.position});
 
   @override
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     return f.Translate(
       translation: position +
-          f.Vector2(
+          ui.Offset(
             size.width * 0.5,
             size.height * 0.4,
           ),
       canvasOps: [
         f.Rectangle(
-          rect: f.Rect.fromCenter(
-            center: f.Offset.zero,
+          rect: ui.Rect.fromCenter(
+            center: ui.Offset.zero,
             width: r,
             height: r,
           ),
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = p.HSLColor.fromAHSL(
               lifespan / c.Particle.ls,
               0.0,
@@ -46,14 +46,14 @@ class ParticleSystem<P extends c.Particle> extends c.ParticleSystem<P> {
   bool intact = true;
 
   ParticleSystem({
-    required f.Size size,
+    required ui.Size size,
     required super.origin,
   }) {
     for (var y = 0; y < cols; y++) {
       for (var x = 0; x < rows; x++) {
         particles.add(
           Particle(
-            position: f.Vector2(
+            position: ui.Offset(
               offset(rows, x),
               offset(cols, y),
             ),
@@ -77,7 +77,7 @@ class ParticleSystem<P extends c.Particle> extends c.ParticleSystem<P> {
   }
 
   @override
-  ParticleSystem<P> update(f.Vector2 origin) {
+  ParticleSystem<P> update(ui.Offset origin) {
     final ps = particles.whereNot((p) => p.isDead).toList();
 
     if (!intact) {
@@ -100,7 +100,7 @@ class _ShatterModel extends f.Model {
   _ShatterModel.init({required super.size})
       : system = ParticleSystem(
           size: size,
-          origin: f.Vector2.zero(),
+          origin: ui.Offset.zero(),
         );
 
   _ShatterModel.update({
@@ -114,8 +114,8 @@ class _ShatterIud<M extends _ShatterModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final ie in inputEvents) {
@@ -130,7 +130,7 @@ class _ShatterIud<M extends _ShatterModel> extends f.IudBase<M>
     }
     return _ShatterModel.update(
       size: size,
-      system: model.system.update(f.Vector2.zero()),
+      system: model.system.update(ui.Offset.zero()),
     ) as M;
   }
 

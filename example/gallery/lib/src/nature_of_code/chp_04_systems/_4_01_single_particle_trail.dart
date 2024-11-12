@@ -14,7 +14,7 @@ class _SingleParticleTrailModel extends f.Model {
 
   _SingleParticleTrailModel.init({required super.size})
       : particle = c.Particle(
-          position: f.Vector2(size.width * 0.5, topOffset),
+          position: ui.Offset(size.width * 0.5, topOffset),
         );
 
   _SingleParticleTrailModel.update({
@@ -29,8 +29,8 @@ class _SingleParticleTrailIud<M extends _SingleParticleTrailModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final ie in inputEvents) {
@@ -52,7 +52,7 @@ class _SingleParticleTrailIud<M extends _SingleParticleTrailModel>
       model.particle.update();
       if (model.particle.isDead) {
         model.particle = c.Particle(
-          position: f.Vector2(
+          position: ui.Offset(
             size.width * 0.5,
             _SingleParticleTrailModel.topOffset,
           ),
@@ -83,7 +83,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
         modelCtor: _SingleParticleTrailModel.init,
         iud: _SingleParticleTrailIud<_SingleParticleTrailModel>(),
         clearCanvas: f.NoClearCanvas(
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.transparentWhite
             ..blendMode = p.BlendMode.srcOver,
         ),

@@ -7,19 +7,19 @@ import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
 
-final f.Vector2 moverInitAcc = f.Vector2(-0.001, 0.01);
+final ui.Offset moverInitAcc = ui.Offset(-0.001, 0.01);
 
 class _Mover {
   static const double radius = 24.0;
   static const double topSpeed = 10.0;
 
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
+  final ui.Offset position;
+  final ui.Offset velocity;
+  final ui.Offset acceleration;
 
   _Mover()
-      : position = f.Vector2.zero(),
-        velocity = f.Vector2.zero(),
+      : position = ui.Offset.zero(),
+        velocity = ui.Offset.zero(),
         acceleration = moverInitAcc;
 
   _Mover.update({
@@ -30,7 +30,7 @@ class _Mover {
 
   _Mover update() {
     final vel = velocity + acceleration;
-    final v = f.Vector2(
+    final v = ui.Offset(
       math.min(
         vel.x,
         topSpeed,
@@ -48,7 +48,7 @@ class _Mover {
     );
   }
 
-  void checkEdges(f.Rect rect) {
+  void checkEdges(ui.Rect rect) {
     if (position.x > rect.right) {
       position.x = rect.left;
     } else if (position.x < rect.left) {
@@ -62,21 +62,21 @@ class _Mover {
     }
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
 
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,
@@ -101,13 +101,13 @@ class _AccIud<M extends _AccModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     final m = model.mover.update();
     m.checkEdges(
-      f.Rect.fromOffsetSize(
+      ui.Rect.fromOffsetSize(
         f.Offset(0.0, 0.0),
         size,
       ),
@@ -135,7 +135,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
         modelCtor: _AccModel.init,
         iud: _AccIud<_AccModel>(),
         clearCanvas: f.NoClearCanvas(
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.transparentWhite
             ..blendMode = p.BlendMode.srcOver,
         ),

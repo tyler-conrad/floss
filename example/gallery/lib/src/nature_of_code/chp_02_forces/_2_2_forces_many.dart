@@ -15,7 +15,7 @@ class _ForcesManyModel extends f.Model {
           numMovers,
           (_) => c.Mover(
             mass: u.randDoubleRange(0.1, 4.0),
-            position: f.Vector2.zero(),
+            position: ui.Offset.zero(),
           ),
         ).toList();
 
@@ -27,14 +27,14 @@ class _ForcesManyModel extends f.Model {
 
 class _ForcesManyIud<M extends _ForcesManyModel> extends f.IudBase<M>
     implements f.Iud<M> {
-  final f.Vector2 wind = f.Vector2(0.01, 0.0);
-  final f.Vector2 gravity = f.Vector2(0.0, 0.1);
+  final ui.Offset wind = ui.Offset(0.01, 0.0);
+  final ui.Offset gravity = ui.Offset(0.0, 0.1);
 
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final m in model.movers) {
@@ -42,7 +42,7 @@ class _ForcesManyIud<M extends _ForcesManyModel> extends f.IudBase<M>
       m.applyForce(gravity);
       m.update();
       m.checkEdges(
-        f.Rect.fromOffsetSize(
+        ui.Rect.fromOffsetSize(
           f.Offset(0.0, 0.0),
           size,
         ),

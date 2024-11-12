@@ -4,21 +4,21 @@ import 'package:floss/floss.dart' as f;
 
 import 'common.dart' as c;
 
-final f.Vector2 moverInitAcc = f.Vector2(-0.001, 0.01);
+final ui.Offset moverInitAcc = ui.Offset(-0.001, 0.01);
 
 class _Mover extends c.Mover {
   static const double radius = 24.0;
   static const double m = 1.0;
   static const double initPosOffset = 60.0;
 
-  _Mover({required f.Rect rect})
+  _Mover({required ui.Rect rect})
       : super.update(
           mass: m,
-          position: f.Vector2(
+          position: ui.Offset(
             rect.left + initPosOffset,
             rect.top + initPosOffset,
           ),
-          velocity: f.Vector2.zero(),
+          velocity: ui.Offset.zero(),
           acceleration: moverInitAcc,
         );
 }
@@ -28,8 +28,8 @@ class _ForcesModel extends f.Model {
 
   _ForcesModel.init({required super.size})
       : mover = _Mover(
-          rect: f.Rect.fromOffsetSize(
-            f.Offset.zero,
+          rect: ui.Rect.fromOffsetSize(
+            ui.Offset.zero,
             size,
           ),
         );
@@ -42,21 +42,21 @@ class _ForcesModel extends f.Model {
 
 class _ForcesIud<M extends _ForcesModel> extends f.IudBase<M>
     implements f.Iud<M> {
-  final f.Vector2 wind = f.Vector2(0.01, 0.0);
-  final f.Vector2 gravity = f.Vector2(0.0, 0.1);
+  final ui.Offset wind = ui.Offset(0.01, 0.0);
+  final ui.Offset gravity = ui.Offset(0.0, 0.1);
 
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     model.mover.applyForce(wind);
     model.mover.applyForce(gravity);
     model.mover.update();
     model.mover.checkEdges(
-      f.Rect.fromOffsetSize(
+      ui.Rect.fromOffsetSize(
         f.Offset(0.0, 0.0),
         size,
       ),

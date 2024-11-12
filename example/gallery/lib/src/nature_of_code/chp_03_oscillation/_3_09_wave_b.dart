@@ -29,8 +29,8 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) =>
       _WaveModel.update(
@@ -44,7 +44,7 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
     required bool isLightTheme,
   }) =>
       f.Translate(
-        translation: f.Vector2(0.0, model.size.height * 0.5),
+        translation: ui.Offset(0.0, model.size.height * 0.5),
         canvasOps: List.generate(
           _WaveModel.numCircles + 1,
           (i) => model.startAngle + i * _WaveModel.angleVel,
@@ -58,11 +58,11 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
               f.Circle(
                   c: f.Offset(x, y),
                   radius: r,
-                  paint: f.Paint()..color = u.transparent5black),
+                  paint: ui.Paint()..color = u.transparent5black),
               f.Circle(
                 c: f.Offset(x, y),
                 radius: r,
-                paint: f.Paint()
+                paint: ui.Paint()
                   ..color = u.black
                   ..style = p.PaintingStyle.stroke
                   ..strokeWidth = 2.0,

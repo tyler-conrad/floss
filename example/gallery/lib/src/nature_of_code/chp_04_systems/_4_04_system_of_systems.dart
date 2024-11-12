@@ -20,15 +20,15 @@ class _SystemOfSystemsIud<M extends _SystemOfSystemsModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2? mouse;
+    ui.Offset? mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
-          mouse = f.Vector2(
+          mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );

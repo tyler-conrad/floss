@@ -20,15 +20,15 @@ class Circle extends ParticleType {
   Circle({required super.position});
 
   @override
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = p.HSLColor.fromAHSL(
               lifespan / c.Particle.ls,
               0.0,
@@ -37,9 +37,9 @@ class Circle extends ParticleType {
             ).toColor(),
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = p.HSLColor.fromAHSL(
               lifespan / c.Particle.ls,
               0.0,
@@ -60,7 +60,7 @@ class Confetti extends ParticleType {
   Confetti({required super.position});
 
   @override
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final s = u.scale(size) * sideLen;
     final theta = position.x / size.width * math.pi * 2.0;
     final a = lifespan / c.Particle.ls;
@@ -71,12 +71,12 @@ class Confetti extends ParticleType {
           radians: theta,
           canvasOps: [
             f.Rectangle(
-              rect: f.Rect.fromCenter(
-                center: f.Offset.zero,
+              rect: ui.Rect.fromCenter(
+                center: ui.Offset.zero,
                 width: s,
                 height: s,
               ),
-              paint: f.Paint()
+              paint: ui.Paint()
                 ..color = p.HSLColor.fromAHSL(
                   a,
                   0.0,
@@ -85,12 +85,12 @@ class Confetti extends ParticleType {
                 ).toColor(),
             ),
             f.Rectangle(
-              rect: f.Rect.fromCenter(
-                center: f.Offset.zero,
+              rect: ui.Rect.fromCenter(
+                center: ui.Offset.zero,
                 width: s,
                 height: s,
               ),
-              paint: f.Paint()
+              paint: ui.Paint()
                 ..color = p.HSLColor.fromAHSL(
                   a,
                   0.0,
@@ -116,7 +116,7 @@ class ParticleSystem<P extends c.Particle> extends c.ParticleSystem<P> {
   }) : super.update();
 
   @override
-  ParticleSystem<P> update(f.Vector2 origin) {
+  ParticleSystem<P> update(ui.Offset origin) {
     final ps = particles.whereNot((p) => p.isDead);
 
     for (final p in ps) {
@@ -134,13 +134,13 @@ class ParticleSystem<P extends c.Particle> extends c.ParticleSystem<P> {
     particles.add(
       math.Random().nextBool()
           ? Circle(
-              position: f.Vector2(
+              position: ui.Offset(
                 origin.x,
                 origin.y,
               ),
             ) as P
           : Confetti(
-              position: f.Vector2(
+              position: ui.Offset(
                 origin.x,
                 origin.y,
               ),
@@ -149,7 +149,7 @@ class ParticleSystem<P extends c.Particle> extends c.ParticleSystem<P> {
   }
 
   @override
-  f.Drawing draw(f.Size size) => f.Drawing(
+  f.Drawing draw(ui.Size size) => f.Drawing(
         canvasOps:
             particles.map((p) => p.draw(size)).toList().reversed.toList(),
       );
@@ -162,7 +162,7 @@ class _ParticleSystemInheritancePolymorphismModel extends f.Model {
 
   _ParticleSystemInheritancePolymorphismModel.init({required super.size})
       : system = ParticleSystem<ParticleType>(
-          origin: f.Vector2(
+          origin: ui.Offset(
             size.width * 0.5,
             topOffset,
           ),
@@ -180,8 +180,8 @@ class _ParticleSystemInheritancePolymorphismIud<
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     model.system.addParticle();
@@ -189,7 +189,7 @@ class _ParticleSystemInheritancePolymorphismIud<
     return _ParticleSystemInheritancePolymorphismModel.update(
       size: size,
       system: model.system.update(
-        f.Vector2(
+        ui.Offset(
           size.width * 0.5,
           u.scale(size) * _ParticleSystemInheritancePolymorphismModel.topOffset,
         ),

@@ -33,8 +33,8 @@ class _MultipleOscillationsIud<M extends _MultipleOscillationsModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     return _MultipleOscillationsModel.update(
@@ -56,25 +56,25 @@ class _MultipleOscillationsIud<M extends _MultipleOscillationsModel>
         _MultipleOscillationsModel.amplitude2 * math.sin(model.angle2);
 
     return f.Translate(
-      translation: f.Vector2(
+      translation: ui.Offset(
         model.size.width * 0.5,
         model.size.height * 0.5,
       ),
       canvasOps: [
         f.Line(
-          p1: f.Offset.zero,
+          p1: ui.Offset.zero,
           p2: f.Offset(x, 0.0),
-          paint: f.Paint()..color = u.black,
+          paint: ui.Paint()..color = u.black,
         ),
         f.Circle(
           c: f.Offset(x, 0.0),
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset(x, 0.0),
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,

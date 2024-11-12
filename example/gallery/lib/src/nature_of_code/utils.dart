@@ -48,7 +48,8 @@ double randDoubleRange(double min, double max) =>
 
 const _scaleFactor = 0.001;
 
-double scale(f.Size size) => _scaleFactor * math.sqrt(size.width * size.height);
+double scale(ui.Size size) =>
+    _scaleFactor * math.sqrt(size.width * size.height);
 
 class ExamplesWidget extends w.StatelessWidget {
   final String _title;

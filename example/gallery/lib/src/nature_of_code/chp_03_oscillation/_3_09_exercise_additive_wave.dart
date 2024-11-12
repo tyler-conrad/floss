@@ -53,8 +53,8 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     final s = u.scale(size);
@@ -87,7 +87,7 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
     required bool isLightTheme,
   }) =>
       f.Translate(
-        translation: f.Vector2(0.0, model.size.height * 0.5),
+        translation: ui.Offset(0.0, model.size.height * 0.5),
         canvasOps: model.yValues
             .mapIndexed(
               (x, y) => f.Circle(
@@ -98,7 +98,7 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
                   y,
                 ),
                 radius: u.scale(model.size) * _AdditiveWaveModel.radius,
-                paint: f.Paint()
+                paint: ui.Paint()
                   ..color = const p.HSLColor.fromAHSL(
                     0.25,
                     0.0,

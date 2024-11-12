@@ -13,14 +13,14 @@ class _Mover {
   static const double accXRange = 1.0;
   static const double accYRange = 1.0;
 
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
+  final ui.Offset position;
+  final ui.Offset velocity;
+  final ui.Offset acceleration;
 
   _Mover()
-      : position = f.Vector2.zero(),
-        velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
+      : position = ui.Offset.zero(),
+        velocity = ui.Offset.zero(),
+        acceleration = ui.Offset.zero();
 
   _Mover.update({
     required this.position,
@@ -29,14 +29,14 @@ class _Mover {
   });
 
   _Mover update() {
-    final acc = f.Vector2(
+    final acc = ui.Offset(
       u.randDoubleRange(-accXRange, accXRange),
       u.randDoubleRange(-accYRange, accYRange),
     );
     final a = acc * u.randDoubleRange(0.0, 2.0);
 
     final vel = velocity + a;
-    final v = f.Vector2(
+    final v = ui.Offset(
       math.min(
         vel.x,
         topSpeed,
@@ -54,7 +54,7 @@ class _Mover {
     );
   }
 
-  void checkEdges(f.Rect rect) {
+  void checkEdges(ui.Rect rect) {
     if (position.x > rect.right) {
       position.x = rect.left;
     } else if (position.x < rect.left) {
@@ -68,21 +68,21 @@ class _Mover {
     }
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
 
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,
@@ -107,13 +107,13 @@ class _AccIud<M extends _AccModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     final m = model.mover.update();
     m.checkEdges(
-      f.Rect.fromOffsetSize(
+      ui.Rect.fromOffsetSize(
         f.Offset(0.0, 0.0),
         size,
       ),

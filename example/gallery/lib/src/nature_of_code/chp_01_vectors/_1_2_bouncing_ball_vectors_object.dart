@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
@@ -5,14 +7,14 @@ import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
 
-final f.Vector2 ballInitPos = f.Vector2(100.0, 100.0);
-final f.Vector2 ballInitVel = f.Vector2(2.5, 2.0);
+const ui.Offset ballInitPos = ui.Offset(100.0, 100.0);
+const ui.Offset ballInitVel = ui.Offset(2.5, 2.0);
 
 class _Ball {
   static const double radius = 48.0;
 
-  final f.Vector2 position;
-  final f.Vector2 velocity;
+  final ui.Offset position;
+  final ui.Offset velocity;
 
   _Ball()
       : position = ballInitPos,
@@ -23,8 +25,8 @@ class _Ball {
     required this.velocity,
   });
 
-  _Ball update(f.Size size) {
-    position.add(velocity);
+  _Ball update(ui.Size size) {
+    position + velocity
     if (position.x > size.width || position.x < 0) {
       velocity.x = -velocity.x;
     }
@@ -37,21 +39,21 @@ class _Ball {
     );
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
 
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke,
         ),
@@ -75,8 +77,8 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) =>
       _BallModel.update(
@@ -97,7 +99,7 @@ f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
         modelCtor: _BallModel.init,
         iud: _BallIud<_BallModel>(),
         clearCanvas: f.NoClearCanvas(
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.transparentWhite
             ..blendMode = p.BlendMode.srcOver,
         ),

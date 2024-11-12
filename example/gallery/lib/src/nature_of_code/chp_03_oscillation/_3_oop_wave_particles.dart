@@ -12,10 +12,10 @@ import '../utils.dart' as u;
 final rng = math.Random();
 
 class _Particle {
-  final f.Vector2 position;
+  final ui.Offset position;
   final double radius;
   _Particle()
-      : position = f.Vector2.zero(),
+      : position = ui.Offset.zero(),
         radius = 0.0;
 
   _Particle.update({
@@ -29,9 +29,9 @@ class _Particle {
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: radius,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = p.HSLColor.fromAHSL(
               1.0,
               0.0,
@@ -40,9 +40,9 @@ class _Particle {
             ).toColor(),
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: radius,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke,
         ),
@@ -56,7 +56,7 @@ class _Wave {
   static const double angularVel = 0.02;
 
   final int numParticles;
-  final f.Vector2 originFactor;
+  final ui.Offset originFactor;
   final double theta;
   final double widthFactor;
   final double period;
@@ -82,7 +82,7 @@ class _Wave {
     required this.particles,
   });
 
-  _Wave calculate(f.Size size) => _Wave.update(
+  _Wave calculate(ui.Size size) => _Wave.update(
         numParticles: numParticles,
         originFactor: originFactor,
         theta: theta + angularVel,
@@ -93,7 +93,7 @@ class _Wave {
           (i, _) {
             final xOffset = size.width * widthFactor / numParticles;
             return _Particle.update(
-              position: f.Vector2(
+              position: ui.Offset(
                 i * xOffset,
                 amplitude *
                     math.sin(
@@ -114,8 +114,8 @@ class _Wave {
         ).toList(),
       );
 
-  f.Drawing draw(f.Size size) => f.Translate(
-        translation: f.Vector2(
+  f.Drawing draw(ui.Size size) => f.Translate(
+        translation: ui.Offset(
           size.width * originFactor.x,
           size.height * originFactor.y,
         ),
@@ -132,14 +132,14 @@ class _OopWaveParticlesModel extends f.Model {
   _OopWaveParticlesModel.init({required super.size})
       : waveOne = _Wave.init(
           numParticles: 15,
-          originFactor: f.Vector2(0.1, 0.4),
+          originFactor: ui.Offset(0.1, 0.4),
           widthFactor: 0.3,
           period: 400.0,
           amplitude: 30.0,
         ),
         waveTwo = _Wave.init(
           numParticles: 40,
-          originFactor: f.Vector2(0.5, 0.5),
+          originFactor: ui.Offset(0.5, 0.5),
           widthFactor: 0.4,
           period: 600.0,
           amplitude: 70.0,
@@ -157,8 +157,8 @@ class _OopWaveParticlesIud<M extends _OopWaveParticlesModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) =>
       _OopWaveParticlesModel.update(

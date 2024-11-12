@@ -8,7 +8,7 @@ import '../utils.dart' as u;
 
 class _StaticWaveLinesModel extends f.Model {
   final double angleVel;
-  final List<f.Vector2> vertices;
+  final List<ui.Offset> vertices;
 
   _StaticWaveLinesModel.init({required super.size})
       : angleVel = 0.1,
@@ -26,15 +26,15 @@ class _StaticWaveLinesIud<M extends _StaticWaveLinesModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     double angle = 0.0;
     model.vertices.clear();
     for (var x = 0; x < size.width; x += 5) {
       model.vertices
-          .add(f.Vector2(x.toDouble(), 0.5 * size.height * math.sin(angle)));
+          .add(ui.Offset(x.toDouble(), 0.5 * size.height * math.sin(angle)));
       angle += model.angleVel;
     }
     return _StaticWaveLinesModel.update(
@@ -50,12 +50,12 @@ class _StaticWaveLinesIud<M extends _StaticWaveLinesModel> extends f.IudBase<M>
     required bool isLightTheme,
   }) =>
       f.Translate(
-        translation: f.Vector2(0.0, model.size.height * 0.5),
+        translation: ui.Offset(0.0, model.size.height * 0.5),
         canvasOps: [
           f.Points(
             pointMode: ui.PointMode.polygon,
             points: model.vertices,
-            paint: f.Paint()
+            paint: ui.Paint()
               ..color = u.black
               ..strokeWidth = 2.0,
           ),

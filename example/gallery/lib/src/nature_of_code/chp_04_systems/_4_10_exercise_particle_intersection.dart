@@ -20,15 +20,15 @@ class Particle extends c.ForceParticle {
 
   Particle({required super.position})
       : super.update(
-          velocity: f.Vector2(
+          velocity: ui.Offset(
             u.randDoubleRange(minVelX, maxVelX),
             u.randDoubleRange(minVelY, maxVelY),
           ),
-          acceleration: f.Vector2(0.0, gravity),
+          acceleration: ui.Offset(0.0, gravity),
           lifespan: c.Particle.ls,
         );
 
-  void intersects(Iterable<Particle> particles, f.Size size) {
+  void intersects(Iterable<Particle> particles, ui.Size size) {
     highlight = false;
     for (final p in particles) {
       if (p != this &&
@@ -40,7 +40,7 @@ class Particle extends c.ForceParticle {
   }
 
   @override
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
     final a = lifespan / c.Particle.ls;
 
@@ -48,9 +48,9 @@ class Particle extends c.ForceParticle {
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = highlight
                 ? const p.HSLColor.fromAHSL(
                     1.0,
@@ -66,9 +66,9 @@ class Particle extends c.ForceParticle {
                   ).toColor(),
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = p.HSLColor.fromAHSL(
               a,
               0.0,
@@ -91,7 +91,7 @@ class ParticleSystem<P extends c.ForceParticle> extends c.ParticleSystem<P> {
     required super.particles,
   }) : super.update();
 
-  void intersection(f.Size size) {
+  void intersection(ui.Size size) {
     for (final p in particles) {
       (p as Particle).intersects(
         particles as Iterable<Particle>,
@@ -103,12 +103,12 @@ class ParticleSystem<P extends c.ForceParticle> extends c.ParticleSystem<P> {
   @override
   void addParticle() {
     particles.add(
-      Particle(position: f.Vector2(origin.x, origin.y)) as P,
+      Particle(position: ui.Offset(origin.x, origin.y)) as P,
     );
   }
 
   @override
-  ParticleSystem<P> update(f.Vector2 origin) {
+  ParticleSystem<P> update(ui.Offset origin) {
     final ps = particles.whereNot((p) => p.isDead);
 
     for (final p in ps) {
@@ -126,16 +126,16 @@ class _ParticleIntersectionModel extends f.Model {
   static const topOffset = 50.0;
 
   final ParticleSystem<Particle> system;
-  final f.Vector2 mouse;
+  final ui.Offset mouse;
 
   _ParticleIntersectionModel.init({required super.size})
       : system = ParticleSystem<Particle>(
-          origin: f.Vector2(
+          origin: ui.Offset(
             size.width / 2,
             u.scale(size) * topOffset,
           ),
         ),
-        mouse = f.Vector2(size.width * 0.5, size.height * 0.5);
+        mouse = ui.Offset(size.width * 0.5, size.height * 0.5);
 
   _ParticleIntersectionModel.update({
     required super.size,
@@ -149,15 +149,15 @@ class _ParticleIntersectionIud<M extends _ParticleIntersectionModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2 mouse = model.mouse;
+    ui.Offset mouse = model.mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
-          mouse = f.Vector2(
+          mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );

@@ -5,7 +5,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _VecMagModel extends f.Model {
-  final f.Vector2? mouse;
+  final ui.Offset? mouse;
 
   _VecMagModel.init({required super.size}) : mouse = null;
 
@@ -20,15 +20,15 @@ class _VecMagIud<M extends _VecMagModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2? mouse;
+    ui.Offset? mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
-          mouse = f.Vector2(
+          mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );
@@ -48,29 +48,29 @@ class _VecMagIud<M extends _VecMagModel> extends f.IudBase<M>
     required M model,
     required bool isLightTheme,
   }) {
-    final center = f.Vector2(
+    final center = ui.Offset(
       model.size.width * 0.5,
       model.size.height * 0.5,
     );
     final mouse =
-        model.mouse == null ? f.Vector2.zero() : model.mouse! - center;
+        model.mouse == null ? ui.Offset.zero() : model.mouse! - center;
 
     return f.Translate(
       translation: center,
       canvasOps: [
         f.Rectangle(
-            rect: f.Rect.fromOffsetSize(
+            rect: ui.Rect.fromOffsetSize(
               f.Offset.fromVec(-center),
-              f.Size(
+              ui.Size(
                 mouse.length,
                 10.0,
               ),
             ),
-            paint: f.Paint()..color = u.black),
+            paint: ui.Paint()..color = u.black),
         f.Line(
-          p1: f.Offset.zero,
+          p1: ui.Offset.zero,
           p2: mouse.toOffset,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..strokeWidth = 2.0,
         ),

@@ -15,8 +15,8 @@ class _Attractor {
   static const double forceLenMin = 5.0;
   static const double forceLenMax = 25.0;
 
-  final f.Vector2 position;
-  final f.Vector2 dragOffset;
+  final ui.Offset position;
+  final ui.Offset dragOffset;
 
   bool dragging;
   bool rollover;
@@ -24,9 +24,9 @@ class _Attractor {
   _Attractor({required this.position})
       : dragging = false,
         rollover = false,
-        dragOffset = f.Vector2.zero();
+        dragOffset = ui.Offset.zero();
 
-  f.Vector2 attract(_Mover m) {
+  ui.Offset attract(_Mover m) {
     final force = position - m.position;
     double d = force.length;
     d = math.min(math.max(forceLenMin, d), forceLenMax);
@@ -34,9 +34,9 @@ class _Attractor {
     return force * (gravity * mass * m.mass) / (d * d);
   }
 
-  double computeRadius(f.Size size) => u.scale(size) * mass * radius;
+  double computeRadius(ui.Size size) => u.scale(size) * mass * radius;
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     double gray;
     if (dragging) {
       gray = 0.2;
@@ -52,9 +52,9 @@ class _Attractor {
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = p.HSLColor.fromAHSL(
               0.8,
               0.0,
@@ -63,9 +63,9 @@ class _Attractor {
             ).toColor(),
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 4.0,
@@ -74,7 +74,7 @@ class _Attractor {
     );
   }
 
-  void clicked({required f.Vector2 mouse, required f.Size size}) {
+  void clicked({required ui.Offset mouse, required ui.Size size}) {
     if ((position - mouse).length < computeRadius(size)) {
       dragging = true;
       dragOffset.setValues(
@@ -84,12 +84,12 @@ class _Attractor {
     }
   }
 
-  void hover({required f.Vector2 mouse, required f.Size size}) =>
+  void hover({required ui.Offset mouse, required ui.Size size}) =>
       rollover = (position - mouse).length < computeRadius(size);
 
   void stopDragging() => dragging = false;
 
-  void drag(f.Vector2 mouse) {
+  void drag(ui.Offset mouse) {
     if (dragging) {
       position.setValues(
         mouse.x + dragOffset.x,
@@ -107,8 +107,8 @@ class _Mover extends c.Mover {
     required super.mass,
     required super.position,
   }) : super.update(
-          velocity: f.Vector2(1.0, 0.0),
-          acceleration: f.Vector2.zero(),
+          velocity: ui.Offset(1.0, 0.0),
+          acceleration: ui.Offset.zero(),
         );
 }
 
@@ -123,13 +123,13 @@ class _AttractionManyModel extends f.Model {
           numMovers,
           (_) => _Mover(
               mass: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
-              position: f.Vector2(
+              position: ui.Offset(
                 u.randDoubleRange(0.0, size.width),
                 u.randDoubleRange(0.0, size.height),
               )),
         ).toList(),
         attractor = _Attractor(
-          position: f.Vector2(
+          position: ui.Offset(
             size.width * 0.5,
             size.height * 0.5,
           ),
@@ -147,15 +147,15 @@ class _AttractionManyIud<M extends _AttractionManyModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
           model.attractor.clicked(
-            mouse: f.Vector2(
+            mouse: ui.Offset(
               event.localPosition.dx,
               event.localPosition.dy,
             ),
@@ -163,7 +163,7 @@ class _AttractionManyIud<M extends _AttractionManyModel> extends f.IudBase<M>
           );
         case f.PointerHover(:final event):
           model.attractor.hover(
-            mouse: f.Vector2(
+            mouse: ui.Offset(
               event.localPosition.dx,
               event.localPosition.dy,
             ),
@@ -171,7 +171,7 @@ class _AttractionManyIud<M extends _AttractionManyModel> extends f.IudBase<M>
           );
         case f.PointerMove(:final event):
           model.attractor.drag(
-            f.Vector2(
+            ui.Offset(
               event.localPosition.dx,
               event.localPosition.dy,
             ),

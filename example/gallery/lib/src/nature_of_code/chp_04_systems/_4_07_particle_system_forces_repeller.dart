@@ -12,34 +12,34 @@ class Repeller {
   static const double radius = 32.0;
   static const double gravity = 100.0;
 
-  final f.Vector2 position;
+  final ui.Offset position;
 
   Repeller({required this.position});
 
-  f.Vector2 repel(c.ForceParticle p) {
-    final f.Vector2 dir = position - p.position;
+  ui.Offset repel(c.ForceParticle p) {
+    final ui.Offset dir = position - p.position;
     double l = dir.length;
     dir.normalize();
     l = l.clamp(5.0, 100.0);
     final double force = -gravity / (l * l);
-    return f.Vector2(dir.x * force, dir.y * force);
+    return ui.Offset(dir.x * force, dir.y * force);
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
 
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,
@@ -59,7 +59,7 @@ class ParticleSystem<P extends c.ForceParticle> extends c.ParticleSystem<P> {
     required super.particles,
   }) : super.update();
 
-  void applyForce(f.Vector2 force) {
+  void applyForce(ui.Offset force) {
     for (final particle in particles) {
       particle.applyForce(force);
     }
@@ -77,7 +77,7 @@ class ParticleSystem<P extends c.ForceParticle> extends c.ParticleSystem<P> {
   }
 
   @override
-  ParticleSystem<P> update(f.Vector2 origin) {
+  ParticleSystem<P> update(ui.Offset origin) {
     final ps = particles.whereNot((p) => p.isDead).toList().reversed;
 
     for (final p in ps) {
@@ -99,12 +99,12 @@ class _ParticleSystemForcesRepellerModel extends f.Model {
 
   _ParticleSystemForcesRepellerModel.init({required super.size})
       : repeller = Repeller(
-            position: f.Vector2(
+            position: ui.Offset(
           size.width * 0.45,
           size.height * 0.5,
         )),
         system = ParticleSystem<c.ForceParticle>(
-          origin: f.Vector2(
+          origin: ui.Offset(
             size.width * 0.5,
             u.scale(size) * topOffset,
           ),
@@ -125,19 +125,19 @@ class _ParticleSystemForcesRepellerIud<
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     model.system.addParticle();
-    model.system.applyForce(f.Vector2(0.0, gravity));
+    model.system.applyForce(ui.Offset(0.0, gravity));
     model.system.applyRepeller(model.repeller);
 
     return _ParticleSystemForcesRepellerModel.update(
       size: size,
       repeller: model.repeller,
       system: model.system.update(
-        f.Vector2(
+        ui.Offset(
           size.width * 0.5,
           u.scale(size) * _ParticleSystemForcesRepellerModel.topOffset,
         ),

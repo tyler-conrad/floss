@@ -10,12 +10,12 @@ class _Mover {
   static const double topSpeed = 5.0;
   static const double accFactor = 0.2;
 
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
+  final ui.Offset position;
+  final ui.Offset velocity;
+  final ui.Offset acceleration;
 
-  _Mover({required f.Rect rect})
-      : position = f.Vector2(
+  _Mover({required ui.Rect rect})
+      : position = ui.Offset(
           u.randDoubleRange(
             rect.left,
             rect.right,
@@ -25,8 +25,8 @@ class _Mover {
             rect.bottom,
           ),
         ),
-        velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
+        velocity = ui.Offset.zero(),
+        acceleration = ui.Offset.zero();
 
   _Mover.update({
     required this.position,
@@ -34,7 +34,7 @@ class _Mover {
     required this.acceleration,
   });
 
-  _Mover update(f.Vector2 mouse) {
+  _Mover update(ui.Offset mouse) {
     final acc = mouse - position;
     final a = acc.normalized() * accFactor;
 
@@ -48,21 +48,21 @@ class _Mover {
     );
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
 
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.transparent7Black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,
@@ -75,20 +75,20 @@ class _Mover {
 class _AccArrayModel extends f.Model {
   static const int numMovers = 20;
 
-  final f.Vector2 mouse;
+  final ui.Offset mouse;
   final List<_Mover> movers;
 
   _AccArrayModel.fromRect({
     required super.size,
-    required f.Rect rect,
-  })  : mouse = f.Vector2.fromOffset(rect.center),
+    required ui.Rect rect,
+  })  : mouse = ui.Offset.fromOffset(rect.center),
         movers = List.generate(numMovers, (_) => _Mover(rect: rect));
 
-  _AccArrayModel.init({required f.Size size})
+  _AccArrayModel.init({required ui.Size size})
       : this.fromRect(
           size: size,
-          rect: f.Rect.fromOffsetSize(
-            f.Offset.zero,
+          rect: ui.Rect.fromOffsetSize(
+            ui.Offset.zero,
             size,
           ),
         );
@@ -105,15 +105,15 @@ class _AccArrayIud<M extends _AccArrayModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2 mouse = model.mouse;
+    ui.Offset mouse = model.mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
-          mouse = f.Vector2(
+          mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );

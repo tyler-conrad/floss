@@ -13,15 +13,15 @@ class _Pendulum {
   static const double length = 450.0;
   static const double radius = 48.0;
 
-  final f.Vector2 position;
-  final f.Vector2 origin;
+  final ui.Offset position;
+  final ui.Offset origin;
   final double angle;
   final double aVelocity;
   final double aAcceleration;
 
   _Pendulum()
-      : origin = f.Vector2.zero(),
-        position = f.Vector2.zero(),
+      : origin = ui.Offset.zero(),
+        position = ui.Offset.zero(),
         angle = math.pi / 4.0,
         aVelocity = 0.0,
         aAcceleration = 0.0;
@@ -34,43 +34,43 @@ class _Pendulum {
     required this.aAcceleration,
   });
 
-  _Pendulum update(f.Size size) {
+  _Pendulum update(ui.Size size) {
     final l = u.scale(size) * length;
     final aAcc = -gravity / l * math.sin(angle);
     final aVel = (aVelocity + aAcc) * damping;
     final a = angle + aVel;
 
-    final pos = f.Vector2(
+    final pos = ui.Offset(
       l * math.sin(a),
       l * math.cos(a),
     );
 
     return _Pendulum.update(
       position: pos,
-      origin: f.Vector2(size.width * 0.5, 0.0),
+      origin: ui.Offset(size.width * 0.5, 0.0),
       angle: a,
       aVelocity: aVel,
       aAcceleration: aAcc,
     );
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final pos = position.toOffset;
     final r = u.scale(size) * radius;
 
     return f.Translate(translation: origin, canvasOps: [
       f.Line(
-        p1: f.Offset.zero,
+        p1: ui.Offset.zero,
         p2: pos,
-        paint: f.Paint()
+        paint: ui.Paint()
           ..color = u.black
           ..strokeWidth = 2.0,
       ),
-      f.Circle(c: pos, radius: r, paint: f.Paint()..color = u.gray5),
+      f.Circle(c: pos, radius: r, paint: ui.Paint()..color = u.gray5),
       f.Circle(
         c: position.toOffset,
         radius: r,
-        paint: f.Paint()
+        paint: ui.Paint()
           ..color = u.black
           ..style = p.PaintingStyle.stroke
           ..strokeWidth = 2.0,
@@ -94,8 +94,8 @@ class _PendulumIud<M extends _PendulumModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) =>
       _PendulumModel.update(

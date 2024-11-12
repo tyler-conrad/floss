@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
@@ -35,8 +37,8 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     final x = model.x + model.xSpeed;
@@ -59,19 +61,19 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
   }) {
     final r = u.scale(model.size) * _BallModel.radius;
     return f.Translate(
-      translation: f.Vector2(model.x, model.y),
+      dx: model.x,
+      dy: model.y,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
-            ..paint
             ..style = p.PaintingStyle.stroke,
         ),
       ],

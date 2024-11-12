@@ -14,18 +14,18 @@ class Particle {
   static const double maxVelY = 0.0;
   static const int ls = 128;
 
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
+  final ui.Offset position;
+  final ui.Offset velocity;
+  final ui.Offset acceleration;
 
   int lifespan;
 
   Particle({required this.position})
-      : velocity = f.Vector2(
+      : velocity = ui.Offset(
           u.randDoubleRange(minVelX, maxVelX),
           u.randDoubleRange(minVelY, maxVelY),
         ),
-        acceleration = f.Vector2(0.0, gravity),
+        acceleration = ui.Offset(0.0, gravity),
         lifespan = ls;
 
   Particle.update({
@@ -43,16 +43,16 @@ class Particle {
 
   bool get isDead => lifespan < 1;
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
     final a = lifespan / ls;
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = p.HSLColor.fromAHSL(
               a,
               0.0,
@@ -61,9 +61,9 @@ class Particle {
             ).toColor(),
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = p.HSLColor.fromAHSL(
               a,
               0.0,
@@ -87,11 +87,11 @@ class ForceParticle extends Particle {
 
   ForceParticle({required super.position})
       : super.update(
-          velocity: f.Vector2(
+          velocity: ui.Offset(
             u.randDoubleRange(minVelX, maxVelX),
             u.randDoubleRange(minVelY, minVelY),
           ),
-          acceleration: f.Vector2.zero(),
+          acceleration: ui.Offset.zero(),
           lifespan: Particle.ls,
         );
 
@@ -102,7 +102,7 @@ class ForceParticle extends Particle {
     required super.lifespan,
   }) : super.update();
 
-  void applyForce(f.Vector2 force) {
+  void applyForce(ui.Offset force) {
     acceleration.add(force / mass);
   }
 
@@ -115,7 +115,7 @@ class ForceParticle extends Particle {
 
 class ParticleSystem<P extends Particle> {
   final List<P> particles;
-  f.Vector2 origin;
+  ui.Offset origin;
 
   ParticleSystem({required this.origin}) : particles = [];
 
@@ -127,7 +127,7 @@ class ParticleSystem<P extends Particle> {
   void addParticle() {
     particles.add(
       Particle(
-        position: f.Vector2(
+        position: ui.Offset(
           origin.x,
           origin.y,
         ),
@@ -135,7 +135,7 @@ class ParticleSystem<P extends Particle> {
     );
   }
 
-  ParticleSystem<P> update(f.Vector2 origin) {
+  ParticleSystem<P> update(ui.Offset origin) {
     final ps = particles.whereNot((p) => p.isDead);
 
     for (final p in ps) {
@@ -148,7 +148,7 @@ class ParticleSystem<P extends Particle> {
     );
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     return f.Drawing(
       canvasOps: [
         for (final p in particles) p.draw(size),

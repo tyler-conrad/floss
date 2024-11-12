@@ -12,28 +12,28 @@ class _Attractor {
   static const double forceLenDistMin = 5.0;
   static const double forceLenDistMax = 25.0;
 
-  final f.Vector2 position;
+  final ui.Offset position;
 
   _Attractor({required this.position});
 
-  f.Vector2 attract(_Mover m) {
+  ui.Offset attract(_Mover m) {
     final force = (position - m.position);
     final distance = force.length.clamp(forceLenDistMin, forceLenDistMax);
     force.normalize();
     return force * (gravity * mass * m.mass) / (distance * distance);
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius * mass;
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-            c: f.Offset.zero, radius: r, paint: f.Paint()..color = u.gray5),
+            c: ui.Offset.zero, radius: r, paint: ui.Paint()..color = u.gray5),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,
@@ -53,9 +53,9 @@ class _Mover {
   static const double massMax = 2.0;
 
   final double mass;
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
+  final ui.Offset position;
+  final ui.Offset velocity;
+  final ui.Offset acceleration;
   final double angle;
   final double aVelocity;
   final double aAcceleration;
@@ -63,11 +63,11 @@ class _Mover {
   _Mover({
     required this.mass,
     required this.position,
-  })  : velocity = f.Vector2(
+  })  : velocity = ui.Offset(
           u.randDoubleRange(-velHalfRange, velHalfRange),
           u.randDoubleRange(-velHalfRange, velHalfRange),
         ),
-        acceleration = f.Vector2.zero(),
+        acceleration = ui.Offset.zero(),
         angle = 0.0,
         aVelocity = 0.0,
         aAcceleration = 0.0;
@@ -82,7 +82,7 @@ class _Mover {
     required this.aAcceleration,
   });
 
-  void applyForce(f.Vector2 force) {
+  void applyForce(ui.Offset force) {
     acceleration.add(force / mass);
   }
 
@@ -105,7 +105,7 @@ class _Mover {
     );
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final s = u.scale(size) * mass * sideLen;
     return f.Translate(
       translation: position,
@@ -114,12 +114,12 @@ class _Mover {
           radians: angle,
           canvasOps: [
             f.Rectangle(
-              rect: f.Rect.fromCenter(
-                center: f.Offset.zero,
+              rect: ui.Rect.fromCenter(
+                center: ui.Offset.zero,
                 width: s,
                 height: s,
               ),
-              paint: f.Paint()
+              paint: ui.Paint()
                 ..color = const p.HSLColor.fromAHSL(
                   0.78,
                   0.0,
@@ -128,12 +128,12 @@ class _Mover {
                 ).toColor(),
             ),
             f.Rectangle(
-              rect: f.Rect.fromCenter(
-                center: f.Offset.zero,
+              rect: ui.Rect.fromCenter(
+                center: ui.Offset.zero,
                 width: s,
                 height: s,
               ),
-              paint: f.Paint()
+              paint: ui.Paint()
                 ..color = u.black
                 ..style = p.PaintingStyle.stroke,
             ),
@@ -155,14 +155,14 @@ class _ForcesAngularMotionModel extends f.Model {
           numMovers,
           (_) => _Mover(
             mass: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
-            position: f.Vector2(
+            position: ui.Offset(
               u.randDoubleRange(0.0, size.width),
               u.randDoubleRange(0.0, size.height),
             ),
           ),
         ).toList(),
         attractor = _Attractor(
-          position: f.Vector2(
+          position: ui.Offset(
             size.width * 0.5,
             size.height * 0.5,
           ),
@@ -180,8 +180,8 @@ class _ForcesAngularMotionIud<M extends _ForcesAngularMotionModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) =>
       _ForcesAngularMotionModel.update(
@@ -193,7 +193,7 @@ class _ForcesAngularMotionIud<M extends _ForcesAngularMotionModel>
             },
           ).toList(),
           attractor: _Attractor(
-            position: f.Vector2(
+            position: ui.Offset(
               size.width * 0.5,
               size.height * 0.5,
             ),

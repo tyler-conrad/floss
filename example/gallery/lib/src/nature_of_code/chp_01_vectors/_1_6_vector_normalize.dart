@@ -5,7 +5,7 @@ import 'package:floss/floss.dart' as f;
 import '../utils.dart' as u;
 
 class _VecNormModel extends f.Model {
-  final f.Vector2? mouse;
+  final ui.Offset? mouse;
 
   _VecNormModel.init({required super.size}) : mouse = null;
 
@@ -20,15 +20,15 @@ class _VecNormIud<M extends _VecNormModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2? mouse;
+    ui.Offset? mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
-          mouse = f.Vector2(
+          mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );
@@ -48,12 +48,12 @@ class _VecNormIud<M extends _VecNormModel> extends f.IudBase<M>
     required M model,
     required bool isLightTheme,
   }) {
-    final center = f.Vector2(
+    final center = ui.Offset(
       model.size.width * 0.5,
       model.size.height * 0.5,
     );
     final mouse =
-        (model.mouse == null ? f.Vector2.zero() : model.mouse! - center)
+        (model.mouse == null ? ui.Offset.zero() : model.mouse! - center)
                 .normalized() *
             150.0;
 
@@ -61,9 +61,9 @@ class _VecNormIud<M extends _VecNormModel> extends f.IudBase<M>
       translation: center,
       canvasOps: [
         f.Line(
-          p1: f.Offset.zero,
+          p1: ui.Offset.zero,
           p2: mouse.toOffset,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..strokeWidth = 2.0,
         ),

@@ -12,7 +12,7 @@ class _ParticleSystemTypeModel extends f.Model {
 
   _ParticleSystemTypeModel.init({required super.size})
       : system = c.ParticleSystem(
-          origin: f.Vector2(
+          origin: ui.Offset(
             size.width * 0.5,
             topOffset,
           ),
@@ -29,8 +29,8 @@ class _ParticleSystemTypeIud<M extends _ParticleSystemTypeModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     model.system.addParticle();
@@ -38,7 +38,7 @@ class _ParticleSystemTypeIud<M extends _ParticleSystemTypeModel>
     return _ParticleSystemTypeModel.update(
       size: size,
       system: model.system.update(
-        f.Vector2(
+        ui.Offset(
           size.width * 0.5,
           u.scale(size) * _ParticleSystemTypeModel.topOffset,
         ),

@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'math/geometry.dart' as g;
 import 'canvas_ops.dart' as co;
 import 'input_event.dart' as ie;
 
@@ -8,16 +7,20 @@ import 'input_event.dart' as ie;
 ///
 /// It takes a required parameter [size] which is the initial size of the
 /// canvas.
-typedef ModelCtor<M> = M Function({required g.Size size});
+typedef ModelCtor<M> = M Function({
+  required ui.Size size,
+  required ie.InputEventList inputEvents,
+});
 
 /// A minimal model class.
 ///
 /// Meant to be extended by the user to create a model class that holds the
 /// state of the application.
 class Model {
-  final g.Size size;
+  final ui.Size size;
+  final ie.InputEventList inputEvents;
 
-  Model({required this.size});
+  Model({required this.size, required this.inputEvents});
 }
 
 /// An interface for the init, update, and draw methods.
@@ -26,14 +29,15 @@ abstract interface class Iud<M> {
   /// [size] of the canvas.
   M init({
     required ModelCtor<M> modelCtor,
-    required g.Size size,
+    required ui.Size size,
+    required ie.InputEventList inputEvents,
   });
 
-  /// Updates the model using the [time], [size], and [inputEvents].
+  /// Updates the model using the [elapsed], [size], and [inputEvents].
   M update({
     required M model,
-    required Duration time,
-    required g.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required ie.InputEventList inputEvents,
   });
 
@@ -61,9 +65,10 @@ class IudBase<M extends Model> implements Iud<M> {
   @override
   M init({
     required ModelCtor<M> modelCtor,
-    required g.Size size,
+    required ui.Size size,
+    required ie.InputEventList inputEvents,
   }) {
-    return modelCtor(size: size);
+    return modelCtor(size: size, inputEvents: inputEvents);
   }
 
   /// Default implementation of the update method.
@@ -73,8 +78,8 @@ class IudBase<M extends Model> implements Iud<M> {
   @override
   M update({
     required M model,
-    required Duration time,
-    required g.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required ie.InputEventList inputEvents,
   }) {
     return model;

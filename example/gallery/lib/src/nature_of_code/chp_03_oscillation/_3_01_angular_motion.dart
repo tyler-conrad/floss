@@ -33,8 +33,8 @@ class _AngularMotionIud<M extends _AngularMotionModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     final angle = model.angle + model.angleVelocity;
@@ -55,7 +55,7 @@ class _AngularMotionIud<M extends _AngularMotionModel> extends f.IudBase<M>
     final s = u.scale(model.size);
     final r = s * circleRadius;
     return f.Translate(
-      translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
+      translation: ui.Offset(model.size.width * 0.5, model.size.height * 0.5),
       canvasOps: [
         f.Rotate(
           radians: model.angle,
@@ -63,22 +63,22 @@ class _AngularMotionIud<M extends _AngularMotionModel> extends f.IudBase<M>
             f.Line(
               p1: f.Offset(s * -halfLength, 0.0),
               p2: f.Offset(s * halfLength, 0.0),
-              paint: f.Paint()
+              paint: ui.Paint()
                 ..color = u.black
                 ..strokeWidth = 2.0,
             ),
             f.Translate(
-              translation: f.Vector2(s * halfLength, 0.0),
+              translation: ui.Offset(s * halfLength, 0.0),
               canvasOps: [
                 f.Circle(
-                  c: f.Offset.zero,
+                  c: ui.Offset.zero,
                   radius: r,
-                  paint: f.Paint()..color = u.gray5,
+                  paint: ui.Paint()..color = u.gray5,
                 ),
                 f.Circle(
-                  c: f.Offset.zero,
+                  c: ui.Offset.zero,
                   radius: r,
-                  paint: f.Paint()
+                  paint: ui.Paint()
                     ..color = u.black
                     ..style = p.PaintingStyle.stroke
                     ..strokeWidth = 2.0,
@@ -86,17 +86,17 @@ class _AngularMotionIud<M extends _AngularMotionModel> extends f.IudBase<M>
               ],
             ),
             f.Translate(
-              translation: f.Vector2(s * -halfLength, 0.0),
+              translation: ui.Offset(s * -halfLength, 0.0),
               canvasOps: [
                 f.Circle(
-                  c: f.Offset.zero,
+                  c: ui.Offset.zero,
                   radius: r,
-                  paint: f.Paint()..color = u.gray5,
+                  paint: ui.Paint()..color = u.gray5,
                 ),
                 f.Circle(
-                  c: f.Offset.zero,
+                  c: ui.Offset.zero,
                   radius: r,
-                  paint: f.Paint()
+                  paint: ui.Paint()
                     ..color = u.black
                     ..style = p.PaintingStyle.stroke
                     ..strokeWidth = 2.0,

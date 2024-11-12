@@ -25,8 +25,8 @@ class _SpringSineIud<M extends _SpringSineModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) =>
       _SpringSineModel.update(
@@ -43,12 +43,12 @@ class _SpringSineIud<M extends _SpringSineModel> extends f.IudBase<M>
     final y = model.size.height * 0.5 +
         model.size.height * 0.25 * math.sin(model.angle);
     return f.Translate(
-      translation: f.Vector2(model.size.width * 0.5, 0.0),
+      translation: ui.Offset(model.size.width * 0.5, 0.0),
       canvasOps: [
         f.Line(
-          p1: f.Offset.zero,
+          p1: ui.Offset.zero,
           p2: f.Offset(0.0, y),
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..strokeWidth = 2.0,
         ),
@@ -58,14 +58,14 @@ class _SpringSineIud<M extends _SpringSineModel> extends f.IudBase<M>
               y,
             ),
             radius: r,
-            paint: f.Paint()..color = u.gray5),
+            paint: ui.Paint()..color = u.gray5),
         f.Circle(
           c: f.Offset(
             0.0,
             y,
           ),
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,

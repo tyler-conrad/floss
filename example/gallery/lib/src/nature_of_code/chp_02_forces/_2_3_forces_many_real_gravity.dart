@@ -15,7 +15,7 @@ class _RealGravityModel extends f.Model {
           numMovers,
           (_) => c.Mover(
             mass: u.randDoubleRange(c.Mover.massMin, c.Mover.massMax),
-            position: f.Vector2.zero(),
+            position: ui.Offset.zero(),
           ),
         ).toList();
 
@@ -29,22 +29,22 @@ class _RealGravityIud<M extends _RealGravityModel> extends f.IudBase<M>
     implements f.Iud<M> {
   static const double gFactor = 0.1;
 
-  final wind = f.Vector2(0.01, 0.0);
+  final wind = ui.Offset(0.01, 0.0);
 
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final m in model.movers) {
       m.applyForce(wind);
-      final gravity = f.Vector2(0.0, gFactor * m.mass);
+      final gravity = ui.Offset(0.0, gFactor * m.mass);
       m.applyForce(gravity);
       m.update();
       m.checkEdges(
-        f.Rect.fromOffsetSize(
+        ui.Rect.fromOffsetSize(
           f.Offset(0.0, 0.0),
           size,
         ),

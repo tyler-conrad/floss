@@ -22,12 +22,12 @@ class _VectorParticleIud<M extends _VectorParticleModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     model.particles.add(c.Particle(
-      position: f.Vector2(
+      position: ui.Offset(
         size.width * 0.5,
         _VectorParticleModel.topOffset,
       ),

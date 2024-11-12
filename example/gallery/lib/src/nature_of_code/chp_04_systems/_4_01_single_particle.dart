@@ -11,7 +11,7 @@ class _SingleParticleModel extends f.Model {
 
   _SingleParticleModel.init({required super.size})
       : particle = c.Particle(
-          position: f.Vector2(size.width * 0.5, topOffset),
+          position: ui.Offset(size.width * 0.5, topOffset),
         );
 
   _SingleParticleModel.update({
@@ -25,14 +25,14 @@ class _SingleParticleIud<M extends _SingleParticleModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     model.particle.update();
     if (model.particle.isDead) {
       model.particle = c.Particle(
-        position: f.Vector2(
+        position: ui.Offset(
           size.width * 0.5,
           _SingleParticleModel.topOffset,
         ),

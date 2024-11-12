@@ -8,16 +8,16 @@ class _MovingParticleSystemModel extends f.Model {
   static const topOffset = 50.0;
 
   final c.ParticleSystem system;
-  final f.Vector2 mouse;
+  final ui.Offset mouse;
 
   _MovingParticleSystemModel.init({required super.size})
       : system = c.ParticleSystem(
-          origin: f.Vector2(
+          origin: ui.Offset(
             size.width * 0.5,
             topOffset,
           ),
         ),
-        mouse = f.Vector2(size.width * 0.5, size.height * 0.5);
+        mouse = ui.Offset(size.width * 0.5, size.height * 0.5);
 
   _MovingParticleSystemModel.update({
     required super.size,
@@ -31,15 +31,15 @@ class _MovingParticleSystemIud<M extends _MovingParticleSystemModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2 mouse = model.mouse;
+    ui.Offset mouse = model.mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
-          mouse = f.Vector2(
+          mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );

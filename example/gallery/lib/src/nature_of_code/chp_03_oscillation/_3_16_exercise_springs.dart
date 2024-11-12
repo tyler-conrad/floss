@@ -5,23 +5,23 @@ import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
 
-final f.Vector2 gravity = f.Vector2(0.0, 2.0);
+final ui.Offset gravity = ui.Offset(0.0, 2.0);
 
 class _Bob {
   static const double mass = 32.0;
   static const double damping = 0.95;
 
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
-  final f.Vector2 dragOffset;
+  final ui.Offset position;
+  final ui.Offset velocity;
+  final ui.Offset acceleration;
+  final ui.Offset dragOffset;
 
   bool dragging = false;
 
   _Bob({required this.position})
-      : velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero(),
-        dragOffset = f.Vector2.zero();
+      : velocity = ui.Offset.zero(),
+        acceleration = ui.Offset.zero(),
+        dragOffset = ui.Offset.zero();
 
   _Bob.update({
     required this.position,
@@ -45,13 +45,13 @@ class _Bob {
     );
   }
 
-  void applyForce(f.Vector2 force) {
+  void applyForce(ui.Offset force) {
     acceleration.add(force / mass);
   }
 
-  double computedRadius(f.Size size) => u.scale(size) * mass;
+  double computedRadius(ui.Size size) => u.scale(size) * mass;
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final c = dragging
         ? u.gray5
         : const p.HSLColor.fromAHSL(
@@ -66,14 +66,14 @@ class _Bob {
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = c,
+          paint: ui.Paint()..color = c,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,
@@ -82,7 +82,7 @@ class _Bob {
     );
   }
 
-  void clicked(f.Vector2 mouse, f.Size size) {
+  void clicked(ui.Offset mouse, ui.Size size) {
     final m = position - mouse;
     if (m.length < computedRadius(size)) {
       dragging = true;
@@ -94,7 +94,7 @@ class _Bob {
     dragging = false;
   }
 
-  void drag(f.Vector2 mouse) {
+  void drag(ui.Offset mouse) {
     if (dragging) {
       position.setFrom(mouse + dragOffset);
     }
@@ -119,7 +119,7 @@ class _Spring {
   f.CanvasOp draw(_Bob a, _Bob b) => f.Line(
         p1: f.Offset.fromVec(a.position),
         p2: f.Offset.fromVec(b.position),
-        paint: f.Paint()
+        paint: ui.Paint()
           ..color = u.black
           ..strokeWidth = 2.0,
       );
@@ -134,26 +134,26 @@ class _SpringsModel extends f.Model {
   final _Bob b2;
   final _Bob b3;
 
-  f.Vector2? mouse;
+  ui.Offset? mouse;
 
   _SpringsModel.init({required super.size})
       : s1 = _Spring(),
         s2 = _Spring(),
         s3 = _Spring(),
         b1 = _Bob(
-          position: f.Vector2(
+          position: ui.Offset(
             size.width * 0.5,
             size.height * 0.2,
           ),
         ),
         b2 = _Bob(
-          position: f.Vector2(
+          position: ui.Offset(
             size.width * 0.2,
             size.height * 0.8,
           ),
         ),
         b3 = _Bob(
-          position: f.Vector2(
+          position: ui.Offset(
             size.width * 0.8,
             size.height * 0.8,
           ),
@@ -177,8 +177,8 @@ class _SpringsIud<M extends _SpringsModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     model.s1.update(
@@ -204,7 +204,7 @@ class _SpringsIud<M extends _SpringsModel> extends f.IudBase<M>
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
-          model.mouse = f.Vector2(
+          model.mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );
@@ -231,7 +231,7 @@ class _SpringsIud<M extends _SpringsModel> extends f.IudBase<M>
           break;
 
         case f.PointerMove(:final event):
-          model.mouse = f.Vector2(
+          model.mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );

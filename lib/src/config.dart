@@ -1,4 +1,5 @@
-import 'paint.dart' as p;
+import 'dart:ui' as ui;
+
 import 'miud.dart' as miud;
 
 /// Represents a sealed class for clearing the canvas.
@@ -18,7 +19,7 @@ sealed class ClearCanvasType {
 /// provided. This class is used to configure the `FlossWidget` to keep that
 /// last drawn frame and draw on top of it.
 class NoClearCanvas extends ClearCanvasType {
-  final p.Paint paint;
+  final ui.Paint paint;
 
   const NoClearCanvas({required this.paint});
 }

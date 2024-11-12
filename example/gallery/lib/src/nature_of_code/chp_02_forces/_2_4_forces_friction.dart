@@ -15,7 +15,7 @@ class _FrictionModel extends f.Model {
           numMovers,
           (_) => c.Mover(
             mass: u.randDoubleRange(c.Mover.massMin, c.Mover.massMax),
-            position: f.Vector2(
+            position: ui.Offset(
               u.randDoubleRange(0.0, size.width),
               0.0,
             ),
@@ -33,19 +33,19 @@ class _FrictionIud<M extends _FrictionModel> extends f.IudBase<M>
   static const double gFactor = 0.1;
   static const double c = 0.05;
 
-  final f.Vector2 wind = f.Vector2(0.01, 0.0);
+  final ui.Offset wind = ui.Offset(0.01, 0.0);
 
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final m in model.movers) {
-      final f.Vector2 gravity = f.Vector2(0.0, gFactor * m.mass);
+      final ui.Offset gravity = ui.Offset(0.0, gFactor * m.mass);
 
-      f.Vector2 friction = m.velocity;
+      ui.Offset friction = m.velocity;
       if (friction.length > 0.0) {
         friction *= -1.0;
         friction = friction.normalized();
@@ -57,7 +57,7 @@ class _FrictionIud<M extends _FrictionModel> extends f.IudBase<M>
       m.applyForce(gravity);
       m.update();
       m.checkEdges(
-        f.Rect.fromOffsetSize(
+        ui.Rect.fromOffsetSize(
           f.Offset(0.0, 0.0),
           size,
         ),

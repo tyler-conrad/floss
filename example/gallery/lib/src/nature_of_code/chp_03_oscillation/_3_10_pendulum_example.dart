@@ -13,8 +13,8 @@ class _Pendulum {
   static const double length = 450.0;
   static const double radius = 48.0;
 
-  final f.Vector2 position;
-  final f.Vector2 origin;
+  final ui.Offset position;
+  final ui.Offset origin;
   final double aAcceleration;
 
   bool dragging;
@@ -22,8 +22,8 @@ class _Pendulum {
   double aVelocity;
 
   _Pendulum()
-      : origin = f.Vector2.zero(),
-        position = f.Vector2.zero(),
+      : origin = ui.Offset.zero(),
+        position = ui.Offset.zero(),
         angle = math.pi / 4.0,
         aVelocity = 0.0,
         aAcceleration = 0.0,
@@ -38,7 +38,7 @@ class _Pendulum {
     required this.dragging,
   });
 
-  _Pendulum update(f.Size size) {
+  _Pendulum update(ui.Size size) {
     var aAcc = aAcceleration;
     var aVel = aVelocity;
     var a = angle;
@@ -50,14 +50,14 @@ class _Pendulum {
       a = angle + aVel;
     }
 
-    final pos = f.Vector2(
+    final pos = ui.Offset(
       r * math.sin(a),
       r * math.cos(a),
     );
 
     return _Pendulum.update(
       position: pos,
-      origin: f.Vector2(size.width * 0.5, 0.0),
+      origin: ui.Offset(size.width * 0.5, 0.0),
       angle: a,
       aVelocity: aVel,
       aAcceleration: aAcc,
@@ -65,30 +65,30 @@ class _Pendulum {
     );
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final c = dragging ? u.black : u.gray5;
     final pos = position.toOffset;
     final r = u.scale(size) * radius;
 
     return f.Translate(translation: origin, canvasOps: [
       f.Line(
-          p1: f.Offset.zero,
+          p1: ui.Offset.zero,
           p2: pos,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..strokeWidth = 2.0),
-      f.Circle(c: pos, radius: r, paint: f.Paint()..color = c),
+      f.Circle(c: pos, radius: r, paint: ui.Paint()..color = c),
       f.Circle(
           c: f.Offset.fromVec(position),
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0)
     ]);
   }
 
-  void clicked(f.Vector2 mouse, f.Size size) {
+  void clicked(ui.Offset mouse, ui.Size size) {
     if ((mouse - (origin + position)).length <= u.scale(size) * radius) {
       dragging = true;
     }
@@ -101,7 +101,7 @@ class _Pendulum {
     }
   }
 
-  void drag(f.Vector2 mouse) {
+  void drag(ui.Offset mouse) {
     if (dragging) {
       final diff = origin - mouse;
       angle = math.atan2(diff.x, diff.y) - math.pi;
@@ -124,8 +124,8 @@ class _PendulumIud<M extends _PendulumModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     final p = model.pendulum.update(size);
@@ -134,13 +134,13 @@ class _PendulumIud<M extends _PendulumModel> extends f.IudBase<M>
       switch (ie) {
         case f.PointerDown(:final event):
           p.clicked(
-              f.Vector2(event.localPosition.dx, event.localPosition.dy), size);
+              ui.Offset(event.localPosition.dx, event.localPosition.dy), size);
           break;
         case f.PointerUp():
           p.stopDragging();
           break;
         case f.PointerMove(:final event):
-          p.drag(f.Vector2(event.localPosition.dx, event.localPosition.dy));
+          p.drag(ui.Offset(event.localPosition.dx, event.localPosition.dy));
           break;
         default:
           break;

@@ -31,8 +31,8 @@ class _PolarToCartesianIud<M extends _PolarToCartesianModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) =>
       _PolarToCartesianModel.update(
@@ -51,24 +51,24 @@ class _PolarToCartesianIud<M extends _PolarToCartesianModel>
     final r = u.scale(model.size) * _PolarToCartesianModel.circleRadius;
 
     return f.Translate(
-      translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
+      translation: ui.Offset(model.size.width * 0.5, model.size.height * 0.5),
       canvasOps: [
         f.Line(
-          p1: f.Offset.zero,
+          p1: ui.Offset.zero,
           p2: f.Offset(x, y),
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..strokeWidth = 2.0,
         ),
         f.Circle(
           c: f.Offset(x, y),
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
           c: f.Offset(x, y),
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..paint
             ..style = p.PaintingStyle.stroke,

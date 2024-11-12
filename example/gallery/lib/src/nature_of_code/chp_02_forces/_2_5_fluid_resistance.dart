@@ -10,24 +10,24 @@ class _Liquid {
   static const double c = 0.1;
 
   f.Offset position;
-  f.Size size;
+  ui.Size size;
 
-  f.Rect get rect => f.Rect.fromOffsetSize(position, size);
+  ui.Rect get rect => ui.Rect.fromOffsetSize(position, size);
 
   _Liquid({required this.position, required this.size});
 
-  void update(f.Size size) {
+  void update(ui.Size size) {
     position = f.Offset(0.0, size.height / 2);
-    this.size = f.Size(size.width, size.height / 2);
+    this.size = ui.Size(size.width, size.height / 2);
   }
 
   bool contains(_Mover m) => rect.containsVec(m.position);
 
-  f.Vector2 drag(_Mover m) {
+  ui.Offset drag(_Mover m) {
     final speed = m.velocity.length;
     final dragMagnitude = c * speed * speed;
 
-    f.Vector2 dragForce = m.velocity;
+    ui.Offset dragForce = m.velocity;
     dragForce *= -1.0;
 
     dragForce.normalize();
@@ -37,7 +37,7 @@ class _Liquid {
 
   f.CanvasOp draw() => f.Rectangle(
         rect: rect,
-        paint: f.Paint()
+        paint: ui.Paint()
           ..color = const p.HSLColor.fromAHSL(
             0.5,
             0.0,
@@ -59,14 +59,14 @@ class _Mover extends c.Mover {
   _Mover.newRandom({required double right})
       : this(
           mass: u.randDoubleRange(massMin, massMax),
-          position: f.Vector2(
+          position: ui.Offset(
             u.randDoubleRange(0.0, right),
             0.0,
           ),
         );
 
   @override
-  void checkEdges(f.Rect rect) {
+  void checkEdges(ui.Rect rect) {
     if (position.y > rect.bottom) {
       position.y = rect.bottom;
       velocity.y *= -0.9;
@@ -89,7 +89,7 @@ class _FluidModel extends f.Model {
         ).toList(),
         liquid = _Liquid(
           position: f.Offset(0.0, size.height / 2),
-          size: f.Size(size.width, size.height / 2),
+          size: ui.Size(size.width, size.height / 2),
         );
 
   _FluidModel.update({
@@ -106,8 +106,8 @@ class _FluidIud<M extends _FluidModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final ie in inputEvents) {
@@ -135,12 +135,12 @@ class _FluidIud<M extends _FluidModel> extends f.IudBase<M>
         m.applyForce(dragForce);
       }
 
-      final gravity = f.Vector2(0.0, gFactor * m.mass);
+      final gravity = ui.Offset(0.0, gFactor * m.mass);
 
       m.applyForce(gravity);
       m.update();
       m.checkEdges(
-        f.Rect.fromOffsetSize(
+        ui.Rect.fromOffsetSize(
           f.Offset(0.0, 0.0),
           size,
         ),

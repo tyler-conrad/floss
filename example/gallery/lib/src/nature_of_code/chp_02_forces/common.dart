@@ -10,15 +10,15 @@ class Mover {
   static const double massMax = 4.0;
 
   final double mass;
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
+  final ui.Offset position;
+  final ui.Offset velocity;
+  final ui.Offset acceleration;
 
   Mover({
     required this.mass,
     required this.position,
-  })  : velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
+  })  : velocity = ui.Offset.zero(),
+        acceleration = ui.Offset.zero();
 
   Mover.update({
     required this.mass,
@@ -27,7 +27,7 @@ class Mover {
     required this.acceleration,
   });
 
-  void applyForce(f.Vector2 force) {
+  void applyForce(ui.Offset force) {
     acceleration.add(force / mass);
   }
 
@@ -37,7 +37,7 @@ class Mover {
     acceleration.setValues(0.0, 0.0);
   }
 
-  void checkEdges(f.Rect rect) {
+  void checkEdges(ui.Rect rect) {
     if (position.x > rect.right) {
       position.x = rect.right;
       velocity.x *= -1.0;
@@ -52,21 +52,21 @@ class Mover {
     }
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * mass * radius;
 
     return f.Translate(
       translation: position,
       canvasOps: [
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = u.transparent5black,
+          paint: ui.Paint()..color = u.transparent5black,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          c: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
+          paint: ui.Paint()
             ..color = u.black
             ..style = p.PaintingStyle.stroke
             ..strokeWidth = 2.0,

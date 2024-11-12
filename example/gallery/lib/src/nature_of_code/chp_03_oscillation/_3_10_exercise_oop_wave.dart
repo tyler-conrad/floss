@@ -14,7 +14,7 @@ class _Wave {
   static const double angularVel = 0.02;
 
   final int numCircles;
-  final f.Vector2 originFactor;
+  final ui.Offset originFactor;
   final double theta;
   final double widthFactor;
   final double period;
@@ -40,7 +40,7 @@ class _Wave {
     required this.yValues,
   });
 
-  _Wave calculate(f.Size size) => _Wave.update(
+  _Wave calculate(ui.Size size) => _Wave.update(
         numCircles: numCircles,
         originFactor: originFactor,
         theta: theta + angularVel,
@@ -65,8 +65,8 @@ class _Wave {
             .toList(),
       );
 
-  f.Drawing draw(f.Size size) => f.Translate(
-        translation: f.Vector2(
+  f.Drawing draw(ui.Size size) => f.Translate(
+        translation: ui.Offset(
           size.width * originFactor.x,
           size.height * originFactor.y,
         ),
@@ -80,7 +80,7 @@ class _Wave {
             return f.Circle(
               c: f.Offset(x, y),
               radius: r,
-              paint: f.Paint()
+              paint: ui.Paint()
                 ..color = const p.HSLColor.fromAHSL(
                   0.2,
                   0.0,
@@ -100,14 +100,14 @@ class _OopWaveModel extends f.Model {
   _OopWaveModel.init({required super.size})
       : waveOne = _Wave.init(
           numCircles: 15,
-          originFactor: f.Vector2(0.1, 0.4),
+          originFactor: ui.Offset(0.1, 0.4),
           widthFactor: 0.3,
           period: 400.0,
           amplitude: 30.0,
         ),
         waveTwo = _Wave.init(
           numCircles: 40,
-          originFactor: f.Vector2(0.5, 0.5),
+          originFactor: ui.Offset(0.5, 0.5),
           widthFactor: 0.4,
           period: 600.0,
           amplitude: 70.0,
@@ -125,8 +125,8 @@ class _OopWaveIud<M extends _OopWaveModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) =>
       _OopWaveModel.update(

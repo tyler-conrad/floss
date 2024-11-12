@@ -17,7 +17,7 @@ class _Mover extends c.Mover {
   static const double forceLenMin = 5.0;
   static const double forceLenMax = 25.0;
 
-  final f.Vector2 forceFactor = f.Vector2(0.1, 0.1);
+  final ui.Offset forceFactor = ui.Offset(0.1, 0.1);
 
   _Mover({
     required super.mass,
@@ -25,13 +25,13 @@ class _Mover extends c.Mover {
   });
 
   @override
-  f.Drawing draw(f.Size size) => f.Translate(
+  f.Drawing draw(ui.Size size) => f.Translate(
         translation: position,
         canvasOps: [
           f.Circle(
-            c: f.Offset.zero,
+            c: ui.Offset.zero,
             radius: u.scale(size) * mass * _Mover.radius,
-            paint: f.Paint()
+            paint: ui.Paint()
               ..color = const p.HSLColor.fromAHSL(
                 0.7,
                 0.0,
@@ -42,7 +42,7 @@ class _Mover extends c.Mover {
         ],
       );
 
-  f.Vector2 attract(_Mover m) {
+  ui.Offset attract(_Mover m) {
     final force = position - m.position;
     double d = force.length;
     d = math.min(math.max(forceLenMin, d), forceLenMax);
@@ -50,9 +50,9 @@ class _Mover extends c.Mover {
     return force * (gravity * mass * m.mass) / (d * d);
   }
 
-  void boundaries(f.Rect rect) {
+  void boundaries(ui.Rect rect) {
     final r = rect.inflate(padding);
-    final force = f.Vector2.zero();
+    final force = ui.Offset.zero();
 
     if (position.x < r.left) {
       force.x = 1.0;
@@ -84,7 +84,7 @@ class _ForcesManyMutualBoundariesModel extends f.Model {
           numMovers,
           (_) => _Mover(
             mass: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
-            position: f.Vector2(
+            position: ui.Offset(
               u.randDoubleRange(0.0, size.width),
               u.randDoubleRange(0.0, size.height),
             ),
@@ -102,8 +102,8 @@ class _ForcesManyMutualBoundariesIud<M extends _ForcesManyMutualBoundariesModel>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final left in model.movers) {
@@ -113,8 +113,8 @@ class _ForcesManyMutualBoundariesIud<M extends _ForcesManyMutualBoundariesModel>
         }
       }
       left.boundaries(
-        f.Rect.fromOffsetSize(
-          f.Offset.zero,
+        ui.Rect.fromOffsetSize(
+          ui.Offset.zero,
           size,
         ),
       );

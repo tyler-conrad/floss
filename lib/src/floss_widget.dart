@@ -5,9 +5,7 @@ import 'package:flutter/widgets.dart' as w;
 import 'package:flutter/material.dart' as m;
 
 import 'logger.dart' show l;
-import 'math/geometry.dart' as g;
 import 'input_event.dart' as ie;
-import 'paint.dart' as p;
 import 'canvas_ops.dart' as go;
 import 'config.dart' as c;
 import 'miud.dart' as miud;
@@ -50,8 +48,8 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
     elapsed.value = elapsed_;
     model = config.iud.update(
       model: model,
-      time: elapsed_,
-      size: g.Size.fromSize(size),
+      elapsed: elapsed_,
+      size: size,
       inputEvents: inputEvents,
     );
     inputEvents.clear();
@@ -79,7 +77,7 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   void _paintWithBackground(
     w.Canvas canvas,
     w.Size s,
-    p.Paint paint,
+    ui.Paint paint,
   ) {
     size = s;
 
@@ -103,16 +101,16 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
         if (background != null)
           go.Image(
             image: background!,
-            offset: g.Offset.zero,
+            offset: ui.Offset.zero,
             paint: paint,
           ),
         go.BackgroundPicture(
-          size: g.Size.fromSize(size),
+          size: size,
           canvasOps: [
             if (background != null)
               go.Image(
                 image: background!,
-                offset: g.Offset.zero,
+                offset: ui.Offset.zero,
                 paint: paint,
               ),
             drawing,
@@ -219,7 +217,8 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
 
     model = widget.config.iud.init(
       modelCtor: widget.config.modelCtor,
-      size: g.Size.fromSize(widget.size),
+      size: widget.size,
+      inputEvents: widget.inputEvents,
     );
 
     painter = _FlossPainter(
@@ -300,344 +299,368 @@ class _FlossWidgetState extends w.State<FlossWidget>
           ),
         );
       },
-      child: w.Listener(
-        behavior: w.HitTestBehavior.deferToChild,
-        onPointerDown: (event) {
+      child: w.MouseRegion(
+        hitTestBehavior: w.HitTestBehavior.deferToChild,
+        onEnter: (event) {
           inputEvents.add(
-            ie.PointerDown(
+            ie.MouseEnter(
               event: event,
             ),
           );
         },
-        onPointerMove: (event) {
+        onExit: (event) {
           inputEvents.add(
-            ie.PointerMove(
+            ie.MouseExit(
               event: event,
             ),
           );
         },
-        onPointerUp: (event) {
+        onHover: (event) {
           inputEvents.add(
-            ie.PointerUp(
+            ie.MouseHover(
               event: event,
             ),
           );
         },
-        onPointerHover: (event) {
-          inputEvents.add(
-            ie.PointerHover(
-              event: event,
-            ),
-          );
-        },
-        onPointerCancel: (event) {
-          inputEvents.add(
-            ie.PointerCancel(
-              event: event,
-            ),
-          );
-        },
-        onPointerPanZoomStart: (event) {
-          inputEvents.add(
-            ie.PointerPanZoomStart(
-              event: event,
-            ),
-          );
-        },
-        onPointerPanZoomUpdate: (event) {
-          inputEvents.add(
-            ie.PointerPanZoomUpdate(
-              event: event,
-            ),
-          );
-        },
-        onPointerPanZoomEnd: (event) {
-          inputEvents.add(
-            ie.PointerPanZoomEnd(
-              event: event,
-            ),
-          );
-        },
-        onPointerSignal: (event) {
-          inputEvents.add(
-            ie.PointerSignal(
-              event: event,
-            ),
-          );
-        },
-        child: w.GestureDetector(
+        child: w.Listener(
           behavior: w.HitTestBehavior.deferToChild,
-          onTapDown: (details) {
+          onPointerDown: (event) {
             inputEvents.add(
-              ie.TapDown(
-                details: details,
+              ie.PointerDown(
+                event: event,
               ),
             );
           },
-          onTapUp: (details) {
+          onPointerMove: (event) {
             inputEvents.add(
-              ie.TapUp(
-                details: details,
+              ie.PointerMove(
+                event: event,
               ),
             );
           },
-          onTap: () {
+          onPointerUp: (event) {
             inputEvents.add(
-              const ie.Tap(),
-            );
-          },
-          onTapCancel: () {
-            inputEvents.add(
-              const ie.TapCancel(),
-            );
-          },
-          onSecondaryTap: () {
-            inputEvents.add(
-              const ie.SecondaryTap(),
-            );
-          },
-          onSecondaryTapDown: (details) {
-            inputEvents.add(
-              ie.SecondaryTapDown(
-                details: details,
+              ie.PointerUp(
+                event: event,
               ),
             );
           },
-          onSecondaryTapUp: (details) {
+          onPointerHover: (event) {
             inputEvents.add(
-              ie.SecondaryTapUp(
-                details: details,
+              ie.PointerHover(
+                event: event,
               ),
             );
           },
-          onSecondaryTapCancel: () {
+          onPointerCancel: (event) {
             inputEvents.add(
-              const ie.SecondaryTapCancel(),
-            );
-          },
-          onTertiaryTapDown: (details) {
-            inputEvents.add(
-              ie.TertiaryTapDown(
-                details: details,
+              ie.PointerCancel(
+                event: event,
               ),
             );
           },
-          onTertiaryTapUp: (details) {
+          onPointerPanZoomStart: (event) {
             inputEvents.add(
-              ie.TertiaryTapUp(
-                details: details,
+              ie.PointerPanZoomStart(
+                event: event,
               ),
             );
           },
-          onTertiaryTapCancel: () {
+          onPointerPanZoomUpdate: (event) {
             inputEvents.add(
-              const ie.TertiaryTapCancel(),
-            );
-          },
-          onDoubleTapDown: (details) {
-            inputEvents.add(
-              ie.DoubleTapDown(
-                details: details,
+              ie.PointerPanZoomUpdate(
+                event: event,
               ),
             );
           },
-          onDoubleTap: () {
+          onPointerPanZoomEnd: (event) {
             inputEvents.add(
-              const ie.DoubleTap(),
-            );
-          },
-          onDoubleTapCancel: () {
-            inputEvents.add(
-              const ie.DoubleTapCancel(),
-            );
-          },
-          onLongPressDown: (details) {
-            inputEvents.add(
-              ie.LongPressDown(
-                details: details,
+              ie.PointerPanZoomEnd(
+                event: event,
               ),
             );
           },
-          onLongPressCancel: () {
+          onPointerSignal: (event) {
             inputEvents.add(
-              const ie.LongPressCancel(),
-            );
-          },
-          onLongPress: () {
-            inputEvents.add(
-              const ie.LongPress(),
-            );
-          },
-          onLongPressStart: (details) {
-            inputEvents.add(
-              ie.LongPressStart(
-                details: details,
+              ie.PointerSignal(
+                event: event,
               ),
             );
           },
-          onLongPressMoveUpdate: (details) {
-            inputEvents.add(
-              ie.LongPressMoveUpdate(
-                details: details,
-              ),
-            );
-          },
-          onLongPressUp: () {
-            inputEvents.add(
-              const ie.LongPressUp(),
-            );
-          },
-          onLongPressEnd: (details) {
-            inputEvents.add(
-              ie.LongPressEnd(
-                details: details,
-              ),
-            );
-          },
-          onSecondaryLongPressDown: (details) {
-            inputEvents.add(
-              ie.SecondaryLongPressDown(
-                details: details,
-              ),
-            );
-          },
-          onSecondaryLongPressCancel: () {
-            inputEvents.add(
-              const ie.SecondaryLongPressCancel(),
-            );
-          },
-          onSecondaryLongPress: () {
-            inputEvents.add(
-              const ie.SecondaryLongPress(),
-            );
-          },
-          onSecondaryLongPressStart: (details) {
-            inputEvents.add(
-              ie.SecondaryLongPressStart(
-                details: details,
-              ),
-            );
-          },
-          onSecondaryLongPressMoveUpdate: (details) {
-            inputEvents.add(
-              ie.SecondaryLongPressMoveUpdate(
-                details: details,
-              ),
-            );
-          },
-          onSecondaryLongPressUp: () {
-            inputEvents.add(
-              const ie.SecondaryLongPressUp(),
-            );
-          },
-          onSecondaryLongPressEnd: (details) {
-            inputEvents.add(
-              ie.SecondaryLongPressEnd(
-                details: details,
-              ),
-            );
-          },
-          onTertiaryLongPressDown: (details) {
-            inputEvents.add(
-              ie.TertiaryLongPressDown(
-                details: details,
-              ),
-            );
-          },
-          onTertiaryLongPressCancel: () {
-            inputEvents.add(
-              const ie.TertiaryLongPressCancel(),
-            );
-          },
-          onTertiaryLongPress: () {
-            inputEvents.add(
-              const ie.TertiaryLongPress(),
-            );
-          },
-          onTertiaryLongPressStart: (details) {
-            inputEvents.add(
-              ie.TertiaryLongPressStart(
-                details: details,
-              ),
-            );
-          },
-          onTertiaryLongPressMoveUpdate: (details) {
-            inputEvents.add(
-              ie.TertiaryLongPressMoveUpdate(
-                details: details,
-              ),
-            );
-          },
-          onTertiaryLongPressUp: () {
-            inputEvents.add(
-              const ie.TertiaryLongPressUp(),
-            );
-          },
-          onTertiaryLongPressEnd: (details) {
-            inputEvents.add(
-              ie.TertiaryLongPressEnd(
-                details: details,
-              ),
-            );
-          },
-          onForcePressStart: (details) {
-            inputEvents.add(
-              ie.ForcePressStart(
-                details: details,
-              ),
-            );
-          },
-          onForcePressPeak: (details) {
-            inputEvents.add(
-              ie.ForcePressPeak(
-                details: details,
-              ),
-            );
-          },
-          onForcePressUpdate: (details) {
-            inputEvents.add(
-              ie.ForcePressUpdate(
-                details: details,
-              ),
-            );
-          },
-          onForcePressEnd: (details) {
-            inputEvents.add(
-              ie.ForcePressEnd(
-                details: details,
-              ),
-            );
-          },
-          onScaleStart: (details) {
-            inputEvents.add(
-              ie.ScaleStart(
-                details: details,
-              ),
-            );
-          },
-          onScaleUpdate: (details) {
-            inputEvents.add(
-              ie.ScaleUpdate(
-                details: details,
-              ),
-            );
-          },
-          onScaleEnd: (details) {
-            inputEvents.add(
-              ie.ScaleEnd(
-                details: details,
-              ),
-            );
-          },
-          child: w.LayoutBuilder(
-            builder: (context, constraints) {
-              return _CanvasTicker(
-                size: constraints.biggest,
-                inputEvents: inputEvents,
-                config: widget._config,
-                brightness: m.Theme.of(context).brightness,
+          child: w.GestureDetector(
+            behavior: w.HitTestBehavior.deferToChild,
+            onTapDown: (details) {
+              inputEvents.add(
+                ie.TapDown(
+                  details: details,
+                ),
               );
             },
+            onTapUp: (details) {
+              inputEvents.add(
+                ie.TapUp(
+                  details: details,
+                ),
+              );
+            },
+            onTap: () {
+              inputEvents.add(
+                const ie.Tap(),
+              );
+            },
+            onTapCancel: () {
+              inputEvents.add(
+                const ie.TapCancel(),
+              );
+            },
+            onSecondaryTap: () {
+              inputEvents.add(
+                const ie.SecondaryTap(),
+              );
+            },
+            onSecondaryTapDown: (details) {
+              inputEvents.add(
+                ie.SecondaryTapDown(
+                  details: details,
+                ),
+              );
+            },
+            onSecondaryTapUp: (details) {
+              inputEvents.add(
+                ie.SecondaryTapUp(
+                  details: details,
+                ),
+              );
+            },
+            onSecondaryTapCancel: () {
+              inputEvents.add(
+                const ie.SecondaryTapCancel(),
+              );
+            },
+            onTertiaryTapDown: (details) {
+              inputEvents.add(
+                ie.TertiaryTapDown(
+                  details: details,
+                ),
+              );
+            },
+            onTertiaryTapUp: (details) {
+              inputEvents.add(
+                ie.TertiaryTapUp(
+                  details: details,
+                ),
+              );
+            },
+            onTertiaryTapCancel: () {
+              inputEvents.add(
+                const ie.TertiaryTapCancel(),
+              );
+            },
+            onDoubleTapDown: (details) {
+              inputEvents.add(
+                ie.DoubleTapDown(
+                  details: details,
+                ),
+              );
+            },
+            onDoubleTap: () {
+              inputEvents.add(
+                const ie.DoubleTap(),
+              );
+            },
+            onDoubleTapCancel: () {
+              inputEvents.add(
+                const ie.DoubleTapCancel(),
+              );
+            },
+            onLongPressDown: (details) {
+              inputEvents.add(
+                ie.LongPressDown(
+                  details: details,
+                ),
+              );
+            },
+            onLongPressCancel: () {
+              inputEvents.add(
+                const ie.LongPressCancel(),
+              );
+            },
+            onLongPress: () {
+              inputEvents.add(
+                const ie.LongPress(),
+              );
+            },
+            onLongPressStart: (details) {
+              inputEvents.add(
+                ie.LongPressStart(
+                  details: details,
+                ),
+              );
+            },
+            onLongPressMoveUpdate: (details) {
+              inputEvents.add(
+                ie.LongPressMoveUpdate(
+                  details: details,
+                ),
+              );
+            },
+            onLongPressUp: () {
+              inputEvents.add(
+                const ie.LongPressUp(),
+              );
+            },
+            onLongPressEnd: (details) {
+              inputEvents.add(
+                ie.LongPressEnd(
+                  details: details,
+                ),
+              );
+            },
+            onSecondaryLongPressDown: (details) {
+              inputEvents.add(
+                ie.SecondaryLongPressDown(
+                  details: details,
+                ),
+              );
+            },
+            onSecondaryLongPressCancel: () {
+              inputEvents.add(
+                const ie.SecondaryLongPressCancel(),
+              );
+            },
+            onSecondaryLongPress: () {
+              inputEvents.add(
+                const ie.SecondaryLongPress(),
+              );
+            },
+            onSecondaryLongPressStart: (details) {
+              inputEvents.add(
+                ie.SecondaryLongPressStart(
+                  details: details,
+                ),
+              );
+            },
+            onSecondaryLongPressMoveUpdate: (details) {
+              inputEvents.add(
+                ie.SecondaryLongPressMoveUpdate(
+                  details: details,
+                ),
+              );
+            },
+            onSecondaryLongPressUp: () {
+              inputEvents.add(
+                const ie.SecondaryLongPressUp(),
+              );
+            },
+            onSecondaryLongPressEnd: (details) {
+              inputEvents.add(
+                ie.SecondaryLongPressEnd(
+                  details: details,
+                ),
+              );
+            },
+            onTertiaryLongPressDown: (details) {
+              inputEvents.add(
+                ie.TertiaryLongPressDown(
+                  details: details,
+                ),
+              );
+            },
+            onTertiaryLongPressCancel: () {
+              inputEvents.add(
+                const ie.TertiaryLongPressCancel(),
+              );
+            },
+            onTertiaryLongPress: () {
+              inputEvents.add(
+                const ie.TertiaryLongPress(),
+              );
+            },
+            onTertiaryLongPressStart: (details) {
+              inputEvents.add(
+                ie.TertiaryLongPressStart(
+                  details: details,
+                ),
+              );
+            },
+            onTertiaryLongPressMoveUpdate: (details) {
+              inputEvents.add(
+                ie.TertiaryLongPressMoveUpdate(
+                  details: details,
+                ),
+              );
+            },
+            onTertiaryLongPressUp: () {
+              inputEvents.add(
+                const ie.TertiaryLongPressUp(),
+              );
+            },
+            onTertiaryLongPressEnd: (details) {
+              inputEvents.add(
+                ie.TertiaryLongPressEnd(
+                  details: details,
+                ),
+              );
+            },
+            onForcePressStart: (details) {
+              inputEvents.add(
+                ie.ForcePressStart(
+                  details: details,
+                ),
+              );
+            },
+            onForcePressPeak: (details) {
+              inputEvents.add(
+                ie.ForcePressPeak(
+                  details: details,
+                ),
+              );
+            },
+            onForcePressUpdate: (details) {
+              inputEvents.add(
+                ie.ForcePressUpdate(
+                  details: details,
+                ),
+              );
+            },
+            onForcePressEnd: (details) {
+              inputEvents.add(
+                ie.ForcePressEnd(
+                  details: details,
+                ),
+              );
+            },
+            onScaleStart: (details) {
+              inputEvents.add(
+                ie.ScaleStart(
+                  details: details,
+                ),
+              );
+            },
+            onScaleUpdate: (details) {
+              inputEvents.add(
+                ie.ScaleUpdate(
+                  details: details,
+                ),
+              );
+            },
+            onScaleEnd: (details) {
+              inputEvents.add(
+                ie.ScaleEnd(
+                  details: details,
+                ),
+              );
+            },
+            child: w.LayoutBuilder(
+              builder: (context, constraints) {
+                return _CanvasTicker(
+                  size: constraints.biggest,
+                  inputEvents: inputEvents,
+                  config: widget._config,
+                  brightness: m.Theme.of(context).brightness,
+                );
+              },
+            ),
           ),
         ),
       ),
