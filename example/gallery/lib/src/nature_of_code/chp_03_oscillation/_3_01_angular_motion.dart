@@ -50,7 +50,7 @@ class _AngularMotionIud<M extends _AngularMotionModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     final s = u.scale(model.size);
     final r = s * circleRadius;

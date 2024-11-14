@@ -60,7 +60,7 @@ class _SystemOfSystemsIud<M extends _SystemOfSystemsModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     return f.Drawing(
       canvasOps: [

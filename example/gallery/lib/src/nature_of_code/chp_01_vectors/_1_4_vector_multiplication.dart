@@ -46,7 +46,7 @@ class _VecMultIud<M extends _VecMultModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     final center = f.Vector2(
       model.size.width * 0.5,

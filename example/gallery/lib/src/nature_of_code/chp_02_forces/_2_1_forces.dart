@@ -71,7 +71,7 @@ class _ForcesIud<M extends _ForcesModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) =>
       model.mover.draw(model.size);
 }

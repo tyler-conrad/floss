@@ -46,7 +46,7 @@ class _VectorParticleIud<M extends _VectorParticleModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     return f.Drawing(
       canvasOps: [

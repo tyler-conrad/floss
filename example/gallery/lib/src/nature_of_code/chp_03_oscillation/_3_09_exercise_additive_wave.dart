@@ -84,7 +84,7 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) =>
       f.Translate(
         translation: f.Vector2(0.0, model.size.height * 0.5),

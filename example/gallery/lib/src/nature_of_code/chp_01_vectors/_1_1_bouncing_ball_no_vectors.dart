@@ -55,7 +55,7 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     final r = u.scale(model.size) * _BallModel.radius;
     return f.Translate(

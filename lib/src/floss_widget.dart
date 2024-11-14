@@ -64,7 +64,7 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
     config.iud
         .draw(
           model: model,
-          isLightTheme: brightness == ui.Brightness.light,
+          lightThemeActive: brightness == ui.Brightness.light,
         )
         .draw(canvas: canvas)
         .toList();
@@ -83,8 +83,8 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   ) {
     size = s;
 
-    final drawing = config.iud
-        .draw(model: model, isLightTheme: brightness == ui.Brightness.light);
+    final drawing = config.iud.draw(
+        model: model, lightThemeActive: brightness == ui.Brightness.light);
 
     try {
       assert(

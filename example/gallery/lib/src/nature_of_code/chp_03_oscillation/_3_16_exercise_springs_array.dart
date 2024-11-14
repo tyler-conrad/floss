@@ -233,7 +233,7 @@ class _SpringsArrayIud<M extends _SpringsArrayModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) =>
       f.Drawing(
         canvasOps: [
