@@ -36,8 +36,8 @@ the Haskell-based [gloss](https://github.com/benl23x5/gloss) library.
 ## Getting started
 1. Define the `Model` and `Iud`:
 - Create a model class that represents the state of your application.
-- Implement the Iud interface for your model. This involves defining the init,
-  update, and draw methods.
+- Implement the Iud interface for processing your model. This involves defining
+  the init, update, and draw methods.
 
 2. Configure the `FlossWidget`:
 - Instantiate a `FlossWidget` in your widget's build method.
@@ -126,10 +126,10 @@ The gallery includes examples of basic shapes, transformations, and animations.
 ## Tested on
 
 **Platform:**
-- macOS Sonoma 14.6.1
+- macOS Sequoia 15.1
 
 **Flutter:**
-- Flutter 3.24.0 • channel stable • https://github.com/flutter/flutter.git
-- Framework • revision 80c2e84975 (2 weeks ago) • 2024-07-30 23:06:49 +0700
-- Engine • revision b8800d88be
-- Tools • Dart 3.5.0 • DevTools 2.37.2
+- Flutter 3.24.5 • channel stable • https://github.com/flutter/flutter.git
+- Framework • revision dec2ee5c1f (21 hours ago) • 2024-11-13 11:13:06 -0800
+- Engine • revision a18df97ca5
+- Tools • Dart 3.5.4 • DevTools 2.37.3
