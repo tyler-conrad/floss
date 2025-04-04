@@ -28,9 +28,7 @@ class _ConsoleOutput extends logger.LogOutput {
 /// [_ConsoleOutput] class. The `level` sets the minimum log level that should
 /// be logged, in this case, it is set to [logger.Level.trace].
 final _log = logger.Logger(
-  printer: logger.PrettyPrinter(
-    noBoxingByDefault: true,
-  ),
+  printer: logger.PrettyPrinter(noBoxingByDefault: true),
   output: _ConsoleOutput(),
   level: logger.Level.trace,
 );
@@ -69,14 +67,13 @@ class _Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-  }) =>
-      _log.log(
-        level,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-      );
+  }) => _log.log(
+    level,
+    message,
+    time: time,
+    error: error,
+    stackTrace: stackTrace,
+  );
 
   /// Logs a message at the trace level.
   void t(
@@ -84,14 +81,13 @@ class _Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-  ) =>
-      _logAtLevel(
-        logger.Level.trace,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-      );
+  ) => _logAtLevel(
+    logger.Level.trace,
+    message,
+    time: time,
+    error: error,
+    stackTrace: stackTrace,
+  );
 
   /// Logs a message at the debug level.
   void d(
@@ -99,14 +95,13 @@ class _Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-  }) =>
-      _logAtLevel(
-        logger.Level.debug,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-      );
+  }) => _logAtLevel(
+    logger.Level.debug,
+    message,
+    time: time,
+    error: error,
+    stackTrace: stackTrace,
+  );
 
   /// Logs a message at the info level.
   void i(
@@ -114,14 +109,13 @@ class _Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-  }) =>
-      _logAtLevel(
-        logger.Level.info,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-      );
+  }) => _logAtLevel(
+    logger.Level.info,
+    message,
+    time: time,
+    error: error,
+    stackTrace: stackTrace,
+  );
 
   /// Logs a message at the warning level.
   void w(
@@ -129,14 +123,13 @@ class _Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-  }) =>
-      _logAtLevel(
-        logger.Level.warning,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-      );
+  }) => _logAtLevel(
+    logger.Level.warning,
+    message,
+    time: time,
+    error: error,
+    stackTrace: stackTrace,
+  );
 
   /// Logs a message at the error level.
   void e(
@@ -144,14 +137,13 @@ class _Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-  }) =>
-      _logAtLevel(
-        logger.Level.error,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-      );
+  }) => _logAtLevel(
+    logger.Level.error,
+    message,
+    time: time,
+    error: error,
+    stackTrace: stackTrace,
+  );
 
   /// Logs a message at the fatal level.
   void f(
@@ -159,14 +151,13 @@ class _Logger {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-  }) =>
-      _logAtLevel(
-        logger.Level.fatal,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-      );
+  }) => _logAtLevel(
+    logger.Level.fatal,
+    message,
+    time: time,
+    error: error,
+    stackTrace: stackTrace,
+  );
 }
 
 /// A global instance of the [_Logger] class.

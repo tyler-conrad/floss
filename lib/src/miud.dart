@@ -7,10 +7,8 @@ import 'input_event.dart' as ie;
 ///
 /// It takes a required parameter [size] which is the initial size of the
 /// canvas.
-typedef ModelCtor<M> = M Function({
-  required ui.Size size,
-  required ie.InputEventList inputEvents,
-});
+typedef ModelCtor<M> =
+    M Function({required ui.Size size, required ie.InputEventList inputEvents});
 
 /// A minimal model class.
 ///
@@ -45,10 +43,10 @@ abstract interface class Iud<M> {
   ///
   /// The [lightThemeActive] parameter is meant to allow changing the returned
   /// drawing based on the current theme of the application.
-  co.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  });
+  co.Drawing draw({required M model, required bool lightThemeActive});
+
+  /// Disposes of any resources held by the model.
+  void dispose(M model) {}
 
   /// Called when the user requests to exit the application.
   Future<ui.AppExitResponse> onExitRequested({required M model});
@@ -58,7 +56,7 @@ abstract interface class Iud<M> {
 ///
 /// It provides default implementations for the init, update, draw, and
 /// onExitRequested methods.
-class IudBase<M extends Model> implements Iud<M> {
+class IudBase<M> implements Iud<M> {
   /// Default implementation of the init method.
   ///
   /// Most of the time subclasses do not need to override this method.
@@ -90,11 +88,14 @@ class IudBase<M extends Model> implements Iud<M> {
   /// This method will almost always be overridden by subclasses to provide
   /// custom logic for drawing the model on the canvas.
   @override
-  co.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) {
+  co.Drawing draw({required M model, required bool lightThemeActive}) {
     return const co.Drawing(canvasOps: []);
+  }
+
+  /// Default implementation of the dispose method.
+  @override
+  void dispose(M model) {
+    // Default implementation does nothing.
   }
 
   /// Default implementation of the onExitRequested method.

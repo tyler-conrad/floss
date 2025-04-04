@@ -16,10 +16,7 @@ class _Painter extends r.CustomPainter {
   _Painter({required this.drawing});
 
   @override
-  void paint(
-    ui.Canvas canvas,
-    ui.Size size,
-  ) {
+  void paint(ui.Canvas canvas, ui.Size size) {
     pictures.addAll(drawing.draw(canvas: canvas));
   }
 
@@ -44,9 +41,7 @@ abstract class PictureType {
 class BackgroundPictureType extends PictureType {
   final ui.Picture picture;
 
-  const BackgroundPictureType({
-    required this.picture,
-  });
+  const BackgroundPictureType({required this.picture});
 }
 
 /// A picture type that uses a [ui.Picture] object.
@@ -56,9 +51,7 @@ class BackgroundPictureType extends PictureType {
 class CanvasPictureType extends PictureType {
   final ui.Picture picture;
 
-  const CanvasPictureType({
-    required this.picture,
-  });
+  const CanvasPictureType({required this.picture});
 }
 
 /// A interface for canvas operations.
@@ -82,44 +75,30 @@ sealed class CanvasOp implements ICanvasOp {
   @override
   Iterable<PictureType> draw({required ui.Canvas canvas}) {
     switch (this) {
-      case _Transform(
-          :final _matrix4,
-        ):
-        canvas.transform(
-          _matrix4,
-        );
+      case _Transform(:final _matrix4):
+        canvas.transform(_matrix4);
 
-      case Picture(
-          :final _picture,
-        ):
-        canvas.drawPicture(
-          _picture,
-        );
+      case Picture(:final _picture):
+        canvas.drawPicture(_picture);
 
       case Arc(
-          :final _rect,
-          :final _startAngle,
-          :final _sweepAngle,
-          :final _useCenter,
-          :final _paint,
-        ):
-        canvas.drawArc(
-          _rect,
-          _startAngle,
-          _sweepAngle,
-          _useCenter,
-          _paint,
-        );
+        :final _rect,
+        :final _startAngle,
+        :final _sweepAngle,
+        :final _useCenter,
+        :final _paint,
+      ):
+        canvas.drawArc(_rect, _startAngle, _sweepAngle, _useCenter, _paint);
 
       case Atlas(
-          :final _image,
-          :final _transforms,
-          :final _rects,
-          :final _colors,
-          :final _blendMode,
-          :final _cullRect,
-          :final _paint,
-        ):
+        :final _image,
+        :final _transforms,
+        :final _rects,
+        :final _colors,
+        :final _blendMode,
+        :final _cullRect,
+        :final _paint,
+      ):
         canvas.drawAtlas(
           _image,
           _transforms,
@@ -130,135 +109,51 @@ sealed class CanvasOp implements ICanvasOp {
           _paint,
         );
 
-      case Circle(
-          :final _c,
-          :final _radius,
-          :final _paint,
-        ):
-        canvas.drawCircle(
-          _c,
-          _radius,
-          _paint,
-        );
+      case Circle(:final _c, :final _radius, :final _paint):
+        canvas.drawCircle(_c, _radius, _paint);
 
-      case Color(
-          :final _color,
-          :final _blendMode,
-        ):
-        canvas.drawColor(
-          _color,
-          _blendMode,
-        );
+      case Color(:final _color, :final _blendMode):
+        canvas.drawColor(_color, _blendMode);
 
-      case DRRect(
-          :final _outer,
-          :final _inner,
-          :final _paint,
-        ):
-        canvas.drawDRRect(
-          _outer,
-          _inner,
-          _paint,
-        );
+      case DRRect(:final _outer, :final _inner, :final _paint):
+        canvas.drawDRRect(_outer, _inner, _paint);
 
-      case Image(
-          :final _image,
-          :final _offset,
-          :final _paint,
-        ):
-        canvas.drawImage(
-          _image,
-          _offset,
-          _paint,
-        );
+      case Image(:final _image, :final _offset, :final _paint):
+        canvas.drawImage(_image, _offset, _paint);
 
-      case ImageNine(
-          :final _image,
-          :final _center,
-          :final _dst,
-          :final _paint,
-        ):
-        canvas.drawImageNine(
-          _image,
-          _center,
-          _dst,
-          _paint,
-        );
+      case ImageNine(:final _image, :final _center, :final _dst, :final _paint):
+        canvas.drawImageNine(_image, _center, _dst, _paint);
 
-      case ImageRect(
-          :final _image,
-          :final _src,
-          :final _dst,
-          :final _paint,
-        ):
-        canvas.drawImageRect(
-          _image,
-          _src,
-          _dst,
-          _paint,
-        );
+      case ImageRect(:final _image, :final _src, :final _dst, :final _paint):
+        canvas.drawImageRect(_image, _src, _dst, _paint);
 
-      case Line(
-          :final _p1,
-          :final _p2,
-          :final _paint,
-        ):
-        canvas.drawLine(
-          _p1,
-          _p2,
-          _paint,
-        );
+      case Line(:final _p1, :final _p2, :final _paint):
+        canvas.drawLine(_p1, _p2, _paint);
 
-      case Oval(
-          :final _rect,
-          :final _paint,
-        ):
-        canvas.drawOval(
-          _rect,
-          _paint,
-        );
+      case Oval(:final _rect, :final _paint):
+        canvas.drawOval(_rect, _paint);
 
       case PaintFill(:final _paint):
         canvas.drawPaint(_paint);
 
-      case Paragraph(
-          :final _paragraph,
-          :final _offset,
-        ):
-        canvas.drawParagraph(
-          _paragraph,
-          _offset,
-        );
+      case Paragraph(:final _paragraph, :final _offset):
+        canvas.drawParagraph(_paragraph, _offset);
 
-      case PathBuilder(
-          :final _path,
-          :final _paint,
-        ):
-        canvas.drawPath(
-          _path,
-          _paint,
-        );
+      case PathBuilder(:final _path, :final _paint):
+        canvas.drawPath(_path, _paint);
 
-      case Points(
-          :final _pointMode,
-          :final _points,
-          :final _paint,
-        ):
-        canvas.drawPoints(
-          _pointMode,
-          _points,
-          _paint,
-        );
+      case Points(:final _pointMode, :final _points, :final _paint):
+        canvas.drawPoints(_pointMode, _points, _paint);
 
       case RawAtlas(
-          :final _atlas,
-          :final _rstTransforms,
-          :final _rects,
-          :final _colors,
-          :final _blendMode,
-          :final _cullRect,
-          :final _paint,
-        ):
+        :final _atlas,
+        :final _rstTransforms,
+        :final _rects,
+        :final _colors,
+        :final _blendMode,
+        :final _cullRect,
+        :final _paint,
+      ):
         canvas.drawRawAtlas(
           _atlas,
           _rstTransforms,
@@ -269,58 +164,25 @@ sealed class CanvasOp implements ICanvasOp {
           _paint,
         );
 
-      case RawPoints(
-          :final _pointMode,
-          :final _points,
-          :final _paint,
-        ):
-        canvas.drawRawPoints(
-          _pointMode,
-          _points,
-          _paint,
-        );
+      case RawPoints(:final _pointMode, :final _points, :final _paint):
+        canvas.drawRawPoints(_pointMode, _points, _paint);
 
-      case Rectangle(
-          :final _rect,
-          :final _paint,
-        ):
-        canvas.drawRect(
-          _rect,
-          _paint,
-        );
+      case Rectangle(:final _rect, :final _paint):
+        canvas.drawRect(_rect, _paint);
 
-      case RRectangle(
-          :final _rrect,
-          :final _paint,
-        ):
-        canvas.drawRRect(
-          _rrect,
-          _paint,
-        );
+      case RRectangle(:final _rrect, :final _paint):
+        canvas.drawRRect(_rrect, _paint);
 
       case Shadow(
-          :final _path,
-          :final _color,
-          :final _elevation,
-          :final _transparentOccluder,
-        ):
-        canvas.drawShadow(
-          _path,
-          _color,
-          _elevation,
-          _transparentOccluder,
-        );
+        :final _path,
+        :final _color,
+        :final _elevation,
+        :final _transparentOccluder,
+      ):
+        canvas.drawShadow(_path, _color, _elevation, _transparentOccluder);
 
-      case Vertices(
-          :final _verts,
-          :final _blendMode,
-          :final _paint,
-        ):
-        canvas.drawVertices(
-          _verts,
-          _blendMode,
-          _paint,
-        );
+      case Vertices(:final _verts, :final _blendMode, :final _paint):
+        canvas.drawVertices(_verts, _blendMode, _paint);
 
       case Drawing():
         return draw(canvas: canvas);
@@ -333,9 +195,7 @@ sealed class CanvasOp implements ICanvasOp {
 class Picture extends CanvasOp {
   final ui.Picture _picture;
 
-  const Picture({
-    required ui.Picture picture,
-  }) : _picture = picture;
+  const Picture({required ui.Picture picture}) : _picture = picture;
 }
 
 /// A matrix transformation operation.
@@ -346,9 +206,7 @@ class Picture extends CanvasOp {
 class _Transform extends CanvasOp {
   final td.Float64List _matrix4;
 
-  const _Transform({
-    required td.Float64List matrix4,
-  }) : _matrix4 = matrix4;
+  const _Transform({required td.Float64List matrix4}) : _matrix4 = matrix4;
 }
 
 /// An arc on the canvas.
@@ -368,11 +226,11 @@ class Arc extends CanvasOp {
     required double sweepAngle,
     bool useCenter = false,
     required ui.Paint paint,
-  })  : _rect = rect,
-        _startAngle = startAngle,
-        _sweepAngle = sweepAngle,
-        _useCenter = useCenter,
-        _paint = paint;
+  }) : _rect = rect,
+       _startAngle = startAngle,
+       _sweepAngle = sweepAngle,
+       _useCenter = useCenter,
+       _paint = paint;
 }
 
 /// An atlas for rendering images on a canvas.
@@ -411,13 +269,13 @@ class Atlas {
     ui.BlendMode? blendMode,
     ui.Rect? cullRect,
     required ui.Paint paint,
-  })  : _image = image,
-        _transforms = transforms,
-        _rects = rects,
-        _colors = colors,
-        _blendMode = blendMode,
-        _cullRect = cullRect,
-        _paint = paint;
+  }) : _image = image,
+       _transforms = transforms,
+       _rects = rects,
+       _colors = colors,
+       _blendMode = blendMode,
+       _cullRect = cullRect,
+       _paint = paint;
 }
 
 /// A circle on the canvas.
@@ -431,9 +289,9 @@ class Circle extends CanvasOp {
     required ui.Offset c,
     required double radius,
     required ui.Paint paint,
-  })  : _c = c,
-        _radius = radius,
-        _paint = paint;
+  }) : _c = c,
+       _radius = radius,
+       _paint = paint;
 }
 
 /// A color and blend mode to be applied to a canvas.
@@ -442,11 +300,9 @@ class Color extends CanvasOp {
   final ui.BlendMode _blendMode;
 
   /// Creates a [Color] instance with the specified [color] and [blendMode].
-  const Color({
-    required ui.Color color,
-    required ui.BlendMode blendMode,
-  })  : _color = color,
-        _blendMode = blendMode;
+  const Color({required ui.Color color, required ui.BlendMode blendMode})
+    : _color = color,
+      _blendMode = blendMode;
 }
 
 /// A canvas operation for drawing a rounded rectangle.
@@ -460,9 +316,9 @@ class DRRect extends CanvasOp {
     required ui.RRect outer,
     required ui.RRect inner,
     required ui.Paint paint,
-  })  : _outer = outer,
-        _inner = inner,
-        _paint = paint;
+  }) : _outer = outer,
+       _inner = inner,
+       _paint = paint;
 }
 
 /// A canvas operation for drawing an image.
@@ -476,9 +332,9 @@ class Image extends CanvasOp {
     required ui.Image image,
     required ui.Offset offset,
     required ui.Paint paint,
-  })  : _image = image,
-        _offset = offset,
-        _paint = paint;
+  }) : _image = image,
+       _offset = offset,
+       _paint = paint;
 }
 
 /// A canvas operation for drawing a nine-patch image.
@@ -495,10 +351,10 @@ class ImageNine extends CanvasOp {
     required ui.Rect center,
     required ui.Rect dst,
     required ui.Paint paint,
-  })  : _image = image,
-        _center = center,
-        _dst = dst,
-        _paint = paint;
+  }) : _image = image,
+       _center = center,
+       _dst = dst,
+       _paint = paint;
 }
 
 /// A canvas operation for drawing an rectangular section of an
@@ -516,10 +372,10 @@ class ImageRect extends CanvasOp {
     required ui.Rect src,
     required ui.Rect dst,
     required ui.Paint paint,
-  })  : _image = image,
-        _src = src,
-        _dst = dst,
-        _paint = paint;
+  }) : _image = image,
+       _src = src,
+       _dst = dst,
+       _paint = paint;
 }
 
 /// A canvas operation for drawing a line.
@@ -533,9 +389,9 @@ class Line extends CanvasOp {
     required ui.Offset p1,
     required ui.Offset p2,
     required ui.Paint paint,
-  })  : _p1 = p1,
-        _p2 = p2,
-        _paint = paint;
+  }) : _p1 = p1,
+       _p2 = p2,
+       _paint = paint;
 }
 
 /// A canvas operation for drawing an oval.
@@ -544,11 +400,9 @@ class Oval extends CanvasOp {
   final ui.Paint _paint;
 
   /// Creates an [Oval] instance with the specified [rect] and [paint].
-  const Oval({
-    required ui.Rect rect,
-    required ui.Paint paint,
-  })  : _rect = rect,
-        _paint = paint;
+  const Oval({required ui.Rect rect, required ui.Paint paint})
+    : _rect = rect,
+      _paint = paint;
 }
 
 /// A canvas operation for filling the canvas with a paint object.
@@ -566,11 +420,9 @@ class Paragraph extends CanvasOp {
 
   /// Creates a [Paragraph] instance with the specified [paragraph] and
   /// [offset].
-  const Paragraph({
-    required ui.Paragraph paragraph,
-    required ui.Offset offset,
-  })  : _paragraph = paragraph,
-        _offset = offset;
+  const Paragraph({required ui.Paragraph paragraph, required ui.Offset offset})
+    : _paragraph = paragraph,
+      _offset = offset;
 }
 
 /// A canvas operation for building a path.
@@ -579,11 +431,9 @@ class PathBuilder extends CanvasOp {
   final ui.Paint _paint;
 
   /// Creates a [PathBuilder] instance with the specified [path] and [paint].
-  const PathBuilder({
-    required ui.Path path,
-    required ui.Paint paint,
-  })  : _path = path,
-        _paint = paint;
+  const PathBuilder({required ui.Path path, required ui.Paint paint})
+    : _path = path,
+      _paint = paint;
 }
 
 /// A canvas operation for drawing points.
@@ -598,9 +448,9 @@ class Points extends CanvasOp {
     required ui.PointMode pointMode,
     required List<ui.Offset> points,
     required ui.Paint paint,
-  })  : _pointMode = pointMode,
-        _points = points,
-        _paint = paint;
+  }) : _pointMode = pointMode,
+       _points = points,
+       _paint = paint;
 }
 
 /// A canvas operation for drawing sections of an image atlas to
@@ -624,13 +474,13 @@ class RawAtlas extends CanvasOp {
     ui.BlendMode? blendMode,
     ui.Rect? cullRect,
     required ui.Paint paint,
-  })  : _atlas = atlas,
-        _rstTransforms = rstTransforms,
-        _rects = rects,
-        _colors = colors,
-        _blendMode = blendMode,
-        _cullRect = cullRect,
-        _paint = paint;
+  }) : _atlas = atlas,
+       _rstTransforms = rstTransforms,
+       _rects = rects,
+       _colors = colors,
+       _blendMode = blendMode,
+       _cullRect = cullRect,
+       _paint = paint;
 }
 
 /// A canvas operation for drawing points.
@@ -645,9 +495,9 @@ class RawPoints extends CanvasOp {
     required ui.PointMode pointMode,
     required td.Float32List points,
     required ui.Paint paint,
-  })  : _pointMode = pointMode,
-        _points = points,
-        _paint = paint;
+  }) : _pointMode = pointMode,
+       _points = points,
+       _paint = paint;
 }
 
 /// A canvas operation for drawing a rectangle.
@@ -656,11 +506,9 @@ class Rectangle extends CanvasOp {
   final ui.Paint _paint;
 
   /// Creates a [Rectangle] instance with the specified [rect] and [paint].
-  const Rectangle({
-    required ui.Rect rect,
-    required ui.Paint paint,
-  })  : _rect = rect,
-        _paint = paint;
+  const Rectangle({required ui.Rect rect, required ui.Paint paint})
+    : _rect = rect,
+      _paint = paint;
 }
 
 /// A canvas operation for drawing a rounded rectangle.
@@ -669,11 +517,9 @@ class RRectangle extends CanvasOp {
   final ui.Paint _paint;
 
   /// Creates a [RRectangle] instance with the specified [rrect] and [paint].
-  const RRectangle({
-    required ui.RRect rrect,
-    required ui.Paint paint,
-  })  : _rrect = rrect,
-        _paint = paint;
+  const RRectangle({required ui.RRect rrect, required ui.Paint paint})
+    : _rrect = rrect,
+      _paint = paint;
 }
 
 /// A canvas operation for drawing a shadow.
@@ -690,10 +536,10 @@ class Shadow extends CanvasOp {
     required ui.Color color,
     required double elevation,
     bool transparentOccluder = false,
-  })  : _path = path,
-        _color = color,
-        _elevation = elevation,
-        _transparentOccluder = transparentOccluder;
+  }) : _path = path,
+       _color = color,
+       _elevation = elevation,
+       _transparentOccluder = transparentOccluder;
 }
 
 /// A canvas operation for drawing vertices.
@@ -708,9 +554,9 @@ class Vertices extends CanvasOp {
     required ui.Vertices vertices,
     required ui.BlendMode blendMode,
     required ui.Paint paint,
-  })  : _verts = vertices,
-        _blendMode = blendMode,
-        _paint = paint;
+  }) : _verts = vertices,
+       _blendMode = blendMode,
+       _paint = paint;
 }
 
 /// A sealed class for composite canvas drawing operations. Meant to be use for
@@ -786,11 +632,7 @@ class Drawing extends CanvasOp implements ICanvasOp {
       case ClipRect(:final _rect, :final _clipOp, :final _doAntiAlias):
         canvas.save();
         final ps = _draw(canvas: canvas).toList();
-        canvas.clipRect(
-          _rect,
-          clipOp: _clipOp,
-          doAntiAlias: _doAntiAlias,
-        );
+        canvas.clipRect(_rect, clipOp: _clipOp, doAntiAlias: _doAntiAlias);
         canvas.restore();
         return ps;
 
@@ -820,7 +662,9 @@ class Drawing extends CanvasOp implements ICanvasOp {
       case BackgroundPicture(:final _size):
         final ui.PictureRecorder recorder = ui.PictureRecorder();
         final canvas = ui.Canvas(
-            recorder, ui.Rect.fromLTWH(0.0, 0.0, _size.width, _size.height));
+          recorder,
+          ui.Rect.fromLTWH(0.0, 0.0, _size.width, _size.height),
+        );
         final painter = _Painter(
           drawing: _BackgroundDrawing(canvasOps: canvasOps),
         )..paint(canvas, _size);
@@ -846,9 +690,7 @@ class Noop extends Drawing {
 /// A drawing operation that draws the background of the canvas. Used for the
 /// `NoClearCanvas` configuration.
 class _BackgroundDrawing extends Drawing {
-  const _BackgroundDrawing({
-    required super.canvasOps,
-  });
+  const _BackgroundDrawing({required super.canvasOps});
 }
 
 /// A drawing operation that applies a translation to the canvas.
@@ -861,8 +703,8 @@ class Translate extends Drawing {
     required super.canvasOps,
     required double dx,
     required double dy,
-  })  : _dx = dx,
-        _dy = dy;
+  }) : _dx = dx,
+       _dy = dy;
 }
 
 /// A drawing operation that applies a rotation to the canvas.
@@ -870,10 +712,8 @@ class Rotate extends Drawing {
   final double _radians;
 
   /// Creates a new [Rotate] instance with the specified [radians].
-  const Rotate({
-    required super.canvasOps,
-    required double radians,
-  }) : _radians = radians;
+  const Rotate({required super.canvasOps, required double radians})
+    : _radians = radians;
 }
 
 /// A drawing operation that applies a scale to the canvas.
@@ -882,12 +722,9 @@ class Scale extends Drawing {
   final double? _sy;
 
   /// Creates a new [Scale] instance with the specified [scale].
-  const Scale({
-    required super.canvasOps,
-    required double sx,
-    double? sy,
-  })  : _sx = sx,
-        _sy = sy;
+  const Scale({required super.canvasOps, required double sx, double? sy})
+    : _sx = sx,
+      _sy = sy;
 }
 
 /// A drawing operation that applies a skew to the canvas.
@@ -896,12 +733,9 @@ class Skew extends Drawing {
   final double _sy;
 
   /// Creates a new [Skew] instance with the specified [skew].
-  const Skew({
-    required super.canvasOps,
-    required double sx,
-    required double sy,
-  })  : _sx = sx,
-        _sy = sy;
+  const Skew({required super.canvasOps, required double sx, required double sy})
+    : _sx = sx,
+      _sy = sy;
 }
 
 /// A drawing operation that applies a matrix transformation to the canvas.
@@ -909,10 +743,8 @@ class Transform extends Drawing {
   final td.Float64List _matrix4;
 
   /// Creates a new [Transform] instance with the specified [matrix4].
-  const Transform({
-    required super.canvasOps,
-    required td.Float64List matrix4,
-  }) : _matrix4 = matrix4;
+  const Transform({required super.canvasOps, required td.Float64List matrix4})
+    : _matrix4 = matrix4;
 }
 
 /// A drawing operation that clips the drawing operations that compose the class
@@ -927,8 +759,8 @@ class ClipPath extends Drawing {
     required super.canvasOps,
     required ui.Path path,
     bool doAntiAlias = true,
-  })  : _path = path,
-        _doAntiAlias = doAntiAlias;
+  }) : _path = path,
+       _doAntiAlias = doAntiAlias;
 }
 
 /// A drawing operation that clips the drawing operations that compose the class
@@ -945,9 +777,9 @@ class ClipRect extends Drawing {
     required ui.Rect rect,
     ui.ClipOp clipOp = ui.ClipOp.intersect,
     bool doAntiAlias = true,
-  })  : _rect = rect,
-        _clipOp = clipOp,
-        _doAntiAlias = doAntiAlias;
+  }) : _rect = rect,
+       _clipOp = clipOp,
+       _doAntiAlias = doAntiAlias;
 }
 
 /// A drawing operation that clips the drawing operations that compose the class
@@ -962,16 +794,14 @@ class ClipRRect extends Drawing {
     required super.canvasOps,
     required ui.RRect rrect,
     bool doAntiAlias = true,
-  })  : _rrect = rrect,
-        _doAntiAlias = doAntiAlias;
+  }) : _rrect = rrect,
+       _doAntiAlias = doAntiAlias;
 }
 
 /// A drawing operation that saves the current state of the canvas.
 class Save extends Drawing {
   /// Creates a new [Save] instance.
-  const Save({
-    required super.canvasOps,
-  });
+  const Save({required super.canvasOps});
 }
 
 /// A drawing operation that saves the current state of the canvas and applies a
@@ -986,16 +816,14 @@ class SaveLayer extends Drawing {
     required super.canvasOps,
     required ui.Rect bounds,
     required ui.Paint paint,
-  })  : _bounds = bounds,
-        _paint = paint;
+  }) : _bounds = bounds,
+       _paint = paint;
 }
 
 /// A drawing operation that restores the last saved state of the canvas.
 class Restore extends Drawing {
   /// Creates a new [Restore] instance.
-  const Restore({
-    required super.canvasOps,
-  });
+  const Restore({required super.canvasOps});
 }
 
 /// A drawing operation that restores the canvas to a specific state in the
@@ -1004,10 +832,8 @@ class RestoreToCount extends Drawing {
   final int _count;
 
   /// Creates a new [RestoreToCount] instance with the specified [count].
-  const RestoreToCount({
-    required super.canvasOps,
-    required int count,
-  }) : _count = count;
+  const RestoreToCount({required super.canvasOps, required int count})
+    : _count = count;
 }
 
 /// A drawing operation that draws a background picture on the canvas. Used for
@@ -1016,8 +842,6 @@ class BackgroundPicture extends Drawing {
   final ui.Size _size;
 
   /// Creates a new [BackgroundPicture] instance with the specified [size].
-  const BackgroundPicture({
-    required super.canvasOps,
-    required ui.Size size,
-  }) : _size = size;
+  const BackgroundPicture({required super.canvasOps, required ui.Size size})
+    : _size = size;
 }
