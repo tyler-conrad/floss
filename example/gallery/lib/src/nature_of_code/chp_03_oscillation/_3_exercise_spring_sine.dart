@@ -37,7 +37,7 @@ class _SpringSineIud<M extends _SpringSineModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     final r = u.scale(model.size) * _SpringSineModel.radius;
     final y = model.size.height * 0.5 +

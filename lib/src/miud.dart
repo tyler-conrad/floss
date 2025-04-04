@@ -43,11 +43,11 @@ abstract interface class Iud<M> {
 
   /// Draws the model on the canvas.
   ///
-  /// The [isLightTheme] parameter is meant to allow changing the returned
+  /// The [lightThemeActive] parameter is meant to allow changing the returned
   /// drawing based on the current theme of the application.
   co.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   });
 
   /// Called when the user requests to exit the application.
@@ -92,7 +92,7 @@ class IudBase<M extends Model> implements Iud<M> {
   @override
   co.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     return const co.Drawing(canvasOps: []);
   }

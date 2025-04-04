@@ -40,7 +40,7 @@ class _OscillatingUpDownIud<M extends _OscillatingUpDownModel>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     final r = u.scale(model.size) * _OscillatingUpDownModel.radius;
     final y = u.scale(model.size) *

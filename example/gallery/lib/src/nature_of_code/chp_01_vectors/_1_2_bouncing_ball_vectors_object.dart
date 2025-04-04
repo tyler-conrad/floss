@@ -87,7 +87,7 @@ class _BallIud<M extends _BallModel> extends f.IudBase<M> implements f.Iud<M> {
       ) as M;
 
   @override
-  f.Drawing draw({required M model, required bool isLightTheme}) =>
+  f.Drawing draw({required M model, required bool lightThemeActive}) =>
       model.ball.draw(model.size);
 }
 

@@ -75,7 +75,7 @@ class _MutualAttractionIud<M extends _MutualAttractionModel>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) =>
       f.Drawing(
         canvasOps: [

@@ -47,7 +47,7 @@ class _SingleParticleIud<M extends _SingleParticleModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     return model.particle.draw(model.size);
   }

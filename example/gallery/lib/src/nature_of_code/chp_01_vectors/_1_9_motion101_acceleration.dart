@@ -128,7 +128,7 @@ class _AccIud<M extends _AccModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) =>
       model.mover.draw(model.size);
 }

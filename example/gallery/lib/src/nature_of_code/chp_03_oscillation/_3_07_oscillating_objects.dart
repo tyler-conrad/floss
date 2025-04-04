@@ -98,7 +98,7 @@ class _OscillatingObjectsIud<M extends _OscillatingObjectsModel>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) =>
       f.Translate(
         translation: ui.Offset(

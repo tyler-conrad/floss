@@ -41,7 +41,7 @@ class _WaveIud<M extends _WaveModel> extends f.IudBase<M> implements f.Iud<M> {
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) =>
       f.Translate(
         translation: ui.Offset(0.0, model.size.height * 0.5),

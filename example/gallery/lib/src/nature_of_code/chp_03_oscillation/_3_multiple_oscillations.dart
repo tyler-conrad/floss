@@ -47,7 +47,7 @@ class _MultipleOscillationsIud<M extends _MultipleOscillationsModel>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     final r = u.scale(model.size) * _MultipleOscillationsModel.radius;
     final x = u.scale(model.size) *

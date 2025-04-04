@@ -47,7 +47,7 @@ class _VecSubIud<M extends _VecSubModel> extends f.IudBase<M>
   @override
   f.Drawing draw({
     required M model,
-    required bool isLightTheme,
+    required bool lightThemeActive,
   }) {
     final center = ui.Offset(
       model.size.width * 0.5,
