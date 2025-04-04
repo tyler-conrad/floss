@@ -70,10 +70,10 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
 
   /// Paints the drawing with a background image.
   ///
-  /// This method is used when the [config] parameter contains a [c.NoClearCanvas]
-  /// object.  This allows for a background image to be painted on the canvas
-  /// before the drawing is painted providing a "ghosting" effect when used with
-  /// a semi-transparent [p.Paint].
+  /// This method is used when the [config] parameter contains a
+  /// [c.NoClearCanvas] object. This allows for a background image to be painted
+  /// on the canvas before the drawing is painted providing a "ghosting" effect
+  /// when used with a semi-transparent [p.Paint].
   void _paintWithBackground(
     w.Canvas canvas,
     w.Size s,

@@ -13,67 +13,67 @@ the Haskell-based [gloss](https://github.com/benl23x5/gloss) library.
 
 1. `FlossWidget`:
 
-- The primary entry point for using the floss library is the
-  [`FlossWidget`](lib/src/floss_widget.dart). This widget integrates seamlessly
-  into the Flutter widget tree and is typically instantiated within the build
-  method of a parent widget.
+    - The primary entry point for using the floss library is the
+      [`FlossWidget`](lib/src/floss_widget.dart). This widget integrates
+      seamlessly into the Flutter widget tree and is typically instantiated
+      within the build method of a parent widget.
 
-- The `FlossWidget` requires a `FocusNode` and a [`Config`](lib/src/config.dart)
-  object. The `FocusNode` is used to capture keyboard events, while the `Config`
-  object contains the configuration for the application, including the model
-  constructor and the `Iud` interface.
+    - The `FlossWidget` requires a `FocusNode` and a
+      [`Config`](lib/src/config.dart) object. The `FocusNode` is used to capture
+      keyboard events, while the `Config` object contains the configuration for
+      the application, including the model constructor and the `Iud` interface.
 
 2. `Iud` Interface:
 
-- The `Iud` interface is a minimalistic interface that provides methods for
-  initializing, updating, and drawing the model. It acts as the bridge between
-  the application state and the rendering logic.
+    - The `Iud` interface is a minimalistic interface that provides methods for
+      initializing, updating, and drawing the model. It acts as the bridge
+      between the application state and the rendering logic.
 
-- The `init` method initializes the model, the `update` method updates the model
-  based on input events and elapsed time, and the `draw` method generates the
-  Drawing tree data structure.
+    - The `init` method initializes the model, the `update` method updates the
+      model based on input events and elapsed time, and the `draw` method
+      generates the Drawing tree data structure.
 
 3. `Drawing` Tree:
 
-- The `Drawing` tree is a tree data structure composed of `Drawing` nodes. Each
-  node represents a graphical element, such as shapes or composite operations
-  like translations, rotations, and scaling.
+    - The `Drawing` tree is a tree data structure composed of `Drawing` nodes.
+      Each node represents a graphical element, such as shapes or composite
+      operations like translations, rotations, and scaling.
 
-- This tree structure allows for efficient and flexible rendering of complex
-  graphics by breaking them down into manageable components.
+    - This tree structure allows for efficient and flexible rendering of complex
+      graphics by breaking them down into manageable components.
 
 ## Getting started
 
 1. Define the `Model` and `Iud`:
 
-- Create a model class that represents the state of your application.
+    - Create a model class that represents the state of your application.
 
-- Implement the `Iud` interface for processing your model. This involves defining
-  the `init`, `update`, and `draw` methods.
+    - Implement the `Iud` interface for processing your model. This involves
+      defining the `init`, `update`, and `draw` methods.
 
 2. Configure the `FlossWidget`:
 
-- Instantiate a `FlossWidget` in your widget's build method.
+    - Instantiate a `FlossWidget` in your widget's build method.
 
-- Pass a `FocusNode` and a `Config` object to the `FlossWidget`. The `Config` object
-  should specify the model constructor and the `Iud` implementation and the
-  `ClearCanvasType`.
+    - Pass a `FocusNode` and a `Config` object to the `FlossWidget`. The
+      `Config` object should specify the model constructor and the `Iud`
+      implementation and the `ClearCanvasType`.
 
 3. Handle Input Events:
 
-- The `FlossWidget` listens for various input events, such as long presses and
-  gestures, and adds them to an `InputEventList`.
+    - The `FlossWidget` listens for various input events, such as long presses
+      and gestures, and adds them to an `InputEventList`.
 
-- These events are processed by the `Iud` implementation to update the model
-  accordingly.
+    - These events are processed by the `Iud` implementation to update the model
+      accordingly.
 
 4. Render the `Drawing` Tree:
 
-- The `FlossWidget` uses a custom painter (`_FlossPainter`) to render the
-  `Drawing` tree on a canvas.
+    - The `FlossWidget` uses a custom painter (`_FlossPainter`) to render the
+      `Drawing` tree on a canvas.
 
-- The painter updates the model based on the elapsed time and input events, and
-  then draws the updated `Drawing` tree.
+    - The painter updates the model based on the elapsed time and input events,
+      and then draws the updated `Drawing` tree.
 
 ### Example
 
