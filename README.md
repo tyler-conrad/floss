@@ -29,8 +29,8 @@ the Haskell-based [gloss](https://github.com/benl23x5/gloss) library.
   initializing, updating, and drawing the model. It acts as the bridge between
   the application state and the rendering logic.
 
-- The init method initializes the model, the update method updates the model
-  based on input events and elapsed time, and the draw method generates the
+- The `init` method initializes the model, the `update` method updates the model
+  based on input events and elapsed time, and the `draw` method generates the
   Drawing tree data structure.
 
 3. `Drawing` Tree:
@@ -48,14 +48,14 @@ the Haskell-based [gloss](https://github.com/benl23x5/gloss) library.
 
 - Create a model class that represents the state of your application.
 
-- Implement the Iud interface for processing your model. This involves defining
-  the init, update, and draw methods.
+- Implement the `Iud` interface for processing your model. This involves defining
+  the `init`, `update`, and `draw` methods.
 
 2. Configure the `FlossWidget`:
 
 - Instantiate a `FlossWidget` in your widget's build method.
 
-- Pass a FocusNode and a Config object to the `FlossWidget`. The `Config object`
+- Pass a `FocusNode` and a `Config` object to the `FlossWidget`. The `Config` object
   should specify the model constructor and the `Iud` implementation and the
   `ClearCanvasType`.
 
@@ -145,6 +145,18 @@ Flutter application that demonstrates the usage of the Floss library. The
 application displays a gallery of interactive graphics that can be manipulated
 using various input events. The gallery includes examples of basic shapes,
 transformations, and animations.
+
+```sh
+git clone https://github.com/tyler-conrad/floss.git
+
+cd floss
+flutter pub get
+
+cd example/gallery
+flutter pub get
+
+flutter run -d device
+```
 
 ## Tested on
 
