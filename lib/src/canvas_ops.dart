@@ -624,22 +624,22 @@ class Drawing extends CanvasOp implements ICanvasOp {
 
       case ClipPath(:final _path, :final _doAntiAlias):
         canvas.save();
-        final ps = _draw(canvas: canvas).toList();
         canvas.clipPath(_path, doAntiAlias: _doAntiAlias);
+        final ps = _draw(canvas: canvas).toList();
         canvas.restore();
         return ps;
 
       case ClipRect(:final _rect, :final _clipOp, :final _doAntiAlias):
         canvas.save();
-        final ps = _draw(canvas: canvas).toList();
         canvas.clipRect(_rect, clipOp: _clipOp, doAntiAlias: _doAntiAlias);
+        final ps = _draw(canvas: canvas).toList();
         canvas.restore();
         return ps;
 
       case ClipRRect(:final _rrect, :final _doAntiAlias):
         canvas.save();
-        final ps = _draw(canvas: canvas).toList();
         canvas.clipRRect(_rrect, doAntiAlias: _doAntiAlias);
+        final ps = _draw(canvas: canvas).toList();
         canvas.restore();
         return ps;
 
