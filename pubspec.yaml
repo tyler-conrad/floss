@@ -4,7 +4,6 @@ version: 0.2.0
 homepage: https://github.com/tyler-conrad/floss
 repository: https://github.com/tyler-conrad/floss.git
 issue_tracker: https://github.com/tyler-conrad/floss/issues
-publish_to: https://pub.dev
 
 environment:
   sdk: ^3.7.2
