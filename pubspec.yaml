@@ -1,18 +1,18 @@
 name: floss
 description: 'Floss is a vector graphics abstraction layer for Flutter.'
-version: 0.1.0+2
+version: 0.2.0
 homepage: https://github.com/tyler-conrad/floss
 repository: https://github.com/tyler-conrad/floss.git
 publish_to: none
 
 environment:
-  sdk: '>=3.4.4 <4.0.0'
+  sdk: ^3.7.2
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
   collection: ^1.18.0
-  vector_math: ^2.1.4
   logger: ^2.3.0
 
 

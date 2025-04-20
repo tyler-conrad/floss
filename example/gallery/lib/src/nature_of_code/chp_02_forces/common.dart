@@ -1,24 +1,22 @@
-import 'package:flutter/painting.dart' as p;
+import 'dart:ui' as ui;
 
 import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
 
 class Mover {
-  static const double radius = 8.0;
+  static const double radius = 24.0;
   static const double massMin = 1.0;
   static const double massMax = 4.0;
 
   final double mass;
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
+  ui.Offset position;
+  ui.Offset velocity;
+  ui.Offset acceleration;
 
-  Mover({
-    required this.mass,
-    required this.position,
-  })  : velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
+  Mover({required this.mass, required this.position})
+    : velocity = ui.Offset.zero,
+      acceleration = ui.Offset.zero;
 
   Mover.update({
     required this.mass,
@@ -27,49 +25,51 @@ class Mover {
     required this.acceleration,
   });
 
-  void applyForce(f.Vector2 force) {
-    acceleration.add(force / mass);
+  void applyForce(ui.Offset force) {
+    acceleration += force / mass;
   }
 
   void update() {
-    velocity.add(acceleration);
-    position.add(velocity);
-    acceleration.setValues(0.0, 0.0);
+    velocity += acceleration;
+    position += velocity;
+    acceleration = ui.Offset(0.0, 0.0);
   }
 
-  void checkEdges(f.Rect rect) {
-    if (position.x > rect.right) {
-      position.x = rect.right;
-      velocity.x *= -1.0;
-    } else if (position.x < rect.left) {
-      position.x = rect.left;
-      velocity.x *= -1.0;
+  void checkEdges(ui.Rect rect) {
+    if (position.dx > rect.right) {
+      position = ui.Offset(rect.right, position.dy);
+      velocity = ui.Offset(-velocity.dx, velocity.dy);
+    } else if (position.dx < rect.left) {
+      position = ui.Offset(rect.left, position.dy);
+      velocity = ui.Offset(-velocity.dx, velocity.dy);
     }
 
-    if (position.y > rect.bottom) {
-      position.y = rect.bottom;
-      velocity.y *= -1.0;
+    if (position.dy > rect.bottom) {
+      position = ui.Offset(position.dx, rect.bottom);
+      velocity = ui.Offset(velocity.dx, -velocity.dy);
     }
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * mass * radius;
 
     return f.Translate(
-      translation: position,
-      canvasOps: [
+      dx: position.dx,
+      dy: position.dy,
+      ops: [
         f.Circle(
-          c: f.Offset.zero,
+          center: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = u.transparent5black,
+          paint: ui.Paint()..color = u.transparent5black,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          center: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
+          paint:
+              ui.Paint()
+                ..color = u.black
+                ..style = ui.PaintingStyle.stroke
+                ..strokeWidth = 2.0,
         ),
       ],
     );

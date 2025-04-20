@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
@@ -15,63 +16,68 @@ class _PolarToCartesianTrailModel extends f.Model {
   final double radius;
   final double theta;
 
-  _PolarToCartesianTrailModel.init({required super.size})
-      : radius = size.height * radiusFactor,
-        theta = 0.0;
+  _PolarToCartesianTrailModel.init({
+    required super.size,
+    required super.inputEvents,
+  }) : radius = size.height * radiusFactor,
+       theta = 0.0;
 
   _PolarToCartesianTrailModel.update({
     required super.size,
+    required super.inputEvents,
     required this.radius,
     required this.theta,
   });
 }
 
 class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
-    extends f.IudBase<M> implements f.Iud<M> {
+    extends f.IudBase<M>
+    implements f.Iud<M> {
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) =>
       _PolarToCartesianTrailModel.update(
-        size: size,
-        radius: _PolarToCartesianTrailModel.radiusFactor * size.height,
-        theta: model.theta + _PolarToCartesianTrailModel.angularVel,
-      ) as M;
+            size: size,
+            inputEvents: inputEvents,
+            radius: _PolarToCartesianTrailModel.radiusFactor * size.height,
+            theta: model.theta + _PolarToCartesianTrailModel.angularVel,
+          )
+          as M;
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) {
+  f.Drawing draw({required M model, required bool lightThemeActive}) {
     final x = model.radius * math.cos(model.theta);
     final y = model.radius * math.sin(model.theta);
     final r = u.scale(model.size) * _PolarToCartesianTrailModel.circleRadius;
 
     return f.Translate(
-      translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
-      canvasOps: [
+      dx: model.size.width * 0.5,
+      dy: model.size.height * 0.5,
+      ops: [
         f.Line(
-          p1: f.Offset.zero,
-          p2: f.Offset(x, y),
-          paint: f.Paint()
-            ..color = u.black
-            ..strokeWidth = 2.0,
+          p1: ui.Offset.zero,
+          p2: ui.Offset(x, y),
+          paint:
+              ui.Paint()
+                ..color = u.black
+                ..strokeWidth = 2.0,
         ),
         f.Circle(
-          c: f.Offset(x, y),
+          center: ui.Offset(x, y),
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
-          c: f.Offset(x, y),
+          center: ui.Offset(x, y),
           radius: r,
-          paint: f.Paint()
-            ..color = u.black
-            ..paint
-            ..style = p.PaintingStyle.stroke,
+          paint:
+              ui.Paint()
+                ..color = u.black
+                ..style = p.PaintingStyle.stroke,
         ),
       ],
     );
@@ -81,13 +87,15 @@ class _PolarToCartesianTrailIud<M extends _PolarToCartesianTrailModel>
 const String title = 'Polar To Cartesian Trail';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _PolarToCartesianTrailModel.init,
-        iud: _PolarToCartesianTrailIud<_PolarToCartesianTrailModel>(),
-        clearCanvas: f.NoClearCanvas(
-            paint: f.Paint()
-              ..color = u.transparentWhite
-              ..blendMode = p.BlendMode.srcOver),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _PolarToCartesianTrailModel.init,
+    iud: _PolarToCartesianTrailIud<_PolarToCartesianTrailModel>(),
+    clearCanvas: f.NoClearCanvas(
+      paint:
+          ui.Paint()
+            ..color = u.transparentWhite
+            ..blendMode = p.BlendMode.srcOver,
+    ),
+  ),
+);

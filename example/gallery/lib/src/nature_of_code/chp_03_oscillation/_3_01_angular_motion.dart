@@ -1,4 +1,5 @@
-import 'package:flutter/painting.dart' as p;
+import 'dart:ui' as ui;
+
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
@@ -12,13 +13,14 @@ class _AngularMotionModel extends f.Model {
   final double angleVelocity;
   final double angleAcceleration;
 
-  _AngularMotionModel.init({required super.size})
-      : angle = 0.0,
-        angleVelocity = 0.0,
-        angleAcceleration = initAngAcc;
+  _AngularMotionModel.init({required super.size, required super.inputEvents})
+    : angle = 0.0,
+      angleVelocity = 0.0,
+      angleAcceleration = initAngAcc;
 
   _AngularMotionModel.update({
     required super.size,
+    required super.inputEvents,
     required this.angle,
     required this.angleVelocity,
     required this.angleAcceleration,
@@ -33,73 +35,78 @@ class _AngularMotionIud<M extends _AngularMotionModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     final angle = model.angle + model.angleVelocity;
     final angleVelocity = model.angleVelocity + model.angleAcceleration;
     return _AngularMotionModel.update(
-      size: size,
-      angle: angle,
-      angleVelocity: angleVelocity,
-      angleAcceleration: model.angleAcceleration,
-    ) as M;
+          size: size,
+          inputEvents: inputEvents,
+          angle: angle,
+          angleVelocity: angleVelocity,
+          angleAcceleration: model.angleAcceleration,
+        )
+        as M;
   }
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) {
+  f.Drawing draw({required M model, required bool lightThemeActive}) {
     final s = u.scale(model.size);
     final r = s * circleRadius;
     return f.Translate(
-      translation: f.Vector2(model.size.width * 0.5, model.size.height * 0.5),
-      canvasOps: [
+      dx: model.size.width * 0.5,
+      dy: model.size.height * 0.5,
+      ops: [
         f.Rotate(
           radians: model.angle,
-          canvasOps: [
+          ops: [
             f.Line(
-              p1: f.Offset(s * -halfLength, 0.0),
-              p2: f.Offset(s * halfLength, 0.0),
-              paint: f.Paint()
-                ..color = u.black
-                ..strokeWidth = 2.0,
+              p1: ui.Offset(s * -halfLength, 0.0),
+              p2: ui.Offset(s * halfLength, 0.0),
+              paint:
+                  ui.Paint()
+                    ..color = u.black
+                    ..strokeWidth = 2.0,
             ),
             f.Translate(
-              translation: f.Vector2(s * halfLength, 0.0),
-              canvasOps: [
+              dx: s * halfLength,
+              dy: 0.0,
+              ops: [
                 f.Circle(
-                  c: f.Offset.zero,
+                  center: ui.Offset.zero,
                   radius: r,
-                  paint: f.Paint()..color = u.gray5,
+                  paint: ui.Paint()..color = u.gray5,
                 ),
                 f.Circle(
-                  c: f.Offset.zero,
+                  center: ui.Offset.zero,
                   radius: r,
-                  paint: f.Paint()
-                    ..color = u.black
-                    ..style = p.PaintingStyle.stroke
-                    ..strokeWidth = 2.0,
+                  paint:
+                      ui.Paint()
+                        ..color = u.black
+                        ..style = ui.PaintingStyle.stroke
+                        ..strokeWidth = 2.0,
                 ),
               ],
             ),
             f.Translate(
-              translation: f.Vector2(s * -halfLength, 0.0),
-              canvasOps: [
+              dx: s * -halfLength,
+              dy: 0.0,
+              ops: [
                 f.Circle(
-                  c: f.Offset.zero,
+                  center: ui.Offset.zero,
                   radius: r,
-                  paint: f.Paint()..color = u.gray5,
+                  paint: ui.Paint()..color = u.gray5,
                 ),
                 f.Circle(
-                  c: f.Offset.zero,
+                  center: ui.Offset.zero,
                   radius: r,
-                  paint: f.Paint()
-                    ..color = u.black
-                    ..style = p.PaintingStyle.stroke
-                    ..strokeWidth = 2.0,
+                  paint:
+                      ui.Paint()
+                        ..color = u.black
+                        ..style = ui.PaintingStyle.stroke
+                        ..strokeWidth = 2.0,
                 ),
               ],
             ),
@@ -113,10 +120,10 @@ class _AngularMotionIud<M extends _AngularMotionModel> extends f.IudBase<M>
 const String title = 'Angular Motion';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _AngularMotionModel.init,
-        iud: _AngularMotionIud<_AngularMotionModel>(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _AngularMotionModel.init,
+    iud: _AngularMotionIud<_AngularMotionModel>(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);

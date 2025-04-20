@@ -8,7 +8,7 @@
 PRODUCT_NAME = gallery
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.kebita.gallery
+PRODUCT_BUNDLE_IDENTIFIER = com.example.gallery
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.kebita. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.

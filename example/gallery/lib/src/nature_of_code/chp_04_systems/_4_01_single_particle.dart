@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
@@ -9,13 +11,12 @@ class _SingleParticleModel extends f.Model {
 
   c.Particle particle;
 
-  _SingleParticleModel.init({required super.size})
-      : particle = c.Particle(
-          position: f.Vector2(size.width * 0.5, topOffset),
-        );
+  _SingleParticleModel.init({required super.size, required super.inputEvents})
+    : particle = c.Particle(position: ui.Offset(size.width * 0.5, topOffset));
 
   _SingleParticleModel.update({
     required super.size,
+    required super.inputEvents,
     required this.particle,
   });
 }
@@ -25,30 +26,26 @@ class _SingleParticleIud<M extends _SingleParticleModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     model.particle.update();
     if (model.particle.isDead) {
       model.particle = c.Particle(
-        position: f.Vector2(
-          size.width * 0.5,
-          _SingleParticleModel.topOffset,
-        ),
+        position: ui.Offset(size.width * 0.5, _SingleParticleModel.topOffset),
       );
     }
     return _SingleParticleModel.update(
-      size: size,
-      particle: model.particle,
-    ) as M;
+          size: size,
+          inputEvents: inputEvents,
+          particle: model.particle,
+        )
+        as M;
   }
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) {
+  f.Drawing draw({required M model, required bool lightThemeActive}) {
     return model.particle.draw(model.size);
   }
 }
@@ -56,10 +53,10 @@ class _SingleParticleIud<M extends _SingleParticleModel> extends f.IudBase<M>
 const String title = 'Single Particle';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _SingleParticleModel.init,
-        iud: _SingleParticleIud<_SingleParticleModel>(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _SingleParticleModel.init,
+    iud: _SingleParticleIud<_SingleParticleModel>(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);

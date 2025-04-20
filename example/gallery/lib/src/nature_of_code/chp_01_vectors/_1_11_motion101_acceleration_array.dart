@@ -1,4 +1,5 @@
-import 'package:flutter/painting.dart' as p;
+import 'dart:ui' as ui;
+
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
@@ -10,23 +11,17 @@ class _Mover {
   static const double topSpeed = 5.0;
   static const double accFactor = 0.2;
 
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
+  final ui.Offset position;
+  final ui.Offset velocity;
+  final ui.Offset acceleration;
 
-  _Mover({required f.Rect rect})
-      : position = f.Vector2(
-          u.randDoubleRange(
-            rect.left,
-            rect.right,
-          ),
-          u.randDoubleRange(
-            rect.top,
-            rect.bottom,
-          ),
-        ),
-        velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero();
+  _Mover({required ui.Rect rect})
+    : position = ui.Offset(
+        u.randDoubleRange(rect.left, rect.right),
+        u.randDoubleRange(rect.top, rect.bottom),
+      ),
+      velocity = ui.Offset.zero,
+      acceleration = ui.Offset.zero;
 
   _Mover.update({
     required this.position,
@@ -34,38 +29,36 @@ class _Mover {
     required this.acceleration,
   });
 
-  _Mover update(f.Vector2 mouse) {
+  _Mover update(ui.Offset mouse) {
     final acc = mouse - position;
-    final a = acc.normalized() * accFactor;
+    final a = acc.norm() * accFactor;
 
     final vel = velocity + a;
-    final v = vel.clampLenMax(topSpeed);
+    final v = vel.clampLen(topSpeed);
 
-    return _Mover.update(
-      position: position + v,
-      velocity: v,
-      acceleration: a,
-    );
+    return _Mover.update(position: position + v, velocity: v, acceleration: a);
   }
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
 
     return f.Translate(
-      translation: position,
-      canvasOps: [
+      dx: position.dx,
+      dy: position.dy,
+      ops: [
         f.Circle(
-          c: f.Offset.zero,
+          center: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = u.gray5,
+          paint: ui.Paint()..color = u.gray5,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          center: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
-            ..color = u.transparent7Black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
+          paint:
+              ui.Paint()
+                ..color = u.transparent7Black
+                ..style = ui.PaintingStyle.stroke
+                ..strokeWidth = 2.0,
         ),
       ],
     );
@@ -75,26 +68,28 @@ class _Mover {
 class _AccArrayModel extends f.Model {
   static const int numMovers = 20;
 
-  final f.Vector2 mouse;
+  final ui.Offset mouse;
   final List<_Mover> movers;
 
   _AccArrayModel.fromRect({
     required super.size,
-    required f.Rect rect,
-  })  : mouse = f.Vector2.fromOffset(rect.center),
-        movers = List.generate(numMovers, (_) => _Mover(rect: rect));
+    required super.inputEvents,
+    required ui.Rect rect,
+  }) : mouse = rect.center,
+       movers = List.generate(numMovers, (_) => _Mover(rect: rect));
 
-  _AccArrayModel.init({required f.Size size})
-      : this.fromRect(
-          size: size,
-          rect: f.Rect.fromOffsetSize(
-            f.Offset.zero,
-            size,
-          ),
-        );
+  _AccArrayModel.init({
+    required ui.Size size,
+    required f.InputEventList inputEvents,
+  }) : this.fromRect(
+         size: size,
+         inputEvents: inputEvents,
+         rect: ui.Offset.zero & size,
+       );
 
   _AccArrayModel.update({
     required super.size,
+    required super.inputEvents,
     required this.mouse,
     required this.movers,
   });
@@ -105,46 +100,41 @@ class _AccArrayIud<M extends _AccArrayModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2 mouse = model.mouse;
+    ui.Offset mouse = model.mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
-          mouse = f.Vector2(
-            event.localPosition.dx,
-            event.localPosition.dy,
-          );
+          mouse = ui.Offset(event.localPosition.dx, event.localPosition.dy);
         default:
           break;
       }
     }
 
     return _AccArrayModel.update(
-      size: size,
-      mouse: mouse,
-      movers: model.movers.map((mover) => mover.update(mouse)).toList(),
-    ) as M;
+          size: size,
+          inputEvents: inputEvents,
+          mouse: mouse,
+          movers: model.movers.map((mover) => mover.update(mouse)).toList(),
+        )
+        as M;
   }
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) =>
-      f.Drawing(
-          canvasOps: model.movers.map((m) => m.draw(model.size)).toList());
+  f.Drawing draw({required M model, required bool lightThemeActive}) =>
+      f.Drawing(ops: model.movers.map((m) => m.draw(model.size)).toList());
 }
 
 const String title = 'Motion 101: Acceleration Array';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _AccArrayModel.init,
-        iud: _AccArrayIud<_AccArrayModel>(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _AccArrayModel.init,
+    iud: _AccArrayIud<_AccArrayModel>(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);

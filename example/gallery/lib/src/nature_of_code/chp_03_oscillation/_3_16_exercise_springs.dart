@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
@@ -5,23 +7,23 @@ import 'package:floss/floss.dart' as f;
 
 import '../utils.dart' as u;
 
-final f.Vector2 gravity = f.Vector2(0.0, 2.0);
+final gravity = ui.Offset(0.0, 2.0);
 
 class _Bob {
   static const double mass = 32.0;
   static const double damping = 0.95;
 
-  final f.Vector2 position;
-  final f.Vector2 velocity;
-  final f.Vector2 acceleration;
-  final f.Vector2 dragOffset;
+  ui.Offset position;
+  final ui.Offset velocity;
+  ui.Offset acceleration;
+  ui.Offset dragOffset;
 
   bool dragging = false;
 
   _Bob({required this.position})
-      : velocity = f.Vector2.zero(),
-        acceleration = f.Vector2.zero(),
-        dragOffset = f.Vector2.zero();
+    : velocity = ui.Offset.zero,
+      acceleration = ui.Offset.zero,
+      dragOffset = ui.Offset.zero;
 
   _Bob.update({
     required this.position,
@@ -34,7 +36,7 @@ class _Bob {
   _Bob update() {
     final vel = (velocity + acceleration) * damping;
     final pos = position + vel;
-    acceleration.setValues(0.0, 0.0);
+    acceleration = ui.Offset.zero;
 
     return _Bob.update(
       position: pos,
@@ -45,48 +47,46 @@ class _Bob {
     );
   }
 
-  void applyForce(f.Vector2 force) {
-    acceleration.add(force / mass);
+  void applyForce(ui.Offset force) {
+    acceleration += force / mass;
   }
 
-  double computedRadius(f.Size size) => u.scale(size) * mass;
+  double computedRadius(ui.Size size) => u.scale(size) * mass;
 
-  f.Drawing draw(f.Size size) {
-    final c = dragging
-        ? u.gray5
-        : const p.HSLColor.fromAHSL(
-            1.0,
-            0.0,
-            0.0,
-            0.2,
-          ).toColor();
+  f.Drawing draw(ui.Size size) {
+    final c =
+        dragging
+            ? u.gray5
+            : const p.HSLColor.fromAHSL(1.0, 0.0, 0.0, 0.2).toColor();
     final r = computedRadius(size);
 
     return f.Translate(
-      translation: position,
-      canvasOps: [
+      dx: position.dx,
+      dy: position.dy,
+      ops: [
         f.Circle(
-          c: f.Offset.zero,
+          center: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()..color = c,
+          paint: ui.Paint()..color = c,
         ),
         f.Circle(
-          c: f.Offset.zero,
+          center: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
-            ..color = u.black
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
+          paint:
+              ui.Paint()
+                ..color = u.black
+                ..style = p.PaintingStyle.stroke
+                ..strokeWidth = 2.0,
         ),
       ],
     );
   }
 
-  void clicked(f.Vector2 mouse, f.Size size) {
+  void clicked(ui.Offset mouse, ui.Size size) {
     final m = position - mouse;
-    if (m.length < computedRadius(size)) {
+    if (m.distance < computedRadius(size)) {
       dragging = true;
-      dragOffset.setFrom(m);
+      dragOffset = m;
     }
   }
 
@@ -94,9 +94,9 @@ class _Bob {
     dragging = false;
   }
 
-  void drag(f.Vector2 mouse) {
+  void drag(ui.Offset mouse) {
     if (dragging) {
-      position.setFrom(mouse + dragOffset);
+      position = mouse + dragOffset;
     }
   }
 }
@@ -107,22 +107,23 @@ class _Spring {
   _Spring();
 
   void update({required double length, required _Bob a, required _Bob b}) {
-    final force = a.position - b.position;
-    final stretch = force.length - length;
-    force.normalize();
-    force.scale(-k * stretch);
+    ui.Offset force = a.position - b.position;
+    final stretch = force.distance - length;
+    force = force.norm();
+    force *= -k * stretch;
     a.applyForce(force);
-    force.scale(-1.0);
+    force *= -1.0;
     b.applyForce(force);
   }
 
   f.CanvasOp draw(_Bob a, _Bob b) => f.Line(
-        p1: f.Offset.fromVec(a.position),
-        p2: f.Offset.fromVec(b.position),
-        paint: f.Paint()
+    p1: a.position,
+    p2: b.position,
+    paint:
+        ui.Paint()
           ..color = u.black
           ..strokeWidth = 2.0,
-      );
+  );
 }
 
 class _SpringsModel extends f.Model {
@@ -134,34 +135,20 @@ class _SpringsModel extends f.Model {
   final _Bob b2;
   final _Bob b3;
 
-  f.Vector2? mouse;
+  ui.Offset? mouse;
 
-  _SpringsModel.init({required super.size})
-      : s1 = _Spring(),
-        s2 = _Spring(),
-        s3 = _Spring(),
-        b1 = _Bob(
-          position: f.Vector2(
-            size.width * 0.5,
-            size.height * 0.2,
-          ),
-        ),
-        b2 = _Bob(
-          position: f.Vector2(
-            size.width * 0.2,
-            size.height * 0.8,
-          ),
-        ),
-        b3 = _Bob(
-          position: f.Vector2(
-            size.width * 0.8,
-            size.height * 0.8,
-          ),
-        ),
-        mouse = null;
+  _SpringsModel.init({required super.size, required super.inputEvents})
+    : s1 = _Spring(),
+      s2 = _Spring(),
+      s3 = _Spring(),
+      b1 = _Bob(position: ui.Offset(size.width * 0.5, size.height * 0.2)),
+      b2 = _Bob(position: ui.Offset(size.width * 0.2, size.height * 0.8)),
+      b3 = _Bob(position: ui.Offset(size.width * 0.8, size.height * 0.8)),
+      mouse = null;
 
   _SpringsModel.update({
     required super.size,
+    required super.inputEvents,
     required this.s1,
     required this.s2,
     required this.s3,
@@ -177,25 +164,13 @@ class _SpringsIud<M extends _SpringsModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    model.s1.update(
-      length: size.height * 0.7,
-      a: model.b1,
-      b: model.b2,
-    );
-    model.s2.update(
-      length: size.height * 0.7,
-      a: model.b2,
-      b: model.b3,
-    );
-    model.s3.update(
-      length: size.height * 0.7,
-      a: model.b3,
-      b: model.b1,
-    );
+    model.s1.update(length: size.height * 0.7, a: model.b1, b: model.b2);
+    model.s2.update(length: size.height * 0.7, a: model.b2, b: model.b3);
+    model.s3.update(length: size.height * 0.7, a: model.b3, b: model.b1);
 
     final b1 = model.b1.update();
     final b2 = model.b2.update();
@@ -204,23 +179,14 @@ class _SpringsIud<M extends _SpringsModel> extends f.IudBase<M>
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
-          model.mouse = f.Vector2(
+          model.mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );
 
-          b1.clicked(
-            model.mouse!,
-            size,
-          );
-          b2.clicked(
-            model.mouse!,
-            size,
-          );
-          b3.clicked(
-            model.mouse!,
-            size,
-          );
+          b1.clicked(model.mouse!, size);
+          b2.clicked(model.mouse!, size);
+          b3.clicked(model.mouse!, size);
           break;
 
         case f.PointerUp():
@@ -231,7 +197,7 @@ class _SpringsIud<M extends _SpringsModel> extends f.IudBase<M>
           break;
 
         case f.PointerMove(:final event):
-          model.mouse = f.Vector2(
+          model.mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );
@@ -249,24 +215,23 @@ class _SpringsIud<M extends _SpringsModel> extends f.IudBase<M>
     }
 
     return _SpringsModel.update(
-      size: size,
-      s1: model.s1,
-      s2: model.s2,
-      s3: model.s3,
-      b1: b1,
-      b2: b2,
-      b3: b3,
-      mouse: model.mouse,
-    ) as M;
+          size: size,
+          inputEvents: inputEvents,
+          s1: model.s1,
+          s2: model.s2,
+          s3: model.s3,
+          b1: b1,
+          b2: b2,
+          b3: b3,
+          mouse: model.mouse,
+        )
+        as M;
   }
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) =>
+  f.Drawing draw({required M model, required bool lightThemeActive}) =>
       f.Drawing(
-        canvasOps: [
+        ops: [
           model.s1.draw(model.b1, model.b2),
           model.s2.draw(model.b2, model.b3),
           model.s3.draw(model.b3, model.b1),
@@ -280,10 +245,10 @@ class _SpringsIud<M extends _SpringsModel> extends f.IudBase<M>
 const String title = 'Springs Array';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _SpringsModel.init,
-        iud: _SpringsIud<_SpringsModel>(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _SpringsModel.init,
+    iud: _SpringsIud<_SpringsModel>(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);

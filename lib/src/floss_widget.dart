@@ -5,21 +5,19 @@ import 'package:flutter/widgets.dart' as w;
 import 'package:flutter/material.dart' as m;
 
 import 'logger.dart' show l;
-import 'math/geometry.dart' as g;
 import 'input_event.dart' as ie;
-import 'paint.dart' as p;
-import 'canvas_ops.dart' as go;
+import 'canvas_ops.dart' as co;
 import 'config.dart' as c;
 import 'miud.dart' as miud;
 
-/// A custom painter that paints the canvas based on the [go.Drawing] data tree
-/// data structure.
+/// A custom painter that paints the canvas based on the [co.Drawing] tree data
+/// structure.
 ///
 /// Provides functionality to clear the canvas or paint a background image.  The
 /// default behavior of [w.CustomPainter] is to clear the canvas. In order to
 /// emulate not clearing the canvas, the [config] parameter is used to determine
 /// if the canvas should be cleared or not.  This allows for a "ghosting" effect
-/// used in some of the examples when a semi-transparent [p.Paint] is used as
+/// used in some of the examples when a semi-transparent [w.Paint] is used as
 /// the parameter to [c.NoClearCanvas].
 class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   final c.Config config;
@@ -50,8 +48,8 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
     elapsed.value = elapsed_;
     model = config.iud.update(
       model: model,
-      time: elapsed_,
-      size: g.Size.fromSize(size),
+      elapsed: elapsed_,
+      size: size,
       inputEvents: inputEvents,
     );
     inputEvents.clear();
@@ -62,57 +60,47 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   void _paint(w.Canvas canvas, w.Size s) {
     size = s;
     config.iud
-        .draw(
-          model: model,
-          lightThemeActive: brightness == ui.Brightness.light,
-        )
+        .draw(model: model, lightThemeActive: brightness == ui.Brightness.light)
         .draw(canvas: canvas)
         .toList();
   }
 
   /// Paints the drawing with a background image.
   ///
-  /// This method is used when the [config] parameter contains a [c.NoClearCanvas]
-  /// object.  This allows for a background image to be painted on the canvas
-  /// before the drawing is painted providing a "ghosting" effect when used with
-  /// a semi-transparent [p.Paint].
-  void _paintWithBackground(
-    w.Canvas canvas,
-    w.Size s,
-    p.Paint paint,
-  ) {
+  /// This method is used when the [config] parameter contains a
+  /// [c.NoClearCanvas] object. This allows for a background image to be painted
+  /// on the canvas before the drawing is painted providing a "ghosting" effect
+  /// when used with a semi-transparent [ui.Paint].
+  void _paintWithBackground(w.Canvas canvas, w.Size s, ui.Paint paint) {
     size = s;
 
     final drawing = config.iud.draw(
-        model: model, lightThemeActive: brightness == ui.Brightness.light);
+      model: model,
+      lightThemeActive: brightness == ui.Brightness.light,
+    );
 
     try {
       assert(
-        drawing.walk().whereType<go.BackgroundPicture>().isEmpty,
-        'BackgroundPicture found in Drawing which is inconsistent with a Config containing "clearBackground: false".',
+        drawing.walk().whereType<co.BackgroundPicture>().isEmpty,
+        'BackgroundPicture found in Drawing which is inconsistent with a Config'
+        ' containing `clearBackground: false`.',
       );
     } on AssertionError {
-      l.e(
-        drawing,
-      );
+      l.e(drawing);
       rethrow;
     }
 
-    final pictures = go.Drawing(
-      canvasOps: [
+    final pictures = co.Drawing(
+      ops: [
         if (background != null)
-          go.Image(
-            image: background!,
-            offset: g.Offset.zero,
-            paint: paint,
-          ),
-        go.BackgroundPicture(
-          size: g.Size.fromSize(size),
-          canvasOps: [
+          co.Image(image: background!, offset: ui.Offset.zero, paint: paint),
+        co.BackgroundPicture(
+          size: size,
+          ops: [
             if (background != null)
-              go.Image(
+              co.Image(
                 image: background!,
-                offset: g.Offset.zero,
+                offset: ui.Offset.zero,
                 paint: paint,
               ),
             drawing,
@@ -122,24 +110,19 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
     ).draw(canvas: canvas);
     for (final p in pictures) {
       switch (p) {
-        case go.BackgroundPictureType(:final picture):
-          picture.toImage(size.width.round(), size.height.round()).then(
-            (i) {
-              background?.dispose();
-              background = i;
-            },
-          );
-        case go.CanvasPictureType():
-          break;
+        case co.BackgroundPictureType(:final picture):
+          picture.toImage(size.width.round(), size.height.round()).then((i) {
+            background?.dispose();
+            background = i;
+          });
+        case co.CanvasPictureType():
+          continue;
       }
     }
   }
 
   @override
-  void paint(
-    w.Canvas canvas,
-    w.Size size,
-  ) {
+  void paint(w.Canvas canvas, w.Size size) {
     switch (config.clearCanvas) {
       case c.ClearCanvas():
         _paint(canvas, size);
@@ -153,9 +136,7 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   bool shouldRepaint(_FlossPainter<M, IUD> oldDelegate) => this != oldDelegate;
 
   @override
-  bool operator ==(
-    covariant _FlossPainter<M, IUD> other,
-  ) =>
+  bool operator ==(covariant _FlossPainter<M, IUD> other) =>
       model == other.model &&
       size == other.size &&
       elapsed == other.elapsed &&
@@ -164,14 +145,8 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
       brightness == other.brightness;
 
   @override
-  int get hashCode => Object.hash(
-        model,
-        size,
-        elapsed,
-        inputEvents,
-        config,
-        brightness,
-      );
+  int get hashCode =>
+      Object.hash(model, size, elapsed, inputEvents, config, brightness);
 }
 
 /// A ticker widget that renders a canvas at vsync intervals.
@@ -197,7 +172,7 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
     with w.SingleTickerProviderStateMixin {
   final time = w.ValueNotifier(Duration.zero);
 
-  late final miud.Model model;
+  late final M model;
   late final w.AppLifecycleListener listener;
   late final s.Ticker ticker;
   late final _FlossPainter painter;
@@ -208,8 +183,9 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
 
     listener = w.AppLifecycleListener(
       onExitRequested: () async {
-        final exitResponse =
-            await widget.config.iud.onExitRequested(model: model);
+        final exitResponse = await widget.config.iud.onExitRequested(
+          model: model,
+        );
         if (exitResponse == ui.AppExitResponse.exit) {
           ticker.stop(canceled: true);
         }
@@ -217,11 +193,14 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
       },
     );
 
+    // Initialize the model using the Iud interface `init()` method.
     model = widget.config.iud.init(
       modelCtor: widget.config.modelCtor,
-      size: g.Size.fromSize(widget.size),
+      size: widget.size,
+      inputEvents: widget.inputEvents,
     );
 
+    // Construct the custom painter.
     painter = _FlossPainter(
       repaint: time,
       model: model,
@@ -238,6 +217,7 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
 
   @override
   void dispose() {
+    widget.config.iud.dispose(model);
     time.dispose();
     ticker.dispose();
     listener.dispose();
@@ -278,8 +258,8 @@ class FlossWidget extends w.StatefulWidget {
     super.key,
     required w.FocusNode focusNode,
     required c.Config config,
-  })  : _focusNode = focusNode,
-        _config = config;
+  }) : _focusNode = focusNode,
+       _config = config;
 
   @override
   w.State<FlossWidget> createState() => _FlossWidgetState();
@@ -294,350 +274,188 @@ class _FlossWidgetState extends w.State<FlossWidget>
     return w.KeyboardListener(
       focusNode: widget._focusNode,
       onKeyEvent: (event) {
-        inputEvents.add(
-          ie.KeyEvent(
-            event: event,
-          ),
-        );
+        inputEvents.add(ie.KeyEvent(event: event));
       },
-      child: w.Listener(
-        behavior: w.HitTestBehavior.deferToChild,
-        onPointerDown: (event) {
-          inputEvents.add(
-            ie.PointerDown(
-              event: event,
-            ),
-          );
+      child: w.MouseRegion(
+        hitTestBehavior: w.HitTestBehavior.deferToChild,
+        onEnter: (event) {
+          inputEvents.add(ie.MouseEnter(event: event));
         },
-        onPointerMove: (event) {
-          inputEvents.add(
-            ie.PointerMove(
-              event: event,
-            ),
-          );
+        onExit: (event) {
+          inputEvents.add(ie.MouseExit(event: event));
         },
-        onPointerUp: (event) {
-          inputEvents.add(
-            ie.PointerUp(
-              event: event,
-            ),
-          );
+        onHover: (event) {
+          inputEvents.add(ie.MouseHover(event: event));
         },
-        onPointerHover: (event) {
-          inputEvents.add(
-            ie.PointerHover(
-              event: event,
-            ),
-          );
-        },
-        onPointerCancel: (event) {
-          inputEvents.add(
-            ie.PointerCancel(
-              event: event,
-            ),
-          );
-        },
-        onPointerPanZoomStart: (event) {
-          inputEvents.add(
-            ie.PointerPanZoomStart(
-              event: event,
-            ),
-          );
-        },
-        onPointerPanZoomUpdate: (event) {
-          inputEvents.add(
-            ie.PointerPanZoomUpdate(
-              event: event,
-            ),
-          );
-        },
-        onPointerPanZoomEnd: (event) {
-          inputEvents.add(
-            ie.PointerPanZoomEnd(
-              event: event,
-            ),
-          );
-        },
-        onPointerSignal: (event) {
-          inputEvents.add(
-            ie.PointerSignal(
-              event: event,
-            ),
-          );
-        },
-        child: w.GestureDetector(
+        child: w.Listener(
           behavior: w.HitTestBehavior.deferToChild,
-          onTapDown: (details) {
-            inputEvents.add(
-              ie.TapDown(
-                details: details,
-              ),
-            );
+          onPointerDown: (event) {
+            inputEvents.add(ie.PointerDown(event: event));
           },
-          onTapUp: (details) {
-            inputEvents.add(
-              ie.TapUp(
-                details: details,
-              ),
-            );
+          onPointerMove: (event) {
+            inputEvents.add(ie.PointerMove(event: event));
           },
-          onTap: () {
-            inputEvents.add(
-              const ie.Tap(),
-            );
+          onPointerUp: (event) {
+            inputEvents.add(ie.PointerUp(event: event));
           },
-          onTapCancel: () {
-            inputEvents.add(
-              const ie.TapCancel(),
-            );
+          onPointerHover: (event) {
+            inputEvents.add(ie.PointerHover(event: event));
           },
-          onSecondaryTap: () {
-            inputEvents.add(
-              const ie.SecondaryTap(),
-            );
+          onPointerCancel: (event) {
+            inputEvents.add(ie.PointerCancel(event: event));
           },
-          onSecondaryTapDown: (details) {
-            inputEvents.add(
-              ie.SecondaryTapDown(
-                details: details,
-              ),
-            );
+          onPointerPanZoomStart: (event) {
+            inputEvents.add(ie.PointerPanZoomStart(event: event));
           },
-          onSecondaryTapUp: (details) {
-            inputEvents.add(
-              ie.SecondaryTapUp(
-                details: details,
-              ),
-            );
+          onPointerPanZoomUpdate: (event) {
+            inputEvents.add(ie.PointerPanZoomUpdate(event: event));
           },
-          onSecondaryTapCancel: () {
-            inputEvents.add(
-              const ie.SecondaryTapCancel(),
-            );
+          onPointerPanZoomEnd: (event) {
+            inputEvents.add(ie.PointerPanZoomEnd(event: event));
           },
-          onTertiaryTapDown: (details) {
-            inputEvents.add(
-              ie.TertiaryTapDown(
-                details: details,
-              ),
-            );
+          onPointerSignal: (event) {
+            inputEvents.add(ie.PointerSignal(event: event));
           },
-          onTertiaryTapUp: (details) {
-            inputEvents.add(
-              ie.TertiaryTapUp(
-                details: details,
-              ),
-            );
-          },
-          onTertiaryTapCancel: () {
-            inputEvents.add(
-              const ie.TertiaryTapCancel(),
-            );
-          },
-          onDoubleTapDown: (details) {
-            inputEvents.add(
-              ie.DoubleTapDown(
-                details: details,
-              ),
-            );
-          },
-          onDoubleTap: () {
-            inputEvents.add(
-              const ie.DoubleTap(),
-            );
-          },
-          onDoubleTapCancel: () {
-            inputEvents.add(
-              const ie.DoubleTapCancel(),
-            );
-          },
-          onLongPressDown: (details) {
-            inputEvents.add(
-              ie.LongPressDown(
-                details: details,
-              ),
-            );
-          },
-          onLongPressCancel: () {
-            inputEvents.add(
-              const ie.LongPressCancel(),
-            );
-          },
-          onLongPress: () {
-            inputEvents.add(
-              const ie.LongPress(),
-            );
-          },
-          onLongPressStart: (details) {
-            inputEvents.add(
-              ie.LongPressStart(
-                details: details,
-              ),
-            );
-          },
-          onLongPressMoveUpdate: (details) {
-            inputEvents.add(
-              ie.LongPressMoveUpdate(
-                details: details,
-              ),
-            );
-          },
-          onLongPressUp: () {
-            inputEvents.add(
-              const ie.LongPressUp(),
-            );
-          },
-          onLongPressEnd: (details) {
-            inputEvents.add(
-              ie.LongPressEnd(
-                details: details,
-              ),
-            );
-          },
-          onSecondaryLongPressDown: (details) {
-            inputEvents.add(
-              ie.SecondaryLongPressDown(
-                details: details,
-              ),
-            );
-          },
-          onSecondaryLongPressCancel: () {
-            inputEvents.add(
-              const ie.SecondaryLongPressCancel(),
-            );
-          },
-          onSecondaryLongPress: () {
-            inputEvents.add(
-              const ie.SecondaryLongPress(),
-            );
-          },
-          onSecondaryLongPressStart: (details) {
-            inputEvents.add(
-              ie.SecondaryLongPressStart(
-                details: details,
-              ),
-            );
-          },
-          onSecondaryLongPressMoveUpdate: (details) {
-            inputEvents.add(
-              ie.SecondaryLongPressMoveUpdate(
-                details: details,
-              ),
-            );
-          },
-          onSecondaryLongPressUp: () {
-            inputEvents.add(
-              const ie.SecondaryLongPressUp(),
-            );
-          },
-          onSecondaryLongPressEnd: (details) {
-            inputEvents.add(
-              ie.SecondaryLongPressEnd(
-                details: details,
-              ),
-            );
-          },
-          onTertiaryLongPressDown: (details) {
-            inputEvents.add(
-              ie.TertiaryLongPressDown(
-                details: details,
-              ),
-            );
-          },
-          onTertiaryLongPressCancel: () {
-            inputEvents.add(
-              const ie.TertiaryLongPressCancel(),
-            );
-          },
-          onTertiaryLongPress: () {
-            inputEvents.add(
-              const ie.TertiaryLongPress(),
-            );
-          },
-          onTertiaryLongPressStart: (details) {
-            inputEvents.add(
-              ie.TertiaryLongPressStart(
-                details: details,
-              ),
-            );
-          },
-          onTertiaryLongPressMoveUpdate: (details) {
-            inputEvents.add(
-              ie.TertiaryLongPressMoveUpdate(
-                details: details,
-              ),
-            );
-          },
-          onTertiaryLongPressUp: () {
-            inputEvents.add(
-              const ie.TertiaryLongPressUp(),
-            );
-          },
-          onTertiaryLongPressEnd: (details) {
-            inputEvents.add(
-              ie.TertiaryLongPressEnd(
-                details: details,
-              ),
-            );
-          },
-          onForcePressStart: (details) {
-            inputEvents.add(
-              ie.ForcePressStart(
-                details: details,
-              ),
-            );
-          },
-          onForcePressPeak: (details) {
-            inputEvents.add(
-              ie.ForcePressPeak(
-                details: details,
-              ),
-            );
-          },
-          onForcePressUpdate: (details) {
-            inputEvents.add(
-              ie.ForcePressUpdate(
-                details: details,
-              ),
-            );
-          },
-          onForcePressEnd: (details) {
-            inputEvents.add(
-              ie.ForcePressEnd(
-                details: details,
-              ),
-            );
-          },
-          onScaleStart: (details) {
-            inputEvents.add(
-              ie.ScaleStart(
-                details: details,
-              ),
-            );
-          },
-          onScaleUpdate: (details) {
-            inputEvents.add(
-              ie.ScaleUpdate(
-                details: details,
-              ),
-            );
-          },
-          onScaleEnd: (details) {
-            inputEvents.add(
-              ie.ScaleEnd(
-                details: details,
-              ),
-            );
-          },
-          child: w.LayoutBuilder(
-            builder: (context, constraints) {
-              return _CanvasTicker(
-                size: constraints.biggest,
-                inputEvents: inputEvents,
-                config: widget._config,
-                brightness: m.Theme.of(context).brightness,
+          child: w.GestureDetector(
+            behavior: w.HitTestBehavior.deferToChild,
+            onTapDown: (details) {
+              inputEvents.add(ie.TapDown(details: details));
+            },
+            onTapUp: (details) {
+              inputEvents.add(ie.TapUp(details: details));
+            },
+            onTap: () {
+              inputEvents.add(const ie.Tap());
+            },
+            onTapCancel: () {
+              inputEvents.add(const ie.TapCancel());
+            },
+            onSecondaryTap: () {
+              inputEvents.add(const ie.SecondaryTap());
+            },
+            onSecondaryTapDown: (details) {
+              inputEvents.add(ie.SecondaryTapDown(details: details));
+            },
+            onSecondaryTapUp: (details) {
+              inputEvents.add(ie.SecondaryTapUp(details: details));
+            },
+            onSecondaryTapCancel: () {
+              inputEvents.add(const ie.SecondaryTapCancel());
+            },
+            onTertiaryTapDown: (details) {
+              inputEvents.add(ie.TertiaryTapDown(details: details));
+            },
+            onTertiaryTapUp: (details) {
+              inputEvents.add(ie.TertiaryTapUp(details: details));
+            },
+            onTertiaryTapCancel: () {
+              inputEvents.add(const ie.TertiaryTapCancel());
+            },
+            onDoubleTapDown: (details) {
+              inputEvents.add(ie.DoubleTapDown(details: details));
+            },
+            onDoubleTap: () {
+              inputEvents.add(const ie.DoubleTap());
+            },
+            onDoubleTapCancel: () {
+              inputEvents.add(const ie.DoubleTapCancel());
+            },
+            onLongPressDown: (details) {
+              inputEvents.add(ie.LongPressDown(details: details));
+            },
+            onLongPressCancel: () {
+              inputEvents.add(const ie.LongPressCancel());
+            },
+            onLongPress: () {
+              inputEvents.add(const ie.LongPress());
+            },
+            onLongPressStart: (details) {
+              inputEvents.add(ie.LongPressStart(details: details));
+            },
+            onLongPressMoveUpdate: (details) {
+              inputEvents.add(ie.LongPressMoveUpdate(details: details));
+            },
+            onLongPressUp: () {
+              inputEvents.add(const ie.LongPressUp());
+            },
+            onLongPressEnd: (details) {
+              inputEvents.add(ie.LongPressEnd(details: details));
+            },
+            onSecondaryLongPressDown: (details) {
+              inputEvents.add(ie.SecondaryLongPressDown(details: details));
+            },
+            onSecondaryLongPressCancel: () {
+              inputEvents.add(const ie.SecondaryLongPressCancel());
+            },
+            onSecondaryLongPress: () {
+              inputEvents.add(const ie.SecondaryLongPress());
+            },
+            onSecondaryLongPressStart: (details) {
+              inputEvents.add(ie.SecondaryLongPressStart(details: details));
+            },
+            onSecondaryLongPressMoveUpdate: (details) {
+              inputEvents.add(
+                ie.SecondaryLongPressMoveUpdate(details: details),
               );
             },
+            onSecondaryLongPressUp: () {
+              inputEvents.add(const ie.SecondaryLongPressUp());
+            },
+            onSecondaryLongPressEnd: (details) {
+              inputEvents.add(ie.SecondaryLongPressEnd(details: details));
+            },
+            onTertiaryLongPressDown: (details) {
+              inputEvents.add(ie.TertiaryLongPressDown(details: details));
+            },
+            onTertiaryLongPressCancel: () {
+              inputEvents.add(const ie.TertiaryLongPressCancel());
+            },
+            onTertiaryLongPress: () {
+              inputEvents.add(const ie.TertiaryLongPress());
+            },
+            onTertiaryLongPressStart: (details) {
+              inputEvents.add(ie.TertiaryLongPressStart(details: details));
+            },
+            onTertiaryLongPressMoveUpdate: (details) {
+              inputEvents.add(ie.TertiaryLongPressMoveUpdate(details: details));
+            },
+            onTertiaryLongPressUp: () {
+              inputEvents.add(const ie.TertiaryLongPressUp());
+            },
+            onTertiaryLongPressEnd: (details) {
+              inputEvents.add(ie.TertiaryLongPressEnd(details: details));
+            },
+            onForcePressStart: (details) {
+              inputEvents.add(ie.ForcePressStart(details: details));
+            },
+            onForcePressPeak: (details) {
+              inputEvents.add(ie.ForcePressPeak(details: details));
+            },
+            onForcePressUpdate: (details) {
+              inputEvents.add(ie.ForcePressUpdate(details: details));
+            },
+            onForcePressEnd: (details) {
+              inputEvents.add(ie.ForcePressEnd(details: details));
+            },
+            onScaleStart: (details) {
+              inputEvents.add(ie.ScaleStart(details: details));
+            },
+            onScaleUpdate: (details) {
+              inputEvents.add(ie.ScaleUpdate(details: details));
+            },
+            onScaleEnd: (details) {
+              inputEvents.add(ie.ScaleEnd(details: details));
+            },
+            child: w.LayoutBuilder(
+              builder: (context, constraints) {
+                return _CanvasTicker(
+                  size: constraints.biggest,
+                  inputEvents: inputEvents,
+                  config: widget._config,
+                  brightness: m.Theme.of(context).brightness,
+                );
+              },
+            ),
           ),
         ),
       ),

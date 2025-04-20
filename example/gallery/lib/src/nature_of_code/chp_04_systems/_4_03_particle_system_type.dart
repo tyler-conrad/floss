@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
@@ -10,57 +12,57 @@ class _ParticleSystemTypeModel extends f.Model {
 
   final c.ParticleSystem system;
 
-  _ParticleSystemTypeModel.init({required super.size})
-      : system = c.ParticleSystem(
-          origin: f.Vector2(
-            size.width * 0.5,
-            topOffset,
-          ),
-        );
+  _ParticleSystemTypeModel.init({
+    required super.size,
+    required super.inputEvents,
+  }) : system = c.ParticleSystem(
+         origin: ui.Offset(size.width * 0.5, topOffset),
+       );
 
   _ParticleSystemTypeModel.update({
     required super.size,
+    required super.inputEvents,
     required this.system,
   });
 }
 
 class _ParticleSystemTypeIud<M extends _ParticleSystemTypeModel>
-    extends f.IudBase<M> implements f.Iud<M> {
+    extends f.IudBase<M>
+    implements f.Iud<M> {
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     model.system.addParticle();
 
     return _ParticleSystemTypeModel.update(
-      size: size,
-      system: model.system.update(
-        f.Vector2(
-          size.width * 0.5,
-          u.scale(size) * _ParticleSystemTypeModel.topOffset,
-        ),
-      ),
-    ) as M;
+          size: size,
+          inputEvents: inputEvents,
+          system: model.system.update(
+            ui.Offset(
+              size.width * 0.5,
+              u.scale(size) * _ParticleSystemTypeModel.topOffset,
+            ),
+          ),
+        )
+        as M;
   }
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) =>
+  f.Drawing draw({required M model, required bool lightThemeActive}) =>
       model.system.draw(model.size);
 }
 
 const String title = 'Particle System Type';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _ParticleSystemTypeModel.init,
-        iud: _ParticleSystemTypeIud<_ParticleSystemTypeModel>(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _ParticleSystemTypeModel.init,
+    iud: _ParticleSystemTypeIud<_ParticleSystemTypeModel>(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);

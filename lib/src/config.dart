@@ -1,4 +1,5 @@
-import 'paint.dart' as p;
+import 'dart:ui' as ui;
+
 import 'miud.dart' as miud;
 
 /// Represents a sealed class for clearing the canvas.
@@ -14,11 +15,11 @@ sealed class ClearCanvasType {
 ///
 /// This class extends the [ClearCanvasType] class.
 ///
-/// The [NoClearCanvas] class requires a [paint] object of type [p.Paint] to be
+/// The [NoClearCanvas] class requires a [paint] object of type [ui.Paint] to be
 /// provided. This class is used to configure the `FlossWidget` to keep that
 /// last drawn frame and draw on top of it.
 class NoClearCanvas extends ClearCanvasType {
-  final p.Paint paint;
+  final ui.Paint paint;
 
   const NoClearCanvas({required this.paint});
 }
@@ -35,10 +36,12 @@ class ClearCanvas extends ClearCanvasType {
 ///
 /// The [Config] class holds information passed to the `FlossWidget`
 /// constructor. The [modelCtor] parameter is a function that constructs an
-/// instance of the model type [M].
+/// instance of the model type [M] from a widget [ui.Size] and the initial
+/// `InputEventList`. The type of the model constructor must match the type
+/// alias [miud.ModelCtor].
 ///
 /// The [iud] parameter is an object that provides the initialize, update, and
-/// draw methods.
+/// draw methods and implements the [miud.Iud] interface.
 ///
 /// The [clearCanvas] parameter specifies the type of canvas clearing. It can be
 /// either [NoClearCanvas] or [ClearCanvas].

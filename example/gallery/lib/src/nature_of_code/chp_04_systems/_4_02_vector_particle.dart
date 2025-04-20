@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/widgets.dart' as w;
 
 import 'package:floss/floss.dart' as f;
@@ -9,10 +11,12 @@ class _VectorParticleModel extends f.Model {
 
   final List<c.Particle> particles;
 
-  _VectorParticleModel.init({required super.size}) : particles = [];
+  _VectorParticleModel.init({required super.size, required super.inputEvents})
+    : particles = [];
 
   _VectorParticleModel.update({
     required super.size,
+    required super.inputEvents,
     required this.particles,
   });
 }
@@ -22,36 +26,32 @@ class _VectorParticleIud<M extends _VectorParticleModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    model.particles.add(c.Particle(
-      position: f.Vector2(
-        size.width * 0.5,
-        _VectorParticleModel.topOffset,
+    model.particles.add(
+      c.Particle(
+        position: ui.Offset(size.width * 0.5, _VectorParticleModel.topOffset),
       ),
-    ));
+    );
 
     for (final p in model.particles) {
       p.update();
     }
 
     return _VectorParticleModel.update(
-      size: size,
-      particles: model.particles.where((p) => !p.isDead).toList(),
-    ) as M;
+          size: size,
+          inputEvents: inputEvents,
+          particles: model.particles.where((p) => !p.isDead).toList(),
+        )
+        as M;
   }
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) {
+  f.Drawing draw({required M model, required bool lightThemeActive}) {
     return f.Drawing(
-      canvasOps: [
-        for (final p in model.particles) p.draw(model.size),
-      ],
+      ops: [for (final p in model.particles) p.draw(model.size)],
     );
   }
 }
@@ -59,10 +59,10 @@ class _VectorParticleIud<M extends _VectorParticleModel> extends f.IudBase<M>
 const String title = 'Vector Particle';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _VectorParticleModel.init,
-        iud: _VectorParticleIud<_VectorParticleModel>(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _VectorParticleModel.init,
+    iud: _VectorParticleIud<_VectorParticleModel>(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);

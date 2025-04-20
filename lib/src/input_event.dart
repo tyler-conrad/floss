@@ -342,24 +342,24 @@ class PointerSignal extends InputEvent {
 //##############################################################################
 
 /// Represents an input event when a pointer enters a target.
-class PointerEnter extends InputEvent {
+class MouseEnter extends InputEvent {
   final g.PointerEnterEvent event;
 
-  PointerEnter({required this.event});
+  MouseEnter({required this.event});
 }
 
 /// Represents an input event when a pointer exits a target.
-class PointerExit extends InputEvent {
+class MouseExit extends InputEvent {
   final g.PointerExitEvent event;
 
-  PointerExit({required this.event});
+  MouseExit({required this.event});
 }
 
 /// Represents an input event when a pointer hovers over a target.
-class PointerHoverEnter extends InputEvent {
+class MouseHover extends InputEvent {
   final g.PointerHoverEvent event;
 
-  PointerHoverEnter({required this.event});
+  MouseHover({required this.event});
 }
 
 //##############################################################################

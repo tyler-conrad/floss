@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
 
@@ -19,20 +21,20 @@ class Particle extends c.ForceParticle {
   bool highlight = false;
 
   Particle({required super.position})
-      : super.update(
-          velocity: f.Vector2(
-            u.randDoubleRange(minVelX, maxVelX),
-            u.randDoubleRange(minVelY, maxVelY),
-          ),
-          acceleration: f.Vector2(0.0, gravity),
-          lifespan: c.Particle.ls,
-        );
+    : super.update(
+        velocity: ui.Offset(
+          u.randDoubleRange(minVelX, maxVelX),
+          u.randDoubleRange(minVelY, maxVelY),
+        ),
+        acceleration: ui.Offset(0.0, gravity),
+        lifespan: c.Particle.ls,
+      );
 
-  void intersects(Iterable<Particle> particles, f.Size size) {
+  void intersects(Iterable<Particle> particles, ui.Size size) {
     highlight = false;
     for (final p in particles) {
       if (p != this &&
-          p.position.distanceTo(position) <= u.scale(size) * radius) {
+          (p.position - position).distance <= u.scale(size) * radius) {
         highlight = true;
         break;
       }
@@ -40,43 +42,37 @@ class Particle extends c.ForceParticle {
   }
 
   @override
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     final r = u.scale(size) * radius;
     final a = lifespan / c.Particle.ls;
 
     return f.Translate(
-      translation: position,
-      canvasOps: [
+      dx: position.dx,
+      dy: position.dy,
+      ops: [
         f.Circle(
-          c: f.Offset.zero,
+          center: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
-            ..color = highlight
-                ? const p.HSLColor.fromAHSL(
-                    1.0,
-                    0.0,
-                    1.0,
-                    0.5,
-                  ).toColor()
-                : p.HSLColor.fromAHSL(
-                    a,
-                    0.0,
-                    0.0,
-                    0.5,
-                  ).toColor(),
+          paint:
+              ui.Paint()
+                ..color =
+                    highlight
+                        ? const p.HSLColor.fromAHSL(
+                          1.0,
+                          0.0,
+                          1.0,
+                          0.5,
+                        ).toColor()
+                        : p.HSLColor.fromAHSL(a, 0.0, 0.0, 0.5).toColor(),
         ),
         f.Circle(
-          c: f.Offset.zero,
+          center: ui.Offset.zero,
           radius: r,
-          paint: f.Paint()
-            ..color = p.HSLColor.fromAHSL(
-              a,
-              0.0,
-              0.0,
-              0.0,
-            ).toColor()
-            ..style = p.PaintingStyle.stroke
-            ..strokeWidth = 2.0,
+          paint:
+              ui.Paint()
+                ..color = p.HSLColor.fromAHSL(a, 0.0, 0.0, 0.0).toColor()
+                ..style = p.PaintingStyle.stroke
+                ..strokeWidth = 2.0,
         ),
       ],
     );
@@ -86,39 +82,29 @@ class Particle extends c.ForceParticle {
 class ParticleSystem<P extends c.ForceParticle> extends c.ParticleSystem<P> {
   ParticleSystem({required super.origin});
 
-  ParticleSystem.update({
-    required super.origin,
-    required super.particles,
-  }) : super.update();
+  ParticleSystem.update({required super.origin, required super.particles})
+    : super.update();
 
-  void intersection(f.Size size) {
+  void intersection(ui.Size size) {
     for (final p in particles) {
-      (p as Particle).intersects(
-        particles as Iterable<Particle>,
-        size,
-      );
+      (p as Particle).intersects(particles as Iterable<Particle>, size);
     }
   }
 
   @override
   void addParticle() {
-    particles.add(
-      Particle(position: f.Vector2(origin.x, origin.y)) as P,
-    );
+    particles.add(Particle(position: origin) as P);
   }
 
   @override
-  ParticleSystem<P> update(f.Vector2 origin) {
+  ParticleSystem<P> update(ui.Offset origin) {
     final ps = particles.whereNot((p) => p.isDead);
 
     for (final p in ps) {
       p.update();
     }
 
-    return ParticleSystem<P>.update(
-      origin: origin,
-      particles: ps.toList(),
-    );
+    return ParticleSystem<P>.update(origin: origin, particles: ps.toList());
   }
 }
 
@@ -126,41 +112,39 @@ class _ParticleIntersectionModel extends f.Model {
   static const topOffset = 50.0;
 
   final ParticleSystem<Particle> system;
-  final f.Vector2 mouse;
+  final ui.Offset mouse;
 
-  _ParticleIntersectionModel.init({required super.size})
-      : system = ParticleSystem<Particle>(
-          origin: f.Vector2(
-            size.width / 2,
-            u.scale(size) * topOffset,
-          ),
-        ),
-        mouse = f.Vector2(size.width * 0.5, size.height * 0.5);
+  _ParticleIntersectionModel.init({
+    required super.size,
+    required super.inputEvents,
+  }) : system = ParticleSystem<Particle>(
+         origin: ui.Offset(size.width / 2, u.scale(size) * topOffset),
+       ),
+       mouse = ui.Offset(size.width * 0.5, size.height * 0.5);
 
   _ParticleIntersectionModel.update({
     required super.size,
+    required super.inputEvents,
     required this.system,
     required this.mouse,
   });
 }
 
 class _ParticleIntersectionIud<M extends _ParticleIntersectionModel>
-    extends f.IudBase<M> implements f.Iud<M> {
+    extends f.IudBase<M>
+    implements f.Iud<M> {
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
-    f.Vector2 mouse = model.mouse;
+    ui.Offset mouse = model.mouse;
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerHover(:final event):
-          mouse = f.Vector2(
-            event.localPosition.dx,
-            event.localPosition.dy,
-          );
+          mouse = ui.Offset(event.localPosition.dx, event.localPosition.dy);
           break;
 
         default:
@@ -173,27 +157,26 @@ class _ParticleIntersectionIud<M extends _ParticleIntersectionModel>
     s.intersection(size);
 
     return _ParticleIntersectionModel.update(
-      size: size,
-      system: s,
-      mouse: mouse,
-    ) as M;
+          size: size,
+          inputEvents: inputEvents,
+          system: s,
+          mouse: mouse,
+        )
+        as M;
   }
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) =>
+  f.Drawing draw({required M model, required bool lightThemeActive}) =>
       model.system.draw(model.size);
 }
 
 const String title = 'Particle Intersection';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _ParticleIntersectionModel.init,
-        iud: _ParticleIntersectionIud<_ParticleIntersectionModel>(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _ParticleIntersectionModel.init,
+    iud: _ParticleIntersectionIud<_ParticleIntersectionModel>(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);

@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
@@ -15,27 +16,27 @@ class _Attractor {
   static const double massMin = 5.0;
   static const double massMax = 25.0;
 
-  final f.Vector2 position;
-  final f.Vector2 dragOffset;
+  ui.Offset position;
+  ui.Offset dragOffset;
   bool dragging;
   bool rollover;
 
   _Attractor({required this.position})
-      : dragOffset = f.Vector2.zero(),
-        dragging = false,
-        rollover = false;
+    : dragOffset = ui.Offset.zero,
+      dragging = false,
+      rollover = false;
 
-  f.Vector2 attract({required _Mover mover, required f.Size size}) {
-    final force = position - mover.position;
-    double d = force.length;
+  ui.Offset attract({required _Mover mover, required ui.Size size}) {
+    ui.Offset force = position - mover.position;
+    double d = force.distance;
     d = math.min(math.max(massMin, d), massMax);
-    force.normalize();
+    force = force.norm();
     return force * (gravity * mass * mover.mass) / (d * d);
   }
 
-  double computeRadius(f.Size size) => u.scale(size) * mass * radius;
+  double computeRadius(ui.Size size) => u.scale(size) * mass * radius;
 
-  f.Drawing draw(f.Size size) {
+  f.Drawing draw(ui.Size size) {
     double gray;
     if (dragging) {
       gray = 0.2;
@@ -46,44 +47,35 @@ class _Attractor {
     }
 
     return f.Translate(
-      translation: position,
-      canvasOps: [
+      dx: position.dx,
+      dy: position.dy,
+      ops: [
         f.Circle(
-          c: f.Offset.zero,
+          center: ui.Offset.zero,
           radius: computeRadius(size),
-          paint: f.Paint()
-            ..color = p.HSLColor.fromAHSL(
-              1.0,
-              0.0,
-              0.0,
-              gray,
-            ).toColor(),
+          paint:
+              ui.Paint()
+                ..color = p.HSLColor.fromAHSL(1.0, 0.0, 0.0, gray).toColor(),
         ),
       ],
     );
   }
 
-  void clicked({required f.Vector2 mouse, required f.Size size}) {
-    if ((position - mouse).length < computeRadius(size)) {
+  void clicked({required ui.Offset mouse, required ui.Size size}) {
+    if ((position - mouse).distance < computeRadius(size)) {
       dragging = true;
-      dragOffset.setValues(
-        position.x - mouse.x,
-        position.y - mouse.y,
-      );
+      dragOffset = ui.Offset(position.dx - mouse.dx, position.dy - mouse.dy);
     }
   }
 
-  void over({required f.Vector2 mouse, required f.Size size}) =>
-      rollover = (position - mouse).length < computeRadius(size);
+  void over({required ui.Offset mouse, required ui.Size size}) =>
+      rollover = (position - mouse).distance < computeRadius(size);
 
   void stopDragging() => dragging = false;
 
-  void drag(f.Vector2 mouse) {
+  void drag(ui.Offset mouse) {
     if (dragging) {
-      position.setValues(
-        mouse.x + dragOffset.x,
-        mouse.y + dragOffset.y,
-      );
+      position = ui.Offset(mouse.dx + dragOffset.dx, mouse.dy + dragOffset.dy);
     }
   }
 }
@@ -95,33 +87,30 @@ class _Mover extends c.Mover {
   static const double massMin = 4.0;
   static const double massMax = 12.0;
 
-  _Mover({
-    required super.mass,
-    required super.position,
-  });
+  _Mover({required super.mass, required super.position});
 
   @override
-  f.Drawing draw(f.Size size) => f.Translate(
-        translation: position,
-        canvasOps: [
-          f.Circle(
-            c: f.Offset.zero,
-            radius: u.scale(size) * mass * radius,
-            paint: f.Paint()
-              ..color = const p.HSLColor.fromAHSL(
-                0.5,
-                0.0,
-                0.0,
-                0.6,
-              ).toColor(),
-          ),
-        ],
-      );
+  f.Drawing draw(ui.Size size) => f.Translate(
+    dx: position.dx,
+    dy: position.dy,
+    ops: [
+      f.Circle(
+        center: ui.Offset.zero,
+        radius: u.scale(size) * mass * radius,
+        paint:
+            ui.Paint()
+              ..color = const p.HSLColor.fromAHSL(0.5, 0.0, 0.0, 0.6).toColor(),
+      ),
+    ],
+  );
 
-  f.Vector2 repel(_Mover m) {
-    final force = position - m.position;
-    final double d = math.min(math.max(forceLenMin, force.length), forceLenMax);
-    force.normalize();
+  ui.Offset repel(_Mover m) {
+    ui.Offset force = position - m.position;
+    final double d = math.min(
+      math.max(forceLenMin, force.distance),
+      forceLenMax,
+    );
+    force = force.norm();
     final strength = (_Attractor.gravity * mass * m.mass) / (d * d);
     return force * -strength;
   }
@@ -133,31 +122,28 @@ class _AttractRepelModel extends f.Model {
   final List<_Mover> movers;
   final _Attractor attractor;
 
-  f.Vector2? mouse;
+  ui.Offset? mouse;
 
-  _AttractRepelModel.init({required super.size})
-      : movers = List.generate(
-          numMovers,
-          (_) => _Mover(
+  _AttractRepelModel.init({required super.size, required super.inputEvents})
+    : movers =
+          List.generate(
+            numMovers,
+            (_) => _Mover(
               mass: u.randDoubleRange(_Mover.massMin, _Mover.massMax),
-              position: f.Vector2(
+              position: ui.Offset(
                 u.randDoubleRange(0.0, size.width),
                 u.randDoubleRange(0.0, size.height),
-              )),
-        ).toList(),
-        attractor = _Attractor(
-          position: f.Vector2(
-            size.width * 0.5,
-            size.height * 0.5,
-          ),
-        ),
-        mouse = f.Vector2(
-          size.width * 0.5,
-          size.height * 0.5,
-        );
+              ),
+            ),
+          ).toList(),
+      attractor = _Attractor(
+        position: ui.Offset(size.width * 0.5, size.height * 0.5),
+      ),
+      mouse = ui.Offset(size.width * 0.5, size.height * 0.5);
 
   _AttractRepelModel.update({
     required super.size,
+    required super.inputEvents,
     required this.movers,
     required this.attractor,
     required this.mouse,
@@ -169,38 +155,30 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     for (final ie in inputEvents) {
       switch (ie) {
         case f.PointerDown(:final event):
-          model.mouse = f.Vector2(
+          model.mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );
-          model.attractor.clicked(
-            mouse: model.mouse!,
-            size: size,
-          );
+          model.attractor.clicked(mouse: model.mouse!, size: size);
         case f.PointerHover(:final event):
-          model.mouse = f.Vector2(
+          model.mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );
-          model.attractor.over(
-            mouse: model.mouse!,
-            size: size,
-          );
+          model.attractor.over(mouse: model.mouse!, size: size);
         case f.PointerMove(:final event):
-          model.mouse = f.Vector2(
+          model.mouse = ui.Offset(
             event.localPosition.dx,
             event.localPosition.dy,
           );
-          model.attractor.drag(
-            model.mouse!,
-          );
+          model.attractor.drag(model.mouse!);
         case f.PointerUp():
           model.attractor.stopDragging();
           model.mouse = null;
@@ -220,20 +198,19 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
     }
 
     return _AttractRepelModel.update(
-      size: size,
-      movers: model.movers,
-      attractor: model.attractor,
-      mouse: model.mouse,
-    ) as M;
+          size: size,
+          inputEvents: inputEvents,
+          movers: model.movers,
+          attractor: model.attractor,
+          mouse: model.mouse,
+        )
+        as M;
   }
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) =>
+  f.Drawing draw({required M model, required bool lightThemeActive}) =>
       f.Drawing(
-        canvasOps: [
+        ops: [
           model.attractor.draw(model.size),
           for (final m in model.movers) m.draw(model.size),
         ],
@@ -243,10 +220,10 @@ class _AttractRepelIud<M extends _AttractRepelModel> extends f.IudBase<M>
 const String title = 'Attract Repel';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _AttractRepelModel.init,
-        iud: _AttractRepelIud<_AttractRepelModel>(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _AttractRepelModel.init,
+    iud: _AttractRepelIud<_AttractRepelModel>(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);

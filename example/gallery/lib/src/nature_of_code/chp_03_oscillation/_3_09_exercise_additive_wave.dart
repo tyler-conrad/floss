@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart' as p;
 import 'package:flutter/widgets.dart' as w;
@@ -24,23 +25,26 @@ class _AdditiveWaveModel extends f.Model {
   final List<double> dx;
   final List<double> yValues;
 
-  _AdditiveWaveModel.init({required super.size})
-      : theta = 0.0,
-        amplitudeFactors = List.generate(
-            maxWaves, (_) => u.randDoubleRange(minAmplitude, maxAmplitude)),
-        dx = List.generate(
-          maxWaves,
-          (_) =>
-              2.0 *
-              math.pi /
-              u.randDoubleRange(minPeriod, maxPeriod) *
-              size.width /
-              numCircles,
-        ),
-        yValues = List.filled(numCircles, 0.0);
+  _AdditiveWaveModel.init({required super.size, required super.inputEvents})
+    : theta = 0.0,
+      amplitudeFactors = List.generate(
+        maxWaves,
+        (_) => u.randDoubleRange(minAmplitude, maxAmplitude),
+      ),
+      dx = List.generate(
+        maxWaves,
+        (_) =>
+            2.0 *
+            math.pi /
+            u.randDoubleRange(minPeriod, maxPeriod) *
+            size.width /
+            numCircles,
+      ),
+      yValues = List.filled(numCircles, 0.0);
 
   _AdditiveWaveModel.update({
     required super.size,
+    required super.inputEvents,
     required this.theta,
     required this.amplitudeFactors,
     required this.dx,
@@ -53,8 +57,8 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
   @override
   M update({
     required M model,
-    required Duration time,
-    required f.Size size,
+    required Duration elapsed,
+    required ui.Size size,
     required f.InputEventList inputEvents,
   }) {
     final s = u.scale(size);
@@ -73,51 +77,54 @@ class _AdditiveWaveIud<M extends _AdditiveWaveModel> extends f.IudBase<M>
       }
     }
     return _AdditiveWaveModel.update(
-      size: size,
-      theta: theta,
-      amplitudeFactors: model.amplitudeFactors,
-      dx: model.dx,
-      yValues: model.yValues,
-    ) as M;
+          size: size,
+          inputEvents: inputEvents,
+          theta: theta,
+          amplitudeFactors: model.amplitudeFactors,
+          dx: model.dx,
+          yValues: model.yValues,
+        )
+        as M;
   }
 
   @override
-  f.Drawing draw({
-    required M model,
-    required bool lightThemeActive,
-  }) =>
+  f.Drawing draw({required M model, required bool lightThemeActive}) =>
       f.Translate(
-        translation: f.Vector2(0.0, model.size.height * 0.5),
-        canvasOps: model.yValues
-            .mapIndexed(
-              (x, y) => f.Circle(
-                c: f.Offset(
-                  x.toDouble() *
-                      model.size.width /
-                      _AdditiveWaveModel.numCircles,
-                  y,
-                ),
-                radius: u.scale(model.size) * _AdditiveWaveModel.radius,
-                paint: f.Paint()
-                  ..color = const p.HSLColor.fromAHSL(
-                    0.25,
-                    0.0,
-                    0.0,
-                    0.0,
-                  ).toColor(),
-              ),
-            )
-            .toList(),
+        dx: 0.0,
+        dy: model.size.height * 0.5,
+        ops:
+            model.yValues
+                .mapIndexed(
+                  (x, y) => f.Circle(
+                    center: ui.Offset(
+                      x.toDouble() *
+                          model.size.width /
+                          _AdditiveWaveModel.numCircles,
+                      y,
+                    ),
+                    radius: u.scale(model.size) * _AdditiveWaveModel.radius,
+                    paint:
+                        ui.Paint()
+                          ..color =
+                              const p.HSLColor.fromAHSL(
+                                0.25,
+                                0.0,
+                                0.0,
+                                0.0,
+                              ).toColor(),
+                  ),
+                )
+                .toList(),
       );
 }
 
 const String title = 'Additive Wave 1';
 
 f.FlossWidget widget(w.FocusNode focusNode) => f.FlossWidget(
-      focusNode: focusNode,
-      config: f.Config(
-        modelCtor: _AdditiveWaveModel.init,
-        iud: _AdditiveWaveIud<_AdditiveWaveModel>(),
-        clearCanvas: const f.ClearCanvas(),
-      ),
-    );
+  focusNode: focusNode,
+  config: f.Config(
+    modelCtor: _AdditiveWaveModel.init,
+    iud: _AdditiveWaveIud<_AdditiveWaveModel>(),
+    clearCanvas: const f.ClearCanvas(),
+  ),
+);
