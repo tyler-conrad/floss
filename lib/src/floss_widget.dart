@@ -6,18 +6,18 @@ import 'package:flutter/material.dart' as m;
 
 import 'logger.dart' show l;
 import 'input_event.dart' as ie;
-import 'canvas_ops.dart' as go;
+import 'canvas_ops.dart' as co;
 import 'config.dart' as c;
 import 'miud.dart' as miud;
 
-/// A custom painter that paints the canvas based on the [go.Drawing] data tree
-/// data structure.
+/// A custom painter that paints the canvas based on the [co.Drawing] tree data
+/// structure.
 ///
 /// Provides functionality to clear the canvas or paint a background image.  The
 /// default behavior of [w.CustomPainter] is to clear the canvas. In order to
 /// emulate not clearing the canvas, the [config] parameter is used to determine
 /// if the canvas should be cleared or not.  This allows for a "ghosting" effect
-/// used in some of the examples when a semi-transparent [p.Paint] is used as
+/// used in some of the examples when a semi-transparent [w.Paint] is used as
 /// the parameter to [c.NoClearCanvas].
 class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   final c.Config config;
@@ -70,7 +70,7 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
   /// This method is used when the [config] parameter contains a
   /// [c.NoClearCanvas] object. This allows for a background image to be painted
   /// on the canvas before the drawing is painted providing a "ghosting" effect
-  /// when used with a semi-transparent [p.Paint].
+  /// when used with a semi-transparent [ui.Paint].
   void _paintWithBackground(w.Canvas canvas, w.Size s, ui.Paint paint) {
     size = s;
 
@@ -81,23 +81,24 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
 
     try {
       assert(
-        drawing.walk().whereType<go.BackgroundPicture>().isEmpty,
-        'BackgroundPicture found in Drawing which is inconsistent with a Config containing "clearBackground: false".',
+        drawing.walk().whereType<co.BackgroundPicture>().isEmpty,
+        'BackgroundPicture found in Drawing which is inconsistent with a Config'
+        ' containing `clearBackground: false`.',
       );
     } on AssertionError {
       l.e(drawing);
       rethrow;
     }
 
-    final pictures = go.Drawing(
-      canvasOps: [
+    final pictures = co.Drawing(
+      ops: [
         if (background != null)
-          go.Image(image: background!, offset: ui.Offset.zero, paint: paint),
-        go.BackgroundPicture(
+          co.Image(image: background!, offset: ui.Offset.zero, paint: paint),
+        co.BackgroundPicture(
           size: size,
-          canvasOps: [
+          ops: [
             if (background != null)
-              go.Image(
+              co.Image(
                 image: background!,
                 offset: ui.Offset.zero,
                 paint: paint,
@@ -109,13 +110,13 @@ class _FlossPainter<M, IUD extends miud.Iud<M>> extends w.CustomPainter {
     ).draw(canvas: canvas);
     for (final p in pictures) {
       switch (p) {
-        case go.BackgroundPictureType(:final picture):
+        case co.BackgroundPictureType(:final picture):
           picture.toImage(size.width.round(), size.height.round()).then((i) {
             background?.dispose();
             background = i;
           });
-        case go.CanvasPictureType():
-          break;
+        case co.CanvasPictureType():
+          continue;
       }
     }
   }
@@ -192,12 +193,14 @@ class _CanvasTickerState<M> extends w.State<_CanvasTicker>
       },
     );
 
+    // Initialize the model using the Iud interface `init()` method.
     model = widget.config.iud.init(
       modelCtor: widget.config.modelCtor,
       size: widget.size,
       inputEvents: widget.inputEvents,
     );
 
+    // Construct the custom painter.
     painter = _FlossPainter(
       repaint: time,
       model: model,
