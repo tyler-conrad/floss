@@ -6,6 +6,8 @@ It provides a composable, tree-structured DSL for describing 2D graphics using
 `CustomPainter`, built around immutable data structures and functional-style
 state management.
 
+![Example](example.gif)
+
 ---
 
 ## Features
