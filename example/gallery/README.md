@@ -1,16 +1,19 @@
 # gallery
 
-A new Flutter project.
+This is an example application for `floss`. It demonstrates basic usage of the
+library by implementing examples from the book "Nature of Code". Many of the
+examples are interactive and check for user input to modify the simulations.
 
-## Getting Started
+## Usage
+To run the examples, you need to have `floss` installed. You can do this by running:
 
-This project is a starting point for a Flutter application.
+```bash
+flutter pub get
+```
 
-A few resources to get you started if this is your first Flutter project:
+Then, you can run the example using the following command from the
+`example/gallery` directory:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter run -d <device>
+```

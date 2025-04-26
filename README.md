@@ -60,6 +60,56 @@ state management.
 - Leaf operations like `Rect`, `Line`, `Image`, etc. perform direct drawing on
   the canvas
 
+## Basic `CanvasOp` Subclasses
+
+| Class        | Basic Usage                                                                    |
+| :----------- | :----------------------------------------------------------------------------- |
+| `Picture`    | Draw a recorded `ui.Picture` onto the canvas.                                  |
+| `Arc`        | Draw an arc within a rectangle, defined by start and sweep angles.             |
+| `Atlas`      | Render multiple parts of an image using transforms and optional colors.        |
+| `Circle`     | Draw a circle given a center point and radius.                                 |
+| `Color`      | Fill the canvas with a solid color using a blend mode.                         |
+| `DRRect`     | Draw the area between two rounded rectangles.                                  |
+| `Image`      | Draw an image at a specific offset.                                            |
+| `ImageNine`  | Draw a 9-slice scalable image (like a stretchable box).                        |
+| `ImageRect`  | Draw a specific rectangle section of an image into a destination rectangle.    |
+| `Line`       | Draw a straight line between two points.                                       |
+| `Oval`       | Draw an oval inside a rectangle.                                               |
+| `Fill`       | Fill the entire canvas with a given paint.                                     |
+| `Paragraph`  | Draw a paragraph of text at an offset.                                         |
+| `Path`       | Draw a path with a specified paint.                                            |
+| `Points`     | Draw multiple points with a paint and point mode.                              |
+| `RawAtlas`   | Draw sections of an image atlas with raw transform data (faster, lower-level). |
+| `RawPoints`  | Draw multiple points with raw coordinate data.                                 |
+| `Rect`       | Draw a rectangle with paint.                                                   |
+| `RRect`      | Draw a rounded rectangle with paint.                                           |
+| `Shadow`     | Draw a shadow for a given path with elevation and color.                       |
+| `Vertices`   | Draw complex shapes made of vertices (custom meshes).                          |
+
+---
+
+## Composite `Drawing` Subclasses
+
+| Class                | Basic Usage |
+| :------------------- | :------------------------------------------------------------------------------------------ |
+| `Drawing`            | Composite of multiple `CanvasOp`s; runs each op in order.                                   |
+| `Noop`               | Does nothing when drawn; useful for conditional drawing branches.                           |
+| `Translate`          | Moves the canvas origin by (`dx`, `dy`), draws child ops, then restores.                    |
+| `Rotate`             | Rotates the canvas by a specified radians angle, draws child ops, restores.                 |
+| `Scale`              | Scales the canvas by `sx` (and optionally `sy`), draws child ops, restores.                 |
+| `Skew`               | Skews the canvas along x and y axes, draws child ops, restores.                             |
+| `Transform`          | Applies a full matrix transform to the canvas, draws child ops, restores.                   |
+| `ClipPath`           | Clips subsequent drawing to a path region, then draws child ops.                            |
+| `ClipRect`           | Clips drawing to a rectangle area (with optional ClipOp), draws child ops.                  |
+| `ClipRRect`          | Clips drawing to a rounded rectangle area, draws child ops.                                 |
+| `Save`               | Saves the canvas state, draws child ops, but doesn't restore afterward itself.              |
+| `SaveLayer`          | Saves the canvas into an offscreen layer (with optional bounds and paint), draws child ops. |
+| `Restore`            | Forces a manual restore of the last saved canvas state, then draws child ops.               |
+| `RestoreToCount`     | Restores to a specific canvas state save count, then draws child ops.                       |
+| `BackgroundPicture`  | Renders a background into a `BackgroundPictureType` for "ghosting" effects.                 |
+
+
+
 ### `Iud<M>`
 
 Your application logic lives in an implementation of the `Iud<M>` interface:
@@ -80,6 +130,17 @@ typedef ModelCtor<M> =
       required ui.Size size,
       required floss.InputEventList inputEvents
   });
+```
+
+---
+
+## Usage
+This library is hosted on [pub.dev](https://pub.dev/packages/floss) and can be
+installed by adding the following to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  floss: ^0.2.1
 ```
 
 ---
@@ -163,7 +224,6 @@ class MyIud extends f.IudBase<MyModel> {
 void main() {
   m.runApp(
     m.MaterialApp(
-      color: m.Colors.white,
       title: 'Floss Example',
       builder: (context, child) {
         return f.FlossWidget(

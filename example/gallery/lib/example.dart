@@ -74,7 +74,6 @@ class MyIud extends f.IudBase<MyModel> {
 void main() {
   m.runApp(
     m.MaterialApp(
-      color: m.Colors.white,
       title: 'Floss Example',
       builder: (context, child) {
         return f.FlossWidget(

@@ -1,6 +1,6 @@
 name: floss
 description: 'Floss is a vector graphics abstraction layer for Flutter.'
-version: 0.2.0
+version: 0.2.1
 homepage: https://github.com/tyler-conrad/floss
 repository: https://github.com/tyler-conrad/floss.git
 issue_tracker: https://github.com/tyler-conrad/floss/issues
@@ -44,7 +44,7 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
-  #   - family: Schyler
+  #   - family: Schyler```````````
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
